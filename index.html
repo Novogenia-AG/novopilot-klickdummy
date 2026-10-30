@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NovoPilot – Partnerportal (GEN(e)IUS-Design v1)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#00163C;--bg1:#000712;--plum:#00225E;--berry:#1D468C;--lime:#C6D63F;--lime-d:#9DB01B;--lime-ink:#000E26;
+  --ink:#241F2C;--soft:#675E6E;--line:rgba(0,34,94,.12);--wash:#F1F3F7;
+  --ok:#5FA81E;--warn:#FFB81C;--bad:#D32F2F;--info:#3B82C4;
+  --r:24px;--f:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;--num:'Archivo Black','Montserrat',sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}html{background:#000712}
+body{font-family:var(--f);color:#fff;min-height:100vh;line-height:1.45;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(1200px 700px at 70% -10%,#0A275A 0%,transparent 60%),linear-gradient(180deg,var(--bg0),var(--bg1));background-attachment:fixed}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px;border-radius:12px}
+.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:128px 1fr;min-height:100vh}
+.rail{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 0;z-index:30;
+  background:linear-gradient(180deg,rgba(0,22,60,.72),rgba(0,10,26,.72));backdrop-filter:blur(18px) saturate(1.4);border-right:1px solid rgba(255,255,255,.1);overflow-y:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.brand{font-weight:800;font-size:31px;letter-spacing:.01em;text-align:center;margin:6px 0 16px;line-height:1}.brand b{display:block}
+.brand b{color:var(--lime)}
+.nav{width:108px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:18px;font-size:12.5px;font-weight:700;text-align:center;color:rgba(255,255,255,.86);transition:all .18s var(--ease)}
+.nav:hover{background:rgba(255,255,255,.08)}
+.nav.on{background:var(--lime);color:var(--lime-ink);box-shadow:0 10px 24px -10px rgba(198,214,63,.6)}
+.nav .ext{font-size:9px;opacity:.7}.nav .ic{width:24px;height:24px}
+.rail .sep{width:48px;height:1px;background:rgba(255,255,255,.14);margin:6px 0}
+.rail .grow{flex:1}
+.main{padding:20px 28px 80px;max-width:1240px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}
+.who{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,.8)}
+.avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;font-weight:800;font-size:12px}
+.pill-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:13px;font-weight:700}
+
+/* ---------- hero ---------- */
+.hero{position:relative;border-radius:28px;padding:26px 28px 24px;background:var(--plum);border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 48px -32px rgba(0,0,0,.65);margin-bottom:26px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--lime)}
+.hero h1{font-size:44px;line-height:1.05;margin:8px 0 8px;font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0 0 14px;color:rgba(255,255,255,.82);max-width:720px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.st{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.88);color:var(--ink)}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.y{background:#FFB81C;color:#3a2600}.st.g{background:#6FBF2A;color:#0c2400}.st.b{background:#BFD9F2;color:#0b2a4a}.st.p{background:#D6DEEB;color:var(--plum)}.st.r{background:#F4C7C7;color:#6b0b0b}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:800;font-size:14px;transition:all .18s var(--ease)}
+.btn.lime{background:var(--lime);color:var(--lime-ink);box-shadow:0 12px 26px -12px rgba(198,214,63,.7)}
+.btn.lime:hover{transform:translateY(-1px)}
+.btn.ghost{border:1px solid rgba(255,255,255,.3);color:#fff}
+.btn.line{border:1px solid var(--line);color:var(--plum);background:#fff}
+.btn.sm{padding:8px 14px;font-size:13px}
+.hero .acts{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---------- sections & cards ---------- */
+.sec{display:flex;align-items:center;gap:10px;margin:26px 0 4px}
+.sec h2{margin:0;font-size:14px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.count{background:var(--lime);color:var(--lime-ink);border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800}
+.sub{color:rgba(255,255,255,.72);font-size:14px;margin:0 0 12px}
+.card{background:#fff;color:var(--ink);border-radius:var(--r);padding:20px;box-shadow:0 22px 44px -22px rgba(0,3,8,.7),0 2px 8px rgba(0,3,8,.14)}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.stat>div{min-width:0}.kpi .lbl{overflow-wrap:anywhere;hyphens:auto}
+.paybtn{margin-top:10px;background:var(--lime-ink);color:var(--lime);padding:8px 14px;font-size:13px}
+.bigsec{margin:34px 0 4px}.bigsec h2{margin:0;font-size:30px;font-weight:800;letter-spacing:-.01em;color:#fff}.bigsec+.sub{margin-bottom:14px}
+.sup{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start}
+.chatwin{display:flex;flex-direction:column;height:560px;padding:0;overflow:hidden}
+.chathd{display:flex;gap:12px;align-items:center;padding:16px 20px;background:var(--wash);border-bottom:1px solid var(--line)}
+.chathd .sic{width:44px;height:44px;border-radius:14px;background:var(--plum);color:var(--lime);display:grid;place-items:center}
+.chatlog{flex:1;overflow-y:auto;scrollbar-width:none;padding:18px 20px;display:flex;flex-direction:column;gap:10px}.chatlog::-webkit-scrollbar{display:none}
+.msg{max-width:80%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.45}
+.msg.bot{background:var(--wash);color:var(--ink);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.me{background:var(--plum);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.chatq{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
+.chatin{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.chatin input{flex:1;border:1px solid var(--line);border-radius:999px;padding:11px 16px;font:inherit}
+.field textarea{border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--ink);font:inherit;font-weight:500;min-height:120px;resize:vertical}
+@media (max-width:980px){.sup{grid-template-columns:1fr}}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+.kpi .lbl{font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.kpi .val{font-family:var(--num);font-size:30px;color:var(--plum);margin-top:6px}
+.kpi .trend{font-size:12px;color:var(--ok);font-weight:700}
+.kpi.hl{background:var(--lime);color:var(--lime-ink)}.kpi.hl .val{color:var(--lime-ink)}.kpi.hl .lbl{color:rgba(0,14,38,.7)}
+
+/* swipe row (no visible scrollbar) */
+.swipe{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 10px;margin:0 -2px}
+.swipe::-webkit-scrollbar{display:none}
+.swipe>*{scroll-snap-align:start;flex:0 0 auto}
+.tile{text-align:left;width:150px;background:#fff;color:var(--ink);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;box-shadow:0 14px 30px -18px rgba(0,3,8,.7)}
+.tile .bubble{width:42px;height:42px;border-radius:14px;background:var(--wash);display:grid;place-items:center;color:var(--plum)}
+.tile b{font-size:14px}.tile span{font-size:12px;color:var(--soft)}
+.tile.on{outline:3px solid var(--lime)}
+
+/* list rows */
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#fff;color:var(--ink);border-radius:18px;padding:14px 18px;box-shadow:0 10px 24px -18px rgba(0,3,8,.7);cursor:pointer;transition:transform .15s var(--ease)}
+.row:hover{transform:translateY(-1px)}
+.row .t{font-weight:800}.row .s{font-size:13px;color:var(--soft)}
+.row .r{text-align:right}
+.ccard .row{transition:border-radius .2s}
+.ccard.open .row{border-radius:18px 18px 6px 6px;outline:2px solid var(--lime)}
+.cright{display:flex;align-items:center;gap:10px}
+.obadge{display:inline-flex;align-items:center;gap:7px;background:var(--wash);color:var(--plum);border-radius:14px;padding:7px 12px;font-size:12px;font-weight:700}
+.obadge b{font-family:var(--num);font-size:18px;font-weight:400}
+.info{position:relative;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--soft);font-style:italic}
+.info .tip{position:absolute;right:0;top:32px;width:230px;background:var(--ink);color:#fff;font-style:normal;font-weight:500;font-size:12px;line-height:1.6;padding:10px 12px;border-radius:12px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:.15s;z-index:5;text-align:left}
+.info:hover .tip,.info:focus .tip{opacity:1;transform:none}
+.chevw{width:38px;height:38px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 6px 14px -6px rgba(0,34,94,.7);transition:background .2s}
+.chevw .ic{width:22px;height:22px;stroke-width:3;transition:transform .25s var(--ease)}
+.ccard.open .chevw,.ccard.sel .chevw{background:var(--lime);color:var(--lime-ink)}.ccard.sel .row{outline:2px solid var(--lime)}
+.ccard.open .chevw .ic{transform:rotate(90deg)}
+.ccard>.row:hover .chevw{transform:scale(1.06)}
+.lastord{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:12px;font-weight:700;color:var(--berry)}
+.lastord .ic{width:14px;height:14px}
+.sublist{margin:16px 0 22px 22px;padding:4px 0 4px 18px;border-left:2px solid rgba(198,214,63,.6);display:flex;flex-direction:column;gap:12px}
+.ocard{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#fff;color:var(--ink);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 8px 18px -14px rgba(0,3,8,.7)}
+.ocard .t{font-weight:800;font-size:14px}.ocard .s{font-size:12px;color:var(--soft)}.ocard .r{text-align:right}
+.sublist .btn{align-self:flex-start}
+.lead{display:flex;align-items:center;gap:12px;min-width:0}
+.lic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none}
+/* Kunde = zartes Plum, Bestellung = zartes Lime */
+.ccard>.row,.crow{background:#F3F6FB;border:1px solid rgba(0,34,94,.14)}
+.ccard>.row .lic,.crow .lic{background:var(--plum);color:#fff}
+.orow{background:#F7F9E6;border:1px solid rgba(157,176,27,.28)}
+.orow .lic{background:var(--lime);color:var(--lime-ink)}
+.ccard .obadge{background:#fff}
+.ocard{background:#F7F9E6;border:1px solid rgba(157,176,27,.28)}
+.ocard .lic{width:36px;height:36px;border-radius:12px;background:var(--lime);color:var(--lime-ink)}
+.row>div:first-child,.ocard>div:first-child{min-width:0}
+.row .s{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:640px){.obadge span{display:none}.sublist{margin-left:8px;padding-left:10px}.cright{gap:6px}}
+.money{font-family:var(--num);color:var(--plum)}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--soft);word-break:break-all}
+.ometa{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:6px}
+.ocust{display:flex;align-items:center;gap:5px;margin-top:2px;font-size:12px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ocust .ic{width:13px;height:13px}
+.rows>.ocard{padding:16px 18px;border-radius:18px}
+
+/* Kennzahl-Kacheln mit Icon (Bestellung = Lime-Ton, Kunde = Plum-Ton) */
+.stat{display:flex;gap:14px;align-items:center}
+.stat .sic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;flex:none;background:var(--wash);color:var(--berry)}
+.stat .sic .ic{width:26px;height:26px;stroke-width:2}
+.stat .val{margin-top:2px;font-size:26px}
+.stat.o{background:#F7F9E6}.stat.o .sic{background:var(--lime);color:var(--lime-ink)}
+.stat.c{background:#F3F6FB}.stat.c .sic{background:var(--plum);color:#fff}
+.stat.hl .sic{background:var(--lime-ink);color:var(--lime)}
+/* Netzwerk */
+.netviz{position:relative;border-radius:28px;padding:10px;margin-bottom:6px;overflow:hidden;cursor:grab;user-select:none;
+  background:radial-gradient(rgba(255,255,255,.13) 1.2px,transparent 1.3px) 0 0/22px 22px,radial-gradient(700px 360px at 50% 40%,#1B4A9C 0%,#123A80 45%,#0D2D66 100%);
+  border:1.5px solid rgba(198,214,63,.45);box-shadow:0 24px 50px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.15)}
+.netviz:active{cursor:grabbing}
+.nvn{cursor:pointer}.nvn:hover circle{stroke:#fff;stroke-width:4}
+.nvctl{position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.nvctl button{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.92);color:#00225E;display:grid;place-items:center;box-shadow:0 6px 16px -8px rgba(0,0,0,.6)}
+.nvctl button:hover{background:var(--lime)}
+.nvtip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;background:#fff;color:var(--ink);font-size:12.5px;line-height:1.45;padding:10px 12px;border-radius:12px;box-shadow:0 14px 30px -10px rgba(0,0,0,.6);max-width:260px;z-index:3}
+.nvtip b{color:var(--plum)}
+.netviz svg{display:block;width:100%;height:auto}
+.netviz .lgd{position:absolute;left:20px;top:18px;display:flex;gap:14px;font-size:12px;color:rgba(255,255,255,.7)}
+.netviz .lgd i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.atile{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.atile .sic{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--plum);color:#fff}
+.atile .sic .ic{width:32px;height:32px;stroke-width:1.9}
+.atile b{font-size:16px}.atile p{margin:0;font-size:13px;color:var(--soft);flex:1}
+.atile .btn{margin-top:4px}
+.ocard.comm .money{font-size:18px}
+/* Kundenportal-Button */
+.pbtn{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 6px;border-radius:14px;background:var(--plum);color:#fff;font-size:12px;font-weight:700;transition:transform .15s}
+.pbtn:hover{transform:translateY(-1px)}
+.pbtn .pic{position:relative;width:28px;height:28px;border-radius:10px;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.pbtn .pic .ic{width:18px;height:18px}
+.pbtn.locked{background:#E6E9ED;color:#8a7f88}
+.pbtn.locked .pic{background:#fff}
+.plock{position:absolute;right:-6px;bottom:-6px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;border:2px solid #F3F6FB}
+.plock .ic{width:10px!important;height:10px!important;stroke-width:2.6}
+@media (max-width:980px){.pbtn .pl{display:none}.pbtn{padding:6px}}
+/* Produktauswahl */
+.psec{display:flex;align-items:center;gap:12px;margin:22px 0 12px}
+.psec:first-child{margin-top:4px}
+.psec b{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink)}.psec .s{font-size:12px;color:var(--soft)}
+.psic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--tint);color:var(--acc)}
+.pcard{position:relative;display:flex;gap:14px;align-items:flex-start;padding:16px 64px 16px 16px;border-radius:18px;background:var(--tint);border:2px solid transparent;cursor:pointer;transition:border-color .15s,transform .15s}
+.pcard:hover{transform:translateY(-1px)}
+.pico{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;flex:none;background:#fff;color:var(--acc);box-shadow:0 6px 14px -10px rgba(0,0,0,.4)}
+.pico .ic{width:36px;height:36px;stroke-width:1.7}
+.pn{display:block;font-size:15px;line-height:1.3;color:var(--ink)}
+.po{font-size:11.5px;color:#9a929e;margin-top:3px}.po .mono{font-size:11px;color:#9a929e}
+.pchk{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:2.5px solid rgba(0,0,0,.18);background:#fff;display:grid;place-items:center;color:transparent;transition:.15s}
+.pchk .ic{width:24px;height:24px;stroke-width:3.4}
+.pcard.on{border-color:#3E9B1F;box-shadow:0 0 0 4px rgba(111,191,42,.25)}
+.pcard.on .pchk{background:#3E9B1F;border-color:#3E9B1F;color:#fff;transform:scale(1.08)}
+.bun{--tint:#E6F4D7;--acc:#2F7D14}.ana{--tint:#F1ECFA;--acc:#6A4BB8}.nem{--tint:#FFF3D9;--acc:#B07A00}.book{--tint:#E7F0FA;--acc:#2F6AA6}
+.pcode{font-weight:600;color:var(--soft)}
+.feats{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.feat{display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:999px;font-size:11.5px;font-weight:600;line-height:1.2}
+.feat .ic{width:13px;height:13px;stroke-width:2.2}
+.feat.b{background:#DCEBFA;color:#1F5A93}.feat.v{background:#E9E1F8;color:#5A3AA6}.feat.g{background:#D9F0C6;color:#2B6E12}.feat.a{background:#FFE9B8;color:#8A5D00}.feat.i{background:#D7EEF0;color:#17666E}.feat.r{background:#FBDDE6;color:#A3204D}
+.abo{--tint:#E3F1EE;--acc:#17766A}.ein{--tint:#F1F1F3;--acc:#5B5566}.upg{--tint:#FCEBF3;--acc:#A3245F}
+.pcard.bun{border-color:#BFE3A1}.pcard.bun.on{border-color:#3E9B1F}
+/* tutorial */
+.tourbtn .ic{color:var(--lime)}
+.tour-dim{position:fixed;inset:0;z-index:88;background:rgba(0,8,24,.55);opacity:0;pointer-events:none;transition:opacity .3s}
+body.touring .tour-dim{opacity:1;pointer-events:auto}
+body.touring .rail{z-index:89}
+.tour-hi{position:relative;z-index:90;box-shadow:0 0 0 3px var(--lime),0 0 0 9px rgba(198,214,63,.25)!important;animation:tourp 1.6s ease-in-out infinite;border-radius:16px}
+@keyframes tourp{50%{box-shadow:0 0 0 3px var(--lime),0 0 0 14px rgba(198,214,63,.08)}}
+.tour-tip{position:fixed;z-index:92;width:min(380px,calc(100vw - 24px));background:#fff;color:var(--ink);border-radius:22px;padding:18px 18px 14px;box-shadow:0 30px 60px -18px rgba(0,0,0,.75);opacity:0;transform:translateY(8px) scale(.97);transition:opacity .25s var(--ease),transform .3s var(--ease),top .35s var(--ease),left .35s var(--ease);pointer-events:none}
+.tour-tip.on{opacity:1;transform:none;pointer-events:auto}
+.tour-tip::before{content:"";position:absolute;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:3px}
+.tour-tip.left::before{left:-7px;top:var(--ay,28px)}.tour-tip.down::before{top:-7px;left:var(--ax,28px)}.tour-tip.up::before{bottom:-7px;left:var(--ax,28px)}
+.tour-k{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--plum)}
+.tour-k i{font-style:normal;display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--lime);color:var(--lime-ink);letter-spacing:0}
+.tour-tip h3{font-size:19px;font-weight:800;margin:8px 0 6px}.tour-tip p{font-size:13.5px;line-height:1.55;color:#3F4656;margin:0}
+.tour-f{display:flex;align-items:center;gap:8px;margin-top:14px}
+.tour-dots{display:flex;gap:4px;margin-right:auto;flex-wrap:wrap}.tour-dots b{width:7px;height:7px;border-radius:50%;background:#DCE3EE}.tour-dots b.on{background:var(--plum);width:18px;border-radius:99px}
+.tour-x{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--soft)}.tour-x:hover{background:#EEF2F8}
+.tour-f .btn:disabled{opacity:.35}
+@media (prefers-reduced-motion:reduce){.tour-hi{animation:none}}
+/* filter */
+.fbtn{background:#fff;color:var(--plum);padding:11px 18px}
+.fbtn.on{background:var(--lime);color:var(--lime-ink)}
+.fbtn .count{background:var(--plum);color:#fff}
+.fpanel{margin-bottom:14px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 16px}
+.frange{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.frange select,.frange input{min-width:0}
+.fquick{display:flex;gap:6px;flex-wrap:wrap}
+.qchip{padding:5px 11px;border-radius:999px;background:var(--wash);color:var(--plum);font-size:12px;font-weight:700}
+.qchip.on{background:var(--plum);color:#fff}
+.ffoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:13px;color:var(--soft)}
+.achips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.achip{display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 12px;border-radius:999px;background:var(--lime);color:var(--lime-ink);font-size:12px;font-weight:700}
+.achip button{width:20px;height:20px;border-radius:50%;background:rgba(0,14,38,.15);font-weight:800;line-height:1}
+.achip.reset{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);padding:5px 12px;cursor:pointer}
+@media (max-width:980px){.fgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.fgrid{grid-template-columns:1fr}}
+
+/* toolbar */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.search{flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:#fff;color:var(--ink);border-radius:999px;padding:10px 16px}
+.search input{border:0;outline:0;flex:1;background:none}
+.fchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.fchips::-webkit-scrollbar{display:none}
+.fchip{white-space:nowrap;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.12);font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.16)}
+.fchip.on{background:var(--lime);color:var(--lime-ink);border-color:transparent}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:rgba(255,255,255,.75);font-size:13px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,4,10,.55);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:min(460px,100%);background:#fff;color:var(--ink);z-index:61;transform:translateX(100%);transition:transform .25s var(--ease);padding:24px;overflow-y:auto;border-radius:28px 0 0 28px}
+.open .scrim{opacity:1;pointer-events:auto}.open .drawer{transform:none}
+.drawer h3{margin:0 0 4px;font-size:22px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 12px;font-size:14px;margin:16px 0}
+.kv dt{color:var(--soft);font-weight:600}.kv dd{margin:0;font-weight:700}
+
+/* stepper */
+.steps{display:flex;align-items:center;gap:6px;margin:6px 0 18px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:rgba(255,255,255,.7)}
+.step i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;background:rgba(255,255,255,.12)}
+.step.on i{background:var(--lime);color:var(--lime-ink)}.step.on{color:#fff}
+.step.done i{background:#6FBF2A;color:#0c2400}
+.bar{flex:0 0 28px;height:2px;background:rgba(255,255,255,.2)}
+.seg{display:inline-flex;background:var(--wash);border-radius:999px;padding:4px;margin-bottom:14px}
+.seg button{padding:8px 16px;border-radius:999px;font-weight:700;font-size:13px;color:var(--plum)}
+.seg button.on{background:var(--plum);color:#fff}
+.pick{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;border:1px solid var(--line);margin-bottom:8px;cursor:pointer}
+.pick.on{border-color:var(--plum);background:var(--wash)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--soft)}
+.field input,.field select{border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--ink);font-weight:500}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.sw{width:46px;height:26px;border-radius:999px;background:#ddd;position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--ok)}.sw.on::after{left:23px}
+.empty{border:2px dashed var(--line);border-radius:16px;padding:18px;color:var(--soft);font-size:13px;text-align:center}
+.drop{border:2px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--soft)}
+.chart{display:flex;align-items:flex-end;gap:14px;height:150px;padding-top:10px}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--soft)}
+.chart span.b{width:100%;max-width:44px;border-radius:10px 10px 4px 4px;background:var(--plum)}
+.chart span.b.l{background:var(--lime)}
+.linkbox{display:flex;gap:8px;align-items:center;background:var(--wash);border-radius:14px;padding:10px 12px;font-size:13px}
+.linkbox code{flex:1;word-break:break-all}
+.fab{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;background:var(--lime);color:var(--lime-ink);display:grid;place-items:center;box-shadow:0 14px 30px -10px rgba(198,214,63,.7);z-index:40}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#fff;color:var(--ink);padding:12px 18px;border-radius:999px;font-weight:700;box-shadow:0 14px 30px -12px rgba(0,0,0,.5);transition:.25s var(--ease);z-index:80}
+.toast.on{transform:translateX(-50%)}
+.note{font-size:12px;color:rgba(255,255,255,.55);margin-top:30px}
+@media (max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}.hero h1{font-size:34px}}
+@media (max-width:640px){
+  .app{grid-template-columns:1fr}
+  .rail{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:6px 8px;overflow-x:auto;border-right:0;border-top:1px solid rgba(255,255,255,.1)}
+  .brand,.rail .sep,.rail .grow{display:none}.nav{width:68px;flex:none}
+  .main{padding:14px 16px 110px}.g4{grid-template-columns:1fr 1fr}.hero h1{font-size:28px}.fab{bottom:86px}
+  .kv{grid-template-columns:1fr}
+  /* Handy: nichts darf breiter als der Bildschirm werden */
+  html,body{overflow-x:clip}
+  .app{grid-template-columns:minmax(0,1fr)}.main{min-width:0}
+  .main *{min-width:0}
+  .top .who{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top .pill-btn{padding:7px 10px;font-size:12px}
+  .hero{padding:20px 18px 18px;border-radius:22px}.hero p{font-size:14px}
+  .hero .acts .btn{flex:1 1 100%;justify-content:center}
+  .nav{width:72px;font-size:10px;padding:6px 2px;gap:3px}.nav .ic{width:22px;height:22px}.nav .ext{display:none}
+  .row{grid-template-columns:minmax(0,1fr);gap:10px;padding:14px}
+  .cright{justify-content:flex-start;flex-wrap:wrap}.cright .chevw{margin-left:auto;width:34px;height:34px}
+  .ocard{grid-template-columns:minmax(0,1fr)}.ocard .r{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;padding-left:48px}.ocard .r .ometa{display:flex;align-items:center;gap:8px}
+  .g4{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.g3,.g2{grid-template-columns:minmax(0,1fr)}
+  .stat{flex-direction:column;align-items:flex-start;gap:10px}.stat .sic{width:42px;height:42px}.kpi .val{font-size:24px}
+  .bigsec h2{font-size:24px}
+  .pgrid{grid-template-columns:minmax(0,1fr)}.pcard{padding:14px 56px 14px 14px}.pico{width:48px;height:48px}.pico .ic{width:28px;height:28px}
+  .chatwin{height:480px}.msg{max-width:90%}
+  .steps{overflow-x:auto;scrollbar-width:none}.steps::-webkit-scrollbar{display:none}
+  .netviz{border-radius:20px;padding:4px}.netviz .lgd{left:12px;top:10px;flex-wrap:wrap;gap:6px 10px;font-size:10.5px;max-width:70%}.netviz .lgd span:last-child{display:none}.nvctl{right:10px;top:auto;bottom:10px;flex-direction:row}.nvctl button{width:32px;height:32px}
+  .tour-tip{width:calc(100vw - 24px)}
+  .top .who{flex:1;gap:8px;display:flex;align-items:center}.top .avatar{flex:none}.top a.pill-btn{display:none}
+  /* 4 gleich große Kacheln in 2 Zeilen; Auszahlungs-Button passt sich der Kachel an */
+  .g4{grid-auto-rows:1fr}.g4 .stat>div{width:100%}.g4 .kpi .lbl{overflow-wrap:normal}.kpi .lbl{font-size:10.5px}.kpi .val{font-size:21px}
+  .paybtn{width:100%;justify-content:center;padding:8px 6px;font-size:11.5px;line-height:1.2;white-space:normal;text-align:center}.paybtn .ic{display:none}
+  /* Navigation unten: wischbar, ausgeblendete Ränder zeigen, dass es weitergeht */
+  .rail{scroll-snap-type:x proximity}.rail .nav{scroll-snap-align:start}
+  .rail.r{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
+  .rail.l{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px);mask-image:linear-gradient(90deg,transparent,#000 56px)}
+  .rail.l.r{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+  .pfchips{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;margin-right:-20px;padding-right:20px}.pfchips::-webkit-scrollbar{display:none}.pfchips>*{flex:none;scroll-snap-align:start}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="rail" id="rail"></nav>
+  <main class="main" id="main"></main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"></aside>
+<a class="fab" href="#support" title="Support"><svg class="ic" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></svg></a>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== Icons ===================== */
+/* Icons: Lucide (lucide.dev, ISC-Lizenz) */
+const I={
+ home:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+ box:'<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/>',
+ plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+ users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+ wallet:'<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+ net:'<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
+ doc:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+ user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+ cog:'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+ shop:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+ cap:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+ mega:'<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+ out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+ share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
+ dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+ copy:'<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+ qr:'<rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/>',
+ ext:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+ csv:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
+ cols:'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/>',
+ search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+ chev:'<path d="m9 18 6-6-6-6"/>',
+ back:'<path d="m15 18-6-6 6-6"/>',
+ lock:'<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+ shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+ bank:'<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+ sign:'<path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/>',
+ book:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+ pill:'<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+ star:'<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+ clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+ portal:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',
+ dna:'<path d="m10 16 1.5 1.5"/><path d="m14 8-1.5-1.5"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m16.5 10.5 1 1"/><path d="m17 6-2.891-2.891"/><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="m20 9 .891.891"/><path d="M3.109 14.109 4 15"/><path d="m6.5 12.5 1 1"/><path d="m7 18 2.891 2.891"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/>',
+ bundle:'<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/>',
+ abo:'<path d="M11 10v4h4"/><path d="m11 14 1.535-1.605a5 5 0 0 1 8 1.5"/><path d="M16 2v4"/><path d="m21 18-1.535 1.605a5 5 0 0 1-8-1.5"/><path d="M21 22v-4h-4"/><path d="M21 8.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4.3"/><path d="M3 10h4"/><path d="M8 2v4"/>',
+ check:'<path d="M20 6 9 17l-5-5"/>',
+ filter:'<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+ truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+ kit:'<path d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01a2.83 2.83 0 0 1 0-4L17 3"/><path d="m16 2 6 6"/><path d="M12 16H4"/>',
+ report:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 18v-1"/><path d="M12 18v-6"/><path d="M16 18v-3"/>',
+ puzzle:'<path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/>',
+ chat:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+ mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+ send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+ bot:'<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+ phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+ lab:'<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>'
+};
+const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${I[n]||''}</svg>`;
+
+/* ===================== Daten (Stage-Erfassung 30.10.2026) ===================== */
+const PARTNER={company:'Company NPDW2412',id:'NPDW2412',shop:'https://dev.novodaily.com/NPDW2412',refBy:'Company NPNG2883 (np_ct_NPNG2883@email.com)',portal:true /* Kundenportal-Zugang für diesen Partner aktiviert */};
+const ORDERS=[
+ ['NS-87a86804208f4eb391105036-281026','Alexandra Berger','NovoDaily Lifestyle+','Sample Received',0,'28/10/2026 13:22'],
+ ['NS-e4915f40db6a4025b77c4f4e-281026','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['QAST-LONG-1793189106853-yyyyyyyyyyyyyyyy','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['NS-bc2e66325add41be80a24206-281026','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['QAST-EXT-1793189105297','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['NS-8c821524b65c4e70b747afdd-281026','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['NS-c56f1551cd77433e9b4228e4-281026','Lukas Gruber','NovoDaily Lifestyle+','Order Received',0,'28/10/2026 13:05'],
+ ['NS-82a3187eb5bf4d7b88ea0b6a-281026','Lukas Gruber','Monthly Subscription Payment','Completed',0,'28/10/2026 13:03'],
+ ['NS-c149884332c741c493180e42-241026','Nina Wagner','Monthly Subscription Payment','Completed',115,'24/10/2026 11:10'],
+ ['NS-e1494a8e2dc648bcb8287c5b-061026','Nina Wagner','NovoDaily Lifestyle+','Report Generation',0,'06/10/2026 13:18'],
+ ['NS-9ab46e16872d40d19911953f-240926','Tobias Huber','NovoDaily Lifestyle+','Order Received',0,'24/09/2026 09:01'],
+ ['NS-43088da231fa4f0fb6e94eec-220926','Nina Wagner','STD - Pharmaco Sensor (Digital PDF) - DE','Kit Shipped',0,'22/09/2026 12:50'],
+ ['NS-fc7ddeb2e9f04c1e97244b4c-210926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'21/09/2026 10:09'],
+ ['NS-28b97f31ceaa41e9bb4b920d-170926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'17/09/2026 12:07'],
+ ['NS-1badac9e8f104637ab5cc38b-090926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'09/09/2026 10:12'],
+ ['NS-cf1763e386164b3095e8adf4-070926','Nina Wagner','STD - Shape (Digital PDF) Upsell','Lab Analysis',0,'07/09/2026 13:21'],
+ ['NS-b0766247684f4f6789450628-070926','Nina Wagner','ND - Performance (Digital PDF) Upsell','Completed',0,'07/09/2026 10:33'],
+ ['NS-42ff0e6f72424d89ba18c63f-070926','Nina Wagner','ND - Performance (Digital PDF) Upsell','Completed',0,'07/09/2026 08:13'],
+ ['NS-27168579a32c4b949799faa0-010926','Tobias Huber','NovoDaily Lifestyle','Completed',0,'01/09/2026 14:55'],
+ ['NS-23e5a71211ba4338b3545d01-310826','Nina Wagner','ND - Performance (Digital PDF) Upsell','Order Received',0,'31/08/2026 14:18'],
+ ['NDA-11192','Nina Wagner','NovoDaily Lifestyle+','Completed',114,'20/08/2026 13:01'],
+ ['NDA-11158','Nina Wagner','NovoDailies','Report Generation',114,'18/08/2026 15:36'],
+ ['NDA-11157','Nina Wagner','Monthly Subscription Payment','Completed',114,'18/08/2026 15:35'],
+ ['NDA-11155','Nina Wagner','NovoDaily Lifestyle+','Completed',114,'18/08/2026 13:13'],
+ ['NDA-11034','Nina Wagner','NovoDaily Lifestyle+','Kit Shipped',114,'04/08/2026 09:48'],
+ ['NDA-11017','Martina Steiner','NovoDaily Lifestyle+','Order Received',0,'31/07/2026 13:49'],
+ ['NDA-11016','Martina Steiner','NovoDaily Lifestyle+','Order Received',0,'31/07/2026 13:46']
+].map(a=>({no:a[0],cust:a[1],prod:a[2],status:a[3],price:a[4],date:a[5]}));
+const CUSTOMERS=[
+ ['Alexandra Berger','alexandra.berger@example.com',1,'28/10/2026 13:22','28/10/2026 13:22',0,'Lifestyle+ Subsc. (First Order) - AT'],
+ ['Tobias Huber','tobias.huber@example.com',2,'01/09/2026 14:55','24/09/2026 09:01',0,'Lifestyle (Digital PDF) - AT'],
+ ['Martina Steiner','martina.steiner@example.com',2,'31/07/2026 13:46','31/07/2026 13:49',0,'NovoDaily Lifestyle+'],
+ ['Lukas Gruber','lukas.gruber@example.com',7,'28/10/2026 13:03','28/10/2026 13:05',0,'NovoDaily Lifestyle+'],
+ ['Nina Wagner','nina.wagner@example.com',11,'20/08/2026 13:01','24/10/2026 11:10',65.59,'NovoDaily Lifestyle+'],
+ ['Nina Wagner','nina.wagner2@example.com',3,'18/08/2026 13:13','18/08/2026 15:36',62.18,'NovoDaily Lifestyle+'],
+ ['Nina Wagner','n.wagner@example.com',1,'04/08/2026 09:48','04/08/2026 09:48',31.09,'NovoDaily Lifestyle+']
+].map(a=>({name:a[0],email:a[1],orders:a[2],first:a[3],last:a[4],comm:a[5],prod:a[6]}));
+const COMMISSIONS=[
+ ['NS-87a86804208f4eb391105036-281026',0,30,'Pending','28/10/2026 13:24'],['NS-e4915f40db6a4025b77c4f4e-281026',0,30,'Pending','28/10/2026 13:05'],
+ ['QAST-LONG-1793189106853-yyyyyyyyyyyyyyyy',0,30,'Pending','28/10/2026 13:05'],['QAST-EXT-1793189105297',0,30,'Pending','28/10/2026 13:05'],
+ ['NS-8c821524b65c4e70b747afdd-281026',0,30,'Pending','28/10/2026 13:05'],['NS-c56f1551cd77433e9b4228e4-281026',0,30,'Pending','28/10/2026 13:05'],
+ ['NS-82a3187eb5bf4d7b88ea0b6a-281026',0,30,'Pending','28/10/2026 13:03'],['NS-c149884332c741c493180e42-241026',34.5,30,'Pending','24/10/2026 11:20'],
+ ['NS-e1494a8e2dc648bcb8287c5b-061026',0,30,'Pending','06/10/2026 13:20'],['NS-9ab46e16872d40d19911953f-240926',0,30,'Pending','24/09/2026 09:01'],
+ ['NS-43088da231fa4f0fb6e94eec-220926',0,30,'Pending','22/09/2026 12:51'],['NS-fc7ddeb2e9f04c1e97244b4c-210926',0,30,'Pending','21/09/2026 10:10'],
+ ['NS-28b97f31ceaa41e9bb4b920d-170926',0,30,'Pending','17/09/2026 12:08'],['NS-1badac9e8f104637ab5cc38b-090926',0,30,'Pending','09/09/2026 10:13'],
+ ['NS-cf1763e386164b3095e8adf4-070926',0,30,'Pending','07/09/2026 13:21'],['NS-b0766247684f4f6789450628-070926',0,30,'Pending','07/09/2026 10:34'],
+ ['NS-42ff0e6f72424d89ba18c63f-070926',0,30,'Pending','07/09/2026 08:13'],['NS-27168579a32c4b949799faa0-010926',0,30,'Pending','01/09/2026 14:56'],
+ ['NS-23e5a71211ba4338b3545d01-310826',0,30,'Pending','31/08/2026 14:18'],['NDA-11192',31.09,30,'Pending','20/08/2026 13:01'],
+ ['NDA-11157',31.09,30,'Pending','18/08/2026 15:36'],['NDA-11155',31.09,30,'Pending','18/08/2026 13:13'],
+ ['NDA-11034',31.09,30,'Paid out','04/08/2026 09:48'],['NDA-11017',0,0,'Pending','31/07/2026 13:51'],['NDA-11016',0,0,'Pending','31/07/2026 13:50']
+].map(a=>({no:a[0],amt:a[1],pct:a[2],status:a[3],date:a[4]}));
+const NETWORK=[['Doom2','30/09/2026 14:10'],['Doom13','30/09/2026 13:52'],['TestfirmaF','10/09/2026 14:34']];
+const DOC_CATS=[
+ ['book','Produkte verstehen','Alles, was du brauchst, um über unsere Produkte zu sprechen und sie mit Überzeugung zu empfehlen.'],
+ ['mega','Werbung','Fertige Materialien – herunterladen und sofort einsetzen.'],
+ ['shield','Pflichtlektüre','Diese Richtlinien sind verbindlich – sie schützen dich, deine Kunden und unsere gemeinsame Marke.'],
+ ['doc','Reseller-Informationen','Hintergrund, Abläufe und Ressourcen, die jeder Reseller griffbereit haben sollte.'],
+ ['star','Erfolgreich werden','Dein persönliches Playbook für mehr Kunden, ein größeres Netzwerk und höhere Einnahmen.']
+];
+
+/* ===================== Helpers ===================== */
+const eur=v=>v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+const ST={'Order Received':['b','Bestellung erhalten'],'Kit Shipped':['p','Kit versendet'],'Sample Received':['y','Probe erhalten'],'Lab Analysis':['y','Laboranalyse'],'Report Generation':['y','Bericht wird erstellt'],'Completed':['g','Abgeschlossen'],'Pending':['y','Ausstehend'],'Paid out':['g','Ausbezahlt']};
+const st=s=>{const x=ST[s]||['p',s];return `<span class="st ${x[0]}">${x[1]}</span>`};
+const parseD=d=>{const[a,b]=d.split(' ');const[dd,mm,yy]=a.split('/');return new Date(`${yy}-${mm}-${dd}T${b||'00:00'}`)};
+const ago=d=>{const days=Math.round((new Date('2026-10-30T12:00')-parseD(d))/864e5);return days<=0?'heute':days===1?'gestern':days<31?`vor ${days} Tagen`:days<365?`vor ${Math.round(days/30)} Monat${Math.round(days/30)>1?'en':''}`:'vor über einem Jahr'};
+const dshort=d=>d.split(' ')[0].replaceAll('/','.');
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+function copy(t){navigator.clipboard?.writeText(t);toast('Kopiert')}
+function hero({eye,title,text,chips='',acts=''}){return `<section class="hero"><div class="eyebrow">${eye}</div><h1>${title}</h1><p>${text}</p>${chips?`<div class="chips">${chips}</div>`:''}${acts?`<div class="acts">${acts}</div>`:''}</section>`}
+function sec(t,n,sub){return `<div class="sec"><h2>${t}</h2>${n!=null?`<span class="count">${n}</span>`:''}</div>${sub?`<p class="sub">${sub}</p>`:''}`}
+function drawer(html){const d=document.getElementById('drawer');d.innerHTML=`<button class="btn line sm" onclick="closeDrawer()" style="margin-bottom:14px">${ic('back')} Schließen</button>`+html;document.body.classList.add('open')}
+function closeDrawer(){document.body.classList.remove('open')}
+document.getElementById('scrim').onclick=closeDrawer;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+
+/* ===================== Navigation ===================== */
+const NAV=[
+ ['x:shop','Shop','shop',PARTNER.shop],
+ ['customers','Kunden','users'],['orders','Bestellungen','box'],['neu','Neue Bestellung','plus'],
+ ['finances','Finanzen','wallet'],['network','Netzwerk','net'],['support','Support','chat'],
+ null,
+ ['x:academy','Academy','cap','https://academy.novopilot.com'],['documents','Dokumente','doc'],['x:ads','Werbe­material','mega','https://market.novogenia.com/novodaily-werbematerialien/'],
+ 'grow',
+ ['profile','Profil','user'],['settings','Einstellungen','cog'],['x:logout','Abmelden','out','#']
+];
+function renderRail(cur){
+  document.getElementById('rail').innerHTML=`<div class="brand">NOVO<b>PILOT</b></div>`+NAV.map(n=>{
+    if(n===null)return '<div class="sep"></div>';if(n==='grow')return '<div class="grow"></div>';
+    const [id,l,i,href]=n;if(href)return `<a class="nav" data-r="${id}" href="${href}" target="${href==='#'?'_self':'_blank'}" rel="noopener">${ic(i)}<span>${l}</span>${href!=='#'?'<span class="ext">↗</span>':''}</a>`;
+    return `<a class="nav ${cur===id?'on':''}" data-r="${id}" href="#${id}">${ic(i)}<span>${l}</span></a>`}).join('');
+  // Handy: aktiven Reiter sichtbar halten, Ränder je nach Scrollposition ausblenden
+  const r=document.getElementById('rail'),on=r.querySelector('.nav.on');
+  if(innerWidth<=640&&on&&(on.offsetLeft<r.scrollLeft||on.offsetLeft+on.offsetWidth>r.scrollLeft+r.clientWidth))r.scrollLeft=on.offsetLeft-(r.clientWidth-on.offsetWidth)/2;
+  r.onscroll=railFade;railFade();
+}
+function railFade(){const r=document.getElementById('rail'),m=r.scrollWidth-r.clientWidth;r.classList.toggle('l',r.scrollLeft>4);r.classList.toggle('r',r.scrollLeft<m-4)}
+
+/* ===================== Seiten ===================== */
+const totalComm=179.65,available=148.56,pending=0,paid=31.09;
+const P={};
+
+P.home=()=>{
+  const inWork=ORDERS.filter(o=>!['Completed'].includes(o.status)).length;
+  return hero({eye:'Freitag, 30. Oktober',title:'Willkommen zurück',text:`${PARTNER.company} · Partner-ID ${PARTNER.id}. Hier siehst du auf einen Blick, was bei deinen Kunden und Provisionen gerade passiert.`,
+    chips:`<span class="st y">In Bearbeitung · ${inWork}</span><span class="st g">Abgeschlossen · ${ORDERS.length-inWork}</span><span class="st p">Kunden · ${CUSTOMERS.length}</span>`,
+    acts:`<a class="btn lime" href="#neu">${ic('plus')} Neue Bestellung</a><a class="btn ghost" href="${PARTNER.shop}" target="_blank">${ic('shop')} Zum Shop</a>`})
+  +sec('Dein Shop-Link',null,'Teile deinen persönlichen Shop – alle Bestellungen darüber werden dir zugeordnet.')
+  +`<div class="card"><div class="linkbox"><code>${PARTNER.shop}</code><button class="btn line sm" onclick="copy('${PARTNER.shop}')">${ic('copy')} Kopieren</button></div>
+     <div class="swipe" style="margin-top:12px">
+       <button class="tile" onclick="toast('Teilen-Dialog')"><span class="bubble">${ic('share')}</span><b>Teilen</b><span>WhatsApp, Mail, Social</span></button>
+       <button class="tile" onclick="toast('QR-Code wird geladen')"><span class="bubble">${ic('qr')}</span><b>QR-Code</b><span>Herunterladen</span></button>
+       <a class="tile" href="${PARTNER.shop}" target="_blank"><span class="bubble">${ic('shop')}</span><b>Zum Shop</b><span>Öffnen ↗</span></a>
+       <a class="tile" href="https://market.novogenia.com/novodaily-werbematerialien/" target="_blank"><span class="bubble">${ic('mega')}</span><b>Werbematerial</b><span>Öffnen ↗</span></a>
+     </div></div>`
+  +sec('Provisionen',null)
+  +`<div class="grid g4">${stat('o','box','Bestellungen gesamt',ORDERS.length)}${stat('','wallet','Provision gesamt',eur(totalComm),'<div class="trend">↑ ggü. Vormonat</div>')}${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available))}${stat('','sign','Bereits ausbezahlt',eur(paid),`<div class="trend" style="color:var(--soft)">Ausstehend: ${eur(pending)}</div>`)}</div><div style="margin-top:12px"><a class="btn lime sm" href="#finances">${ic('wallet')} Zu den Finanzen</a></div>`
+  +sec('Neue Kunden',5,'Tippe einen Kunden an, um Details und Bestellungen zu sehen.')
+  +`<div class="rows">${CUSTOMERS.slice().sort((a,b)=>parseD(b.first)-parseD(a.first)).slice(0,5).map(c=>custCard(c,{click:`custDrawer('${c.email}')`})).join('')}</div>
+   <div style="margin-top:12px"><a class="btn ghost sm" href="#customers">Alle Kunden ${ic('chev')}</a></div>`;
+};
+
+/* ===================== Filter (Kunden + Bestellungen) ===================== */
+const NOW=new Date('2026-10-30T12:00');
+const daysAgo=d=>Math.round((NOW-parseD(d))/864e5);
+const PROBE={wait:['Probe ausstehend',['Order Received','Kit Shipped']],lab:['Probe im Labor',['Sample Received','Lab Analysis','Report Generation']],done:['Bericht fertig',['Completed']]};
+const probeOf=o=>Object.keys(PROBE).find(k=>PROBE[k][1].includes(o.status))||'wait';
+// Stage-Liste zeigt keine Probenbarcodes – Demo-Werte, sobald ein Kit zugeordnet ist
+ORDERS.forEach((o,i)=>{o.barcode=o.status==='Order Received'?'':'NG'+String(40117 + i*3613).padStart(8,'0')});
+const lc=s=>(s||'').toLowerCase();
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const inRange=(d,f)=>!(f.from&&parseD(d)<new Date(f.from+'T00:00'))&&!(f.to&&parseD(d)>new Date(f.to+'T23:59'));
+const daysOk=(d,f)=>f.days===''||(f.dMode==='in'?daysAgo(d)<=+f.days:daysAgo(d)>+f.days);
+const isoDe=s=>s.split('-').reverse().join('.');
+
+const cF={open:false,q:'',name:'',email:'',probe:'',barcode:'',dMode:'in',days:'',from:'',to:'',min:'',max:''},cF0={...cF};
+const oF={open:false,q:'',name:'',email:'',prod:'',status:'',probe:'',barcode:'',dMode:'in',days:'',from:'',to:''},oF0={...oF};
+const PROBE_OPTS=Object.entries(PROBE).map(([k,v])=>[k,v[0]]);
+const C_DEFS=[
+ {k:'name',t:'text',l:'Name',ph:'Vor- oder Nachname'},
+ {k:'email',t:'text',l:'E-Mail-Adresse',ph:'z. B. @novogenia.com'},
+ {k:'barcode',t:'text',l:'Barcode',ph:'Probenbarcode'},
+ {k:'probe',t:'select',l:'Proben',opts:PROBE_OPTS},
+ {k:'days',t:'days',l:'Letzte Bestellung'},
+ {k:'from',t:'range',l:'Bestellungen zwischen'},
+ {k:'min',t:'num',l:'Anzahl Bestellungen'}];
+const O_DEFS=[
+ {k:'name',t:'text',l:'Kunde',ph:'Vor- oder Nachname'},
+ {k:'email',t:'text',l:'E-Mail-Adresse',ph:'z. B. @novogenia.com'},
+ {k:'barcode',t:'text',l:'Barcode',ph:'Probenbarcode'},
+ {k:'probe',t:'select',l:'Proben',opts:PROBE_OPTS},
+ {k:'status',t:'select',l:'Status',opts:Object.keys(ST).filter(s=>ORDERS.some(o=>o.status===s)).map(s=>[s,ST[s][1]])},
+ {k:'prod',t:'select',l:'Produkt',opts:[...new Set(ORDERS.map(o=>o.prod))].sort().map(p=>[p,p])},
+ {k:'days',t:'days',l:'Bestellt'},
+ {k:'from',t:'range',l:'Bestellt zwischen'}];
+
+function oMatch(o,f){
+  if(f.q&&!lc(o.no+' '+o.cust+' '+o.prod+' '+o.barcode).includes(lc(f.q)))return false;
+  if(f.name&&!lc(o.cust).includes(lc(f.name)))return false;
+  if(f.email&&!lc(o.email).includes(lc(f.email)))return false;
+  if(f.barcode&&!lc(o.barcode).includes(lc(f.barcode)))return false;
+  if(f.probe&&probeOf(o)!==f.probe)return false;
+  if(f.status&&o.status!==f.status)return false;
+  if(f.prod&&o.prod!==f.prod)return false;
+  return daysOk(o.date,f)&&inRange(o.date,f)}
+function cMatch(c,f){const os=custOrders(c);
+  if(f.q&&!lc(c.name+' '+c.email).includes(lc(f.q))&&!os.some(o=>lc(o.barcode).includes(lc(f.q))))return false;
+  if(f.name&&!lc(c.name).includes(lc(f.name)))return false;
+  if(f.email&&!lc(c.email).includes(lc(f.email)))return false;
+  if(f.barcode&&!os.some(o=>lc(o.barcode).includes(lc(f.barcode))))return false;
+  if(f.probe&&!os.some(o=>probeOf(o)===f.probe))return false;
+  if(f.min!==''&&c.orders<+f.min)return false;
+  if(f.max!==''&&c.orders>+f.max)return false;
+  if((f.from||f.to)&&!os.some(o=>inRange(o.date,f)))return false;
+  return daysOk(c.last,f)}
+
+// aktive Filter als entfernbare Chips: [Text, Reset-Code]
+function fActive(F,N,defs){const out=[];defs.forEach(d=>{
+  if(d.t==='text'&&F[d.k])out.push([`${d.l}: „${F[d.k]}“`,`${N}.${d.k}=''`]);
+  if(d.t==='select'&&F[d.k])out.push([`${d.l}: ${d.opts.find(o=>o[0]===F[d.k])[1]}`,`${N}.${d.k}=''`]);
+  if(d.t==='days'&&F.days!=='')out.push([`${d.l} ${F.dMode==='in'?'in den letzten':'vor mehr als'} ${F.days} Tagen`,`${N}.days=''`]);
+  if(d.t==='range'&&(F.from||F.to))out.push([`${d.l} ${F.from?isoDe(F.from):'…'} – ${F.to?isoDe(F.to):'…'}`,`${N}.from='';${N}.to=''`]);
+  if(d.t==='num'&&(F.min!==''||F.max!==''))out.push([`${d.l}: ${F.min!==''?F.min:'0'}–${F.max!==''?F.max:'∞'}`,`${N}.min='';${N}.max=''`]);
+});return out}
+function fCtl(F,N,d){const id=`f-${N}-${d.k}`,set=k=>`${N}.${k}=this.value;render(true)`;
+  if(d.t==='text')return `<label class="field">${d.l}<input id="${id}" placeholder="${d.ph}" value="${esc(F[d.k])}" oninput="${set(d.k)}"></label>`;
+  if(d.t==='select')return `<label class="field">${d.l}<select onchange="${set(d.k)}"><option value="">Alle</option>${d.opts.map(([v,l])=>`<option value="${esc(v)}" ${F[d.k]===v?'selected':''}>${l}</option>`).join('')}</select></label>`;
+  if(d.t==='days')return `<div class="field">${d.l}<div class="frange"><select onchange="${set('dMode')}"><option value="in" ${F.dMode==='in'?'selected':''}>in den letzten …</option><option value="out" ${F.dMode==='out'?'selected':''}>vor mehr als …</option></select><input id="${id}" type="number" min="0" placeholder="X Tage" value="${F.days}" oninput="${set('days')}"></div>
+     <div class="fquick">${[7,30,90,180].map(n=>`<button class="qchip ${F.days==n&&F.days!==''?'on':''}" onclick="${N}.days=${F.days==n&&F.days!==''?"''":`'${n}'`};render(true)">${n} Tage</button>`).join('')}</div></div>`;
+  if(d.t==='range')return `<div class="field">${d.l}<div class="frange"><input type="date" title="von" value="${F.from}" onchange="${set('from')}"><input type="date" title="bis" value="${F.to}" onchange="${set('to')}"></div></div>`;
+  if(d.t==='num')return `<div class="field">${d.l}<div class="frange"><input id="${id}-min" type="number" min="0" placeholder="mind." value="${F.min}" oninput="${set('min')}"><input id="${id}-max" type="number" min="0" placeholder="höchstens" value="${F.max}" oninput="${set('max')}"></div></div>`}
+function fBar(F,N,defs,ph,hits,total,unit){const act=fActive(F,N,defs);
+  return `<div class="tools"><label class="search">${ic('search')}<input id="f-${N}-q" placeholder="${ph}" value="${esc(F.q)}" oninput="${N}.q=this.value;render(true)"></label>
+     <button class="btn fbtn ${F.open?'on':''}" onclick="${N}.open=!${N}.open;render(true)">${ic('filter')} Filter${act.length?` <span class="count">${act.length}</span>`:''}</button></div>
+   ${F.open?`<div class="card fpanel"><div class="fgrid">${defs.map(d=>fCtl(F,N,d)).join('')}</div>
+     <div class="ffoot"><span><b style="color:var(--plum)">${hits}</b> von ${total} ${unit}</span><span style="display:flex;gap:8px">${act.length?`<button class="btn line sm" onclick="Object.assign(${N},${N}0,{open:true});render(true)">Zurücksetzen</button>`:''}<button class="btn lime sm" onclick="${N}.open=false;render(true)">Fertig</button></span></div></div>`:''}
+   ${act.length?`<div class="achips">${act.map(([t,r])=>`<span class="achip">${t}<button title="Filter entfernen" onclick="${r};render(true)">×</button></span>`).join('')}<span class="achip reset" onclick="Object.assign(${N},${N}0,{open:${N}.open});render(true)">Alle Filter löschen</span></div>`:''}`}
+
+// Bestellkarte – gleiche Komponente auf Kunden-, Bestell- und Drawer-Ansicht
+function orderCard(o,showCust){const c=COMMISSIONS.find(x=>x.no===o.no);
+  return `<div class="ocard" onclick="orderDrawer('${o.no}')"><div class="lead"><span class="lic">${ic('box')}</span><div style="min-width:0"><div class="t">${o.prod}</div>${showCust?`<div class="ocust">${ic('user')} ${o.cust}</div>`:''}<div class="lastord">${ic('clock')} Bestellung ${ago(o.date)}</div></div></div>
+    <div class="r">${st(o.status)}<div class="ometa"><span class="money">${eur(o.price)}</span><span class="info" tabindex="0" onclick="event.stopPropagation()">i<span class="tip">Bestellt am ${dshort(o.date)}, ${o.date.split(' ')[1]} Uhr<br>${PROBE[probeOf(o)][0]}${o.barcode?' · '+o.barcode:''}${c?'<br>Provision: '+eur(c.amt):''}</span></span></div></div></div>`}
+
+// Provision als Bestellkarte: gleiche Karte, rechts Provisionsbetrag + Provisionsstatus
+function commCard(c){const o=ORDERS.find(x=>x.no===c.no)||{no:c.no,prod:'Bestellung',cust:'—',date:c.date,status:''};
+  return `<div class="ocard comm" onclick="ORDERS.find(x=>x.no==='${c.no}')&&orderDrawer('${c.no}')"><div class="lead"><span class="lic">${ic('box')}</span><div style="min-width:0"><div class="t">${o.prod}</div><div class="ocust">${ic('user')} ${o.cust}</div><div class="lastord">${ic('clock')} Bestellung ${ago(o.date)}</div></div></div>
+    <div class="r">${st(c.status)}<div class="ometa"><span class="money">${eur(c.amt)}</span><span class="info" tabindex="0" onclick="event.stopPropagation()">i<span class="tip">Provision ${c.pct.toFixed(1)} %<br>Gebucht am ${dshort(c.date)}, ${c.date.split(' ')[1]} Uhr<br>Bestellstatus: ${o.status?ST[o.status][1]:'—'}</span></span></div></div></div>`}
+// Kennzahl-Kachel mit Icon
+const stat=(cls,i,lbl,val,sub='')=>`<div class="card kpi stat ${cls}"><span class="sic">${ic(i)}</span><div><div class="lbl">${lbl}</div><div class="val">${val}</div>${sub}</div></div>`;
+
+let oFilter='all',oPage=1;
+P.orders=()=>{
+  const groups={all:'Alle',open:'In Bearbeitung',done:'Abgeschlossen'};
+  const isDone=o=>o.status==='Completed';
+  const list=ORDERS.filter(o=>(oFilter==='all'||(oFilter==='done'?isDone(o):!isDone(o)))&&oMatch(o,oF));
+  const per=25,pages=Math.max(1,Math.ceil(list.length/per));oPage=Math.min(oPage,pages);
+  return hero({eye:'Bestellungen',title:'Deine Bestellungen',text:'Alle Bestellungen deiner Kunden mit aktuellem Status – vom Auftrag über das Labor bis zum fertigen Bericht.',
+     chips:`<span class="st y">In Bearbeitung · ${ORDERS.filter(o=>!isDone(o)).length}</span><span class="st g">Abgeschlossen · ${ORDERS.filter(isDone).length}</span>`,
+     acts:`<a class="btn lime" href="#neu">${ic('plus')} Neue Bestellung</a><button class="btn ghost" onclick="toast('CSV-Export gestartet')">${ic('csv')} CSV exportieren</button>`})
+  +fBar(oF,'oF',O_DEFS,'Suche: Kunde, Produkt, Bestellnummer oder Barcode',list.length,ORDERS.length,'Bestellungen')
+  +`<div class="fchips" style="margin-bottom:14px">${Object.entries(groups).map(([k,v])=>`<button class="fchip ${oFilter===k?'on':''}" onclick="oFilter='${k}';oPage=1;render(true)">${v}</button>`).join('')}</div>`
+  +sec('Bestellungen',list.length,'Tippe eine Bestellung an, um alle Details zu sehen.')
+  +`<div class="rows">${list.slice((oPage-1)*per,oPage*per).map(o=>orderCard(o,true)).join('')||'<div class="empty">Keine Bestellungen für diese Filter.</div>'}</div>
+   <div class="pager"><span>${list.length?`${(oPage-1)*per+1}–${Math.min(oPage*per,list.length)} von ${list.length}`:''}</span><span>${oPage>1?`<button class="btn ghost sm" onclick="oPage--;render()">${ic('back')}</button>`:''} Seite ${oPage} von ${pages} ${oPage<pages?`<button class="btn ghost sm" onclick="oPage++;render()">${ic('chev')}</button>`:''}</span></div>`;
+};
+const FLOW=['Order Received','Kit Shipped','Sample Received','Lab Analysis','Report Generation','Completed'];
+function orderDrawer(no){const o=ORDERS.find(x=>x.no===no);const c=COMMISSIONS.find(x=>x.no===no);const idx=FLOW.indexOf(o.status);
+  drawer(`<div class="eyebrow" style="color:var(--berry)">Bestellung</div><h3>${o.prod}</h3><div class="lastord">${ic('clock')} Bestellung ${ago(o.date)}</div><div style="margin-top:10px">${st(o.status)}</div>
+  ${idx>=0?`<div style="margin:18px 0 6px;font-weight:800">Verlauf</div>${FLOW.map((f,i)=>`<div style="display:flex;gap:10px;align-items:center;padding:6px 0;color:${i<=idx?'var(--ink)':'#bbb'}"><span style="width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:${i<idx?'#6FBF2A':i===idx?'var(--lime)':'#eee'};color:${i<=idx?'#14200a':'#999'}">${i<idx?'✓':i+1}</span>${ST[f][1]}</div>`).join('')}`:''}
+  <dl class="kv"><dt>Kunde</dt><dd>${o.cust}</dd>${o.email?`<dt>E-Mail</dt><dd style="word-break:break-all">${o.email}</dd>`:''}<dt>Erstellt</dt><dd>${o.date} (${ago(o.date)})</dd><dt>Probe</dt><dd>${PROBE[probeOf(o)][0]}</dd><dt>Barcode</dt><dd>${o.barcode||'— (noch kein Kit)'}</dd><dt>Bestellnummer</dt><dd class="mono">${o.no}</dd><dt>Preis</dt><dd>${eur(o.price)}</dd><dt>Provision</dt><dd>${c?eur(c.amt)+' ('+c.pct+' %) · '+(ST[c.status]||[0,c.status])[1]:'—'}</dd></dl>`)}
+
+P.customers=()=>{const list=CUSTOMERS.filter(c=>cMatch(c,cF));
+  return hero({eye:'Kunden',title:'Deine Kunden',text:'Alle Kundinnen und Kunden, die über dich bestellt haben – mit Bestellungen und Provision.',
+     chips:`<span class="st p">Kunden · ${CUSTOMERS.length}</span><span class="st g">Provision · ${eur(CUSTOMERS.reduce((s,c)=>s+c.comm,0))}</span>`,
+     acts:`<a class="btn lime" href="#neu">${ic('plus')} Bestellung für Kunden</a><button class="btn ghost" onclick="toast('CSV-Export gestartet')">${ic('csv')} CSV exportieren</button>`})
+  +fBar(cF,'cF',C_DEFS,'Suche: Name, E-Mail oder Barcode',list.length,CUSTOMERS.length,'Kunden')
+  +sec('Kunden',list.length,'Tippe einen Kunden an – darunter klappen alle seine Bestellungen auf.')
+  +`<div class="rows">${list.map(c=>{const open=cOpen===c.email,os=custOrders(c);return custCard(c,{open,click:`cOpen=cOpen==='${c.email}'?null:'${c.email}';render(true)`,
+       body:open?`<div class="sublist">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}
+       <a class="btn lime sm" href="#neu" onclick="wPick=${CUSTOMERS.indexOf(c)};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a></div>`:''})}).join('')||'<div class="empty">Keine Kunden für diese Filter.</div>'}</div>`};
+// Kundenkarte – überall dieselbe (Kunden, Dashboard, Neue Bestellung)
+function custCard(c,{open=false,click='',body='',sel=false}={}){return `<div class="ccard ${open?'open':''} ${sel?'sel':''}">
+     <div class="row" onclick="${click}">
+       <div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${c.name}</div><div class="s">${c.email}</div><div class="lastord">${ic('clock')} Letzte Bestellung ${ago(c.last)}</div></div></div>
+       <div class="cright">
+         ${portalBtn(c)}
+         <span class="obadge">${ic('box')}<b>${c.orders}</b><span>Bestellung${c.orders>1?'en':''}</span></span>
+         <span class="info" tabindex="0" onclick="event.stopPropagation()">i<span class="tip">Erste Bestellung: ${dshort(c.first)} (${ago(c.first)})<br>Letzte Bestellung: ${dshort(c.last)} (${ago(c.last)})<br>Provision: ${eur(c.comm)}</span></span>
+         <span class="chevw">${ic(sel?'check':'chev')}</span>
+       </div>
+     </div>${body}
+   </div>`}
+let cOpen=null;
+// Kundenportal: nur wenn die Funktion für diesen Partner aktiviert ist (PARTNER.portal) – sonst bei allen Kunden mit Schloss gesperrt
+function portalBtn(c){const ok=PARTNER.portal;
+  return `<button class="pbtn ${ok?'':'locked'}" title="${ok?'Kundenportal öffnen':'Kundenportal gesperrt – Funktion für dich nicht aktiviert'}" onclick="event.stopPropagation();toast('${ok?`Kundenportal von ${c.name} wird geöffnet (Demo)`:'Kundenportal gesperrt – diese Funktion ist für dich nicht aktiviert'}')"><span class="pic">${ic('portal')}${ok?'':`<span class="plock">${ic('lock')}</span>`}</span><span class="pl">Kundenportal</span></button>`}
+function custOrders(c){const a=+parseD(c.first)-6e4,b=+parseD(c.last)+6e4;return ORDERS.filter(o=>o.cust===c.name&&+parseD(o.date)>=a&&+parseD(o.date)<=b)}
+CUSTOMERS.forEach(c=>custOrders(c).forEach(o=>o.email=c.email));
+function custDrawer(email){const c=CUSTOMERS.find(x=>x.email===email);const os=custOrders(c);
+  drawer(`<div class="eyebrow" style="color:var(--berry)">Kunde</div><h3>${c.name}</h3><div class="s" style="color:var(--soft)">${c.email}</div>
+  <dl class="kv"><dt>Bestellungen</dt><dd>${c.orders}</dd><dt>Erste Bestellung</dt><dd>${c.first}</dd><dt>Letzte Bestellung</dt><dd>${c.last} (${ago(c.last)})</dd><dt>Provision</dt><dd>${eur(c.comm)}</dd></dl>
+  <a class="btn lime sm" href="#neu" onclick="closeDrawer()">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a>
+  <div style="margin:18px 0 8px;font-weight:800">Bestellungen</div><div class="rows">${os.map(o=>orderCard(o)).join('')}</div>`)}
+
+// [Originalname, Code, Typ (Original), Icon, Anzeigename, Sektion, enthaltene Leistungen]
+const FEAT={kit:['Proben-Set-Versand','box','b'],dna:['DNA-Labor-Analyse','lab','r'],rep:['Analyse-Report digital','report','v'],
+ shape:['Shape-Analyse digital','report','v'],life:['Lifestyle-Analyse digital','report','v'],book:['Gedrucktes Buch','book','i'],
+ abo12:['12 Monate Abo','abo','g'],shapebook:['Shape-Buch gedruckt','book','i'],lifebook:['Lifestyle-Buch gedruckt','book','i'],nem:['Nahrungsergänzungsmittel personalisiert','pill','a'],
+ at:['Versand nach Österreich','truck','b'],de:['Versand nach Deutschland','truck','b']};
+const PRODUCTS=[
+ ['ND - Drug Response (Digital PDF) - AT','I-B-ND-DRDIGIAT-1','Test-Bundle','dna','NovoDaily Drug Response Analyse (Austria)','ana',['kit','dna','rep','at']],
+ ['Lifestyle (Digital PDF) - AT','I-B-ND-LDIGIAT-1','Test-Bundle','dna','NovoDaily Lifestyle Analyse (Austria)','ana',['kit','dna','rep','at']],
+ ['Lifestyle+ Subsc. (First Order) - AT','I-B-ND-LPSFOAT-1','Abo','abo','NovoDaily Lifestyle+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','life','shapebook','lifebook','nem','at']],
+ ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','bundle','NovoDaily Lifestyle Bundle (Austria)','bun',['kit','dna','shape','life','shapebook','lifebook','at']],
+ ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','pill','NovoDaily Nahrungsergänzung (Austria)','nem',['nem','at']],
+ ['ND - Performance (Digital PDF) Upsell','I-B-ND-PDIGIUP-1','Test-Bundle','dna','NovoDaily Performance Upgrade','upg',['rep']],
+ ['ND - Shape (Digital PDF) Upsell','I-B-ND-SDIGIUP-1','Test-Bundle','dna','NovoDaily Shape Upgrade','upg',['rep']],
+ ['Shape+ Subsc. (First Order) - AT','I-B-ND-SPSFOAT-1','Abo','abo','NovoDaily Shape+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','nem','at']],
+ ['STD - Pharmaco Sensor (Digital PDF) - DE','I-B-STD-PHDIGIDE-1','Test-Bundle','dna','Pharmaco Sensor Medikamenten-Analyse (Deutschland)','ana',['kit','dna','rep','de']],
+ ['STD - Pharmaco Sensor (Printed) - AT','I-B-STD-PHPRINAT-1','Test-Bundle','book','Pharmaco Sensor Booklet, gedruckt (Austria)','book',['book','at']]
+];
+const PSEC=[['abo','Abos','abo','Laufende Abos mit Analyse und Nahrungsergänzung'],['bun','Bundles','bundle','Analyse und Nahrungsergänzung im Paket'],['ana','Analysen','dna','Genanalysen als digitaler Bericht'],['upg','Upgrades','report','Auf Basis bereits vorhandener DNA-Daten neue Analysen bestellen'],['nem','Nahrungsergänzung','pill','Einzelne Nahrungsergänzungen'],['book','Gedruckte Booklets','book','Berichte als gedrucktes Booklet'],['ein','Einzelkomponenten','puzzle','Einzeln bestellbare Bestandteile']];
+function prodCard(p,i){const on=wProd.has(i);
+  return `<div class="pcard ${p[5]} ${on?'on':''}" onclick="wProd.has(${i})?wProd.delete(${i}):wProd.add(${i});render(true)"><span class="pico">${ic(p[3])}</span>
+   <div style="min-width:0"><b class="pn">${p[4]} <span class="pcode">(${p[1]})</span></b><div class="po">${p[0]}</div>
+   <div class="feats">${p[6].map(k=>`<span class="feat ${FEAT[k][2]}">${ic(FEAT[k][1])}${FEAT[k][0]}</span>`).join('')}</div>
+   </div>
+   <span class="pchk">${ic('check')}</span></div>`}
+let wStep=1,wMode='single',wCust='existing',wPick=null,wProd=new Set(),wPF='all',wQ='',wSame=true;
+P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPick!=null?CUSTOMERS[wPick]:null;
+  const prods=[...wProd].map(i=>PRODUCTS[i]);
+  const body={1:()=>`<div class="seg"><button class="${wCust==='existing'?'on':''}" onclick="wCust='existing';render()">Bestehender Kunde</button><button class="${wCust==='new'?'on':''}" onclick="wCust='new';render()">Neuer Kunde</button></div>
+     ${wCust==='existing'?(cu?`${custCard(cu,{sel:true})}<div style="margin:10px 0 4px"><button class="btn line sm" onclick="wPick=null;render()">Anderen Kunden wählen</button></div>
+        <div class="grid g2" style="margin-top:12px"><label class="field">Anrede *<select><option>Herr</option><option>Frau</option><option>Divers</option></select></label><label class="field">Geschlecht *<select><option>Männlich</option><option>Weiblich</option><option>Divers</option></select></label></div><label class="field">Geburtsdatum *<input type="date" value="1963-11-22"></label>`
+       :`<label class="search" style="border:1px solid var(--line);margin-bottom:12px">${ic('search')}<input placeholder="Kunden nach Name oder E-Mail suchen …"></label><div class="rows">${CUSTOMERS.map((c,i)=>custCard(c,{click:`wPick=${i};render()`})).join('')}</div>`)
+       :`<div class="grid g2"><label class="field">Anrede *<select><option>Herr</option><option>Frau</option><option>Divers</option></select></label><label class="field">Geschlecht *<select><option>Männlich</option><option>Weiblich</option><option>Divers</option></select></label><label class="field">Vorname *<input></label><label class="field">Nachname *<input></label><label class="field">E-Mail *<input type="email"></label><label class="field">Geburtsdatum *<input type="date"></label></div>`}`,
+   2:()=>`<p style="color:var(--soft);font-size:13px;margin-top:0">Der bestellbare Katalog deines Mandanten – wähle ein oder mehrere Produkte für diesen Kunden.</p>
+     <div class="pfchips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">${[['all','Alle'],...PSEC.map(([k,t])=>[k,t])].map(([k,t])=>[k,`${t} · ${k==='all'?PRODUCTS.length:PRODUCTS.filter(p=>p[5]===k).length}`]).map(([k,v])=>`<button class="fchip" style="${wPF===k?'background:var(--plum);color:#fff':'background:var(--wash);color:var(--plum);border-color:transparent'}" onclick="wPF='${k}';render()">${v}</button>`).join('')}</div>
+     <label class="search" style="border:1px solid var(--line);margin-bottom:12px">${ic('search')}<input placeholder="Nach Name, Code oder Typ suchen …" value="${wQ}" oninput="wQ=this.value;render(true)"></label>
+     ${(()=>{const vis=PRODUCTS.map((p,i)=>[p,i]).filter(([p])=>(wPF==='all'||p[5]===wPF)&&(!wQ||(p[0]+p[1]+p[2]+p[4]).toLowerCase().includes(wQ.toLowerCase())));
+       return PSEC.filter(([k])=>wPF==='all'||k===wPF).map(([k,t,icn,sub])=>{const ps=vis.filter(([p])=>p[5]===k);return `<div class="psec ${k}"><span class="psic">${ic(icn)}</span><div><b>${t}</b> <span class="count">${ps.length}</span><div class="s">${sub}</div></div></div>`
+         +(ps.length?`<div class="grid g2 pgrid">${ps.map(([p,i])=>prodCard(p,i)).join('')}</div>`:`<div class="empty" style="margin-bottom:8px">In deinem Katalog ist derzeit kein Produkt dieser Art freigeschaltet.</div>`)}).join('')})()}
+     <p style="font-size:13px;font-weight:700;margin-bottom:0">${wProd.size?`Ausgewählt: ${wProd.size}`:'Noch kein Produkt ausgewählt.'}</p>`,
+   3:()=>`<p style="color:var(--soft);font-size:13px;margin-top:0">Beantworte im Namen des Kunden. Pflichtfragen kommen aus den gewählten Produkten – ohne sie wird die Bestellung abgelehnt. Eine Frage, die mehrere Produkte teilen, wird nur einmal gestellt.</p>
+     ${prods.length?`<div class="grid g3"><label class="field">Aktuelles Gewicht <span style="font-weight:500">(optional)</span><input type="number" placeholder="kg"></label><label class="field">Körpergröße <span style="font-weight:500">(optional)</span><input type="number" min="50" max="250" placeholder="cm (50–250)"></label><label class="field">Zielgewicht <span style="font-weight:500">(optional)</span><input type="number" placeholder="kg"></label></div>`:`<div class="empty">Bitte zuerst ein Produkt wählen.</div>`}`,
+   4:()=>`<b>Rechnungsadresse</b><div class="grid g2" style="margin-top:10px"><label class="field">Vorname *<input value="${cu?cu.name.split(' ')[0]:''}"></label><label class="field">Nachname *<input value="${cu?cu.name.split(' ').slice(1).join(' '):''}"></label></div>
+     <label class="field">Straße & Hausnummer *<input></label><div class="grid g2"><label class="field">PLZ *<input></label><label class="field">Ort *<input></label></div><label class="field">Land *<select><option>Österreich</option><option>Deutschland</option><option>Schweiz</option></select></label>
+     <div class="toggle"><div><b>Lieferadresse</b><div style="color:var(--soft);font-size:13px">Wie Rechnungsadresse · Novogenia schickt das Probenset direkt an den Kunden.</div></div><button class="sw ${wSame?'on':''}" onclick="wSame=!wSame;render()"></button></div>
+     ${wSame?'':`<div class="grid g2" style="margin-top:12px"><label class="field">Straße & Hausnummer *<input></label><label class="field">PLZ / Ort *<input></label></div>`}`,
+   5:()=>`<div class="grid g2"><div class="card" style="box-shadow:none;border:1px solid var(--line)"><b>Kunde</b><dl class="kv"><dt>Kunde</dt><dd>${cu?cu.name:'Neuer Kunde'}</dd><dt>Typ</dt><dd>${wCust==='existing'?'Bestehender Kunde':'Neuer Kunde'}</dd><dt>E-Mail</dt><dd>${cu?cu.email:'—'}</dd><dt>Vertriebsmodell</dt><dd>Full Service</dd></dl></div>
+     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><b>Produkt & Adresse</b><dl class="kv"><dt>Produkt</dt><dd>${prods.map(p=>`${p[4]} (${p[1]})<div class="mono" style="font-weight:500">${p[0]}</div>`).join('')||'—'}</dd><dt>Lieferung</dt><dd>${wSame?'an Rechnungsadresse':'abweichende Lieferadresse'}</dd><dt>Berichtssprache</dt><dd>Deutsch</dd></dl></div></div>
+     <div class="card" style="box-shadow:none;border:1px solid var(--line);margin-top:14px"><b>Preis</b><p style="color:var(--soft);font-size:13px">Richtwert: deine Preisliste gilt für deine Bestellungen noch nicht.</p>${prods.map(p=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)"><span>${p[1]} × 1</span><span style="color:var(--soft)">kein Preis</span></div>`).join('')}<div style="display:flex;justify-content:space-between;padding-top:10px;font-weight:800"><span>Gesamt inkl. MwSt.</span><span>—</span></div></div>`}[wStep]();
+  return hero({eye:'Neue Bestellung',title:'Bestellung anlegen',text:'In fünf Schritten zur Bestellung – einzeln oder als Sammel-Upload.',
+    acts:`<div class="seg" style="margin:0;background:rgba(255,255,255,.12)"><button class="${wMode==='single'?'on':''}" style="color:#fff" onclick="wMode='single';render()">Einzelbestellung</button><button class="${wMode==='bulk'?'on':''}" style="color:#fff" onclick="wMode='bulk';render()">Sammel-Upload</button></div>`})
+  +(wMode==='bulk'?`<div class="steps"><span class="step on"><i>1</i>Hochladen</span><span class="bar"></span><span class="step"><i>2</i>Prüfen & ergänzen</span><span class="bar"></span><span class="step"><i>3</i>Bestellungen aufgeben</span></div>
+     <div class="card"><p style="margin-top:0">Lade eine ausgefüllte Vorlage hoch, um viele Bestellungen auf einmal aufzugeben. Bestehende Kunden ordnen wir automatisch zu, den Rest bestätigst du.</p>
+     <div class="pick" style="cursor:default"><div style="display:flex;gap:10px;align-items:center"><span class="bubble" style="width:38px;height:38px;border-radius:12px;background:var(--wash);display:grid;place-items:center;color:var(--plum)">${ic('csv')}</span><div><b>reseller-bulk-order-template.xlsx</b><div style="color:var(--soft);font-size:13px">Grundfelder, eine Spalte für den Produktcode und je eine Spalte pro Fragebogen-Frage aus deinem Katalog – bei jedem Download frisch erzeugt. Alle Fragen sind optional; leere Zellen sind immer in Ordnung.</div></div></div><button class="btn lime sm" onclick="toast('Vorlage wird heruntergeladen')">${ic('dl')} Vorlage</button></div>
+     <div class="drop" style="margin-top:12px">${ic('dl')}<br><b>Ausgefüllte Vorlage hier ablegen</b><br>oder klicken zum Auswählen – nur .xlsx</div>
+     <p style="color:var(--soft);font-size:13px;margin-bottom:0">Jede Zeile ist eine Bestellung. Die Spalte „Existing? (yes/no)“ legt fest, ob ein bestehender Kunde zugeordnet oder ein Gastkunde angelegt wird. Zugeordnet wird über Vorname + Nachname + Geburtsdatum innerhalb deines Mandanten.</p></div>`:
+   `<div class="steps">${S.map((s,i)=>`${i?'<span class="bar"></span>':''}<span class="step ${i+1===wStep?'on':i+1<wStep?'done':''}"><i>${i+1<wStep?'✓':i+1}</i>${s}</span>`).join('')}</div>
+   <div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>${S[wStep-1]}</b><span style="color:var(--soft);font-size:13px">Schritt ${wStep} von 5</span></div>${body}
+   <div style="display:flex;justify-content:space-between;margin-top:16px"><button class="btn line sm" ${wStep===1?'disabled style="opacity:.4"':''} onclick="wStep--;render()">${ic('back')} Zurück</button><button class="btn lime sm" onclick="wStep<5?(wStep++,render()):toast('Bestellung abgeschickt (Demo)')">${wStep<5?'Weiter':'Bestellung aufgeben'} ${ic('chev')}</button></div></div>`)};
+
+P.finances=()=>{const months=[['Mai',0],['Jun',0],['Jul',0],['Aug',124.36],['Sep',0],['Okt',34.5]];const mx=Math.max(...months.map(m=>m[1]))||1;
+  return hero({eye:'Finanzen',title:'Deine Provisionen',text:'Deine Provisionen aus selbst verkauften Produkten – verdient, ausstehend und ausbezahlt. Hier beantragst du deine Auszahlung.',
+     chips:`<span class="st g">Auszahlbar · ${eur(available)}</span><span class="st y">Ausstehend · ${eur(pending)}</span>`,
+     acts:`<button class="btn lime" onclick="toast('Auszahlung angefordert (Demo)')">${ic('bank')} Auszahlung anfordern</button><button class="btn ghost" onclick="toast('Export Direktverkaufsprovisionen')">${ic('csv')} Direktverkaufsprovisionen exportieren</button>`})
+  +bigsec('Deine Direktverkaufsprovisionen','Provisionen aus Produkten, die du selbst verkauft hast.')+directStats()
+  +sec('Überblick',null,'Provisionen der letzten sechs Monate (Demo-Werte aus den Provisionsdaten).')
+  +`<div class="card"><div class="chart">${months.map((m,i)=>`<div><span style="font-weight:700;color:var(--ink)">${m[1]?eur(m[1]):''}</span><span class="b ${i===5?'l':''}" style="height:${Math.max(4,m[1]/mx*110)}px"></span>${m[0]}</div>`).join('')}</div></div>`
+  +sec('Letzte Direktverkaufsprovisionen',COMMISSIONS.length)
+  +`<div class="rows">${COMMISSIONS.map(commCard).join('')}</div>`
+};
+const bigsec=(t,sub)=>`<div class="bigsec"><h2>${t}</h2></div>${sub?`<p class="sub">${sub}</p>`:''}`;
+const payBtn=w=>`<button class="btn paybtn" onclick="toast('Auszahlung der ${w} beantragt (Demo)')">${ic('bank')} Auszahlung beantragen</button>`;
+const directStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',ORDERS.length)}${stat('','wallet','Einnahmen gesamt',eur(totalComm),'<div class="trend">↑ ggü. Vormonat</div>')}${stat('c','users','Kunden',CUSTOMERS.length)}${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available),payBtn('Direktverkaufsprovision'))}</div>`;
+const netStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',NET_COMMISSIONS.length)}${stat('','wallet','Einnahmen gesamt',eur(NET_COMMISSIONS.reduce((s,c)=>s+c.amt,0)))}${stat('c','users','Kunden',new Set(NET_COMMISSIONS.map(c=>(ORDERS.find(o=>o.no===c.no)||{}).cust)).size)}${stat('hl','bank','Netzwerk&shy;provision auszahlbar',eur(netAvail()),payBtn('Netzwerkprovision'))}</div>`;
+const netAvail=()=>NET_COMMISSIONS.filter(c=>c.status!=="Paid out").reduce((s,c)=>s+c.amt,0);
+
+P.network=()=>`${hero({eye:'Mein Netzwerk',title:'Dein Netzwerk',text:'Lade neue Partner ein und verfolge, was dein Netzwerk bewegt.',
+   chips:`<span class="st p">Partner im Netzwerk · 6</span><span class="st g">Netzwerkprovision auszahlbar · ${eur(netAvail())}</span>`,
+   acts:`<a class="btn lime" href="#network" onclick="document.querySelector('.ntiles')?.scrollIntoView({behavior:'smooth'});return false">${ic('share')} Partner einladen</a><button class="btn ghost" onclick="toast('Export Netzwerk-Provisionen')">${ic('csv')} Netzwerk-Provisionen exportieren</button>`})}
+  ${bigsec('Erweitere dein Netzwerk und lade Kollegen ein','Teile deinen Einladungslink, einen QR-Code oder deine Empfehlungsdaten – neue Partner werden automatisch dir zugeordnet.')}
+  <div class="grid g4 ntiles">
+    <div class="card atile"><span class="sic">${ic('copy')}</span><b>Einladungslink</b><p>Dein persönlicher Link – neue Partner werden automatisch dir zugeordnet.</p><div class="mono" style="color:var(--ink)">stage.novopilot.com/r/${PARTNER.id}</div><button class="btn lime sm" onclick="copy('https://stage.novopilot.com/r/${PARTNER.id}')">${ic('copy')} Link kopieren</button></div>
+    <div class="card atile"><span class="sic">${ic('share')}</span><b>Teilen</b><p>Per WhatsApp, E-Mail oder Social Media direkt verschicken.</p><button class="btn lime sm" onclick="toast('Teilen-Dialog')">${ic('share')} Jetzt teilen</button></div>
+    <div class="card atile"><span class="sic">${ic('qr')}</span><b>QR-Code</b><p>Für Flyer, Visitenkarten oder das persönliche Gespräch.</p><button class="btn lime sm" onclick="qrDrawer()">${ic('qr')} QR-Code erstellen</button></div>
+    <div class="card atile"><span class="sic">${ic('user')}</span><b>Empfehlungsdaten</b><p>Empfehlungs-ID <b style="color:var(--ink)">${PARTNER.id}</b><br>Empfohlen von ${PARTNER.refBy.split(' (')[0]}</p><button class="btn lime sm" onclick="copy('Empfehlungs-ID: ${PARTNER.id} · https://stage.novopilot.com/r/${PARTNER.id}')">${ic('share')} Daten teilen</button></div>
+  </div>
+  <div style="margin-top:22px">${netViz()}</div>
+  ${bigsec('Netzwerkprovisionen','Provisionen aus Bestellungen deiner Netzwerk-Partner.')}
+  ${netStats()}
+  ${sec('Letzte Netzwerkprovisionen',NET_COMMISSIONS.length)}
+  <div class="rows">${NET_COMMISSIONS.map(commCard).join('')||'<div class="empty" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)">Noch keine Netzwerk-Provisionen – sobald deine Partner verkaufen, erscheinen sie hier als Bestellkarten.</div>'}</div>`;
+const NET_COMMISSIONS=[]; // Stage: Provisionsübersicht Netzwerk leer (30.10.2026)
+// Netzwerk-Visualisierung: Zoom (Buttons, Mausrad), Verschieben (Ziehen), Infos per Hover
+let nvZ=1,nvX=0,nvY=0,nvW=900,nvH=440;
+function netViz(){
+  const kids=[...NETWORK.map(n=>[n[0],ago(n[1]),n[1]]),['weitere Partner','ohne Detailangaben','']],mob=innerWidth<=640,W=mob?420:900,H=mob?600:440,cx=W/2;
+  nvW=W;nvH=H;
+  // Handy: Partner in zwei Reihen à zwei, damit die Beschriftung lesbar bleibt
+  const xs=kids.map((_,i)=>mob?(i%2?310:110):120+i*(W-240)/(kids.length-1)),ys=kids.map((_,i)=>mob?(i<2?350:490):350);
+  const tipA=t=>`onmouseenter="nvTip(event,'${t.replace(/'/g,"\\'")}')" onmousemove="nvTip(event)" onmouseleave="nvTip()"`;
+  const node=(x,y,r,fill,stroke,label,sub,tip)=>`<g class="nvn" ${tipA(tip)}><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="3"/><text x="${x}" y="${y+r+22}" text-anchor="middle" fill="#fff" font-weight="800" font-size="15">${label}</text><text x="${x}" y="${y+r+40}" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="12">${sub}</text></g>`;
+  const glyph=(x,y,s,col)=>`<g pointer-events="none" transform="translate(${x-s/2},${y-s/2}) scale(${s/24})" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="round">${I.user}</g>`;
+  const netSum=eur(NET_COMMISSIONS.reduce((s,c)=>s+c.amt,0));
+  const up=PARTNER.refBy.split(' (')[0];
+  return `<div class="netviz" onwheel="nvWheel(event)" onmousedown="nvDrag(event)">
+   <div class="nvctl"><button onclick="nvZoom(1.25)" title="Hineinzoomen">${ic('plus')}</button><button onclick="nvZoom(0.8)" title="Herauszoomen"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button onclick="nvReset()" title="Ansicht zurücksetzen"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>
+   <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Netzwerk-Visualisierung"><g id="nvg" transform="${nvT()}">
+    <path d="M${cx} 92 L${cx} 168" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="5 6"/>
+    ${xs.map((x,i)=>`<path d="M${cx} 232 C${cx} 290, ${x} ${ys[i]-80}, ${x} ${ys[i]-32}" stroke="#C6D63F" stroke-opacity=".8" stroke-width="2.5" fill="none"/>`).join('')}
+    ${node(cx,60,30,'rgba(255,255,255,.12)','rgba(255,255,255,.5)','','',`<b>${up}</b><br>hat dich empfohlen (Upline)<br>Kontakt: np_ct_NPNG2883@email.com`)}${glyph(cx,60,26,'rgba(255,255,255,.85)')}
+    <text x="${cx+46}" y="56" fill="#fff" font-weight="800" font-size="14">${up}</text><text x="${cx+46}" y="74" fill="rgba(255,255,255,.7)" font-size="12">hat dich empfohlen</text>
+    <g class="nvn" ${tipA(`<b>Du · ${PARTNER.id}</b><br>${PARTNER.company}<br>6 Partner im Netzwerk<br>Netzwerkprovision bisher: ${netSum}`)}><circle cx="${cx}" cy="200" r="48" fill="#C6D63F" opacity=".22"/><circle cx="${cx}" cy="200" r="38" fill="#00225E" stroke="#C6D63F" stroke-width="4"/></g>${glyph(cx,200,34,'#fff')}
+    <text x="${cx+60}" y="196" fill="#fff" font-weight="800" font-size="17">Du · ${PARTNER.id}</text><text x="${cx+60}" y="215" fill="#C6D63F" font-size="12" font-weight="700">6 Partner im Netzwerk</text>
+    ${kids.map((k,i)=>{const real=i<NETWORK.length;
+      const tip=real?`<b>${k[0]}</b><br>Beigetreten am ${dshort(k[2])} (${k[1]})<br>Ebene 1 · direkt von dir eingeladen<br>Netzwerkprovision bisher: 0,00 €`:`<b>3 weitere Partner</b><br>Auf Stage ohne Detailangaben (Name, Beitrittsdatum)`;
+      return node(xs[i],ys[i],30,real?'#F7F9E6':'rgba(255,255,255,.12)',real?'#C6D63F':'rgba(255,255,255,.45)',k[0],real?'beigetreten '+k[1]:k[1],tip)+(real?glyph(xs[i],ys[i],26,'#000E26'):`<text pointer-events="none" x="${xs[i]}" y="${ys[i]+6}" text-anchor="middle" fill="#fff" font-weight="800" font-size="16">+3</text>`)}).join('')}
+   </g></svg>
+   <div class="lgd"><span><i style="background:rgba(255,255,255,.6)"></i>Empfohlen von</span><span><i style="background:#C6D63F"></i>Deine Partner</span><span style="opacity:.75">Ziehen zum Verschieben · Mausrad zum Zoomen</span></div>
+   <div class="nvtip" id="nvtip"></div></div>`}
+const nvT=()=>`translate(${nvW/2} ${nvH/2}) scale(${nvZ}) translate(${-nvW/2+nvX} ${-nvH/2+nvY})`;
+function nvApply(){const g=document.getElementById('nvg');if(g)g.setAttribute('transform',nvT())}
+function nvZoom(f){nvZ=Math.min(3,Math.max(.6,nvZ*f));nvApply()}
+function nvReset(){nvZ=1;nvX=0;nvY=0;nvApply()}
+function nvWheel(e){e.preventDefault();nvZoom(e.deltaY<0?1.1:1/1.1)}
+function nvDrag(e){if(e.target.closest('button'))return;const box=e.currentTarget.querySelector('svg').getBoundingClientRect(),k=nvW/box.width/nvZ;let px=e.clientX,py=e.clientY;
+  const mv=ev=>{nvX+=(ev.clientX-px)*k;nvY+=(ev.clientY-py)*k;px=ev.clientX;py=ev.clientY;nvApply()},up=()=>{removeEventListener('mousemove',mv);removeEventListener('mouseup',up)};
+  addEventListener('mousemove',mv);addEventListener('mouseup',up)}
+function nvTip(e,html){const t=document.getElementById('nvtip');if(!t)return;if(!e){t.style.opacity=0;return}
+  if(html!=null)t.innerHTML=html;const r=t.parentNode.getBoundingClientRect();t.style.left=(e.clientX-r.left+14)+'px';t.style.top=(e.clientY-r.top+14)+'px';t.style.opacity=1}
+function qrDrawer(){let seed=7,r=()=>(seed=(seed*9301+49297)%233280)/233280,cells='';
+  for(let y=0;y<25;y++)for(let x=0;x<25;x++){const f=(x<7&&y<7)||(x>17&&y<7)||(x<7&&y>17);const on=f?((x%6===0||y%6===0||(x>1&&x<5&&y>1&&y<5)||(x>19&&x<23&&y>1&&y<5)||(x>1&&x<5&&y>19&&y<23)||x===24||y===24)&&!(x>17&&y>17)):r()>.55;if(on&&!(f&&(x===6||y===6||x===18||y===18)&&false))cells+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}
+  drawer(`<div class="eyebrow" style="color:var(--berry)">Netzwerk</div><h3>Dein QR-Code</h3><p style="color:var(--soft);font-size:14px">Führt zu deinem Einladungslink. Vorschau – der echte Code wird vom System erzeugt.</p>
+   <div style="background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;display:grid;place-items:center"><svg viewBox="-1 -1 27 27" width="220" height="220" fill="#000E26">${cells}</svg></div>
+   <div class="mono" style="text-align:center;margin:10px 0 16px">https://stage.novopilot.com/r/${PARTNER.id}</div>
+   <button class="btn lime" onclick="toast('QR-Code heruntergeladen (Demo)')">${ic('dl')} PNG herunterladen</button>`)}
+
+let chatLog=[['bot','Hallo! Ich bin dein NovoPilot KI-Agent. Erzähl mir von deinem Anliegen – zu Bestellungen, Produkten, Provisionen oder deinem Netzwerk. Ich antworte sofort, rund um die Uhr.']],chatIn='';
+const CHAT_Q=['Wie bestelle ich für einen Kunden?','Wann wird meine Provision ausbezahlt?','Wie lade ich Partner ein?','Was ist ein Upgrade?'];
+function chatSend(t){t=(t||'').trim();if(!t)return;chatLog.push(['me',t],['bot','Danke für deine Frage! (Demo – im Live-Portal antwortet hier der NovoPilot-Chatbot.)']);chatIn='';render(true);setTimeout(()=>{const l=document.querySelector('.chatlog');if(l)l.scrollTop=l.scrollHeight},0)}
+let supF={topic:'Bestellung',msg:''};
+P.support=()=>hero({eye:'Support',title:'Wie können wir helfen?',text:'Sprich mit unserem KI-Agenten über dein Anliegen – er kennt Produkte, Bestellungen und Provisionen. Oder schreib uns per WhatsApp oder E-Mail.'})
+  +`<div class="sup"><div class="card chatwin">
+     <div class="chathd"><span class="sic">${ic('bot')}</span><div><b>Sprich mit unserem KI-Agenten</b><div style="font-size:12px;color:var(--ok);font-weight:700">● online · antwortet sofort</div></div></div>
+     <div class="chatlog">${chatLog.map(([w,t])=>`<div class="msg ${w}">${esc(t)}</div>`).join('')}</div>
+     ${chatLog.length<2?`<div class="chatq">${CHAT_Q.map(q=>`<button class="qchip" onclick="chatSend('${q}')">${q}</button>`).join('')}</div>`:''}
+     <div class="chatin"><input id="chatin" placeholder="Schreib deine Frage …" value="${esc(chatIn)}" oninput="chatIn=this.value" onkeydown="if(event.key==='Enter')chatSend(this.value)"><button class="btn lime sm" onclick="chatSend(chatIn)">${ic('send')} Senden</button></div>
+   </div>
+   <div>
+     <div class="card atile"><span class="sic">${ic('phone')}</span><b>WhatsApp</b><p>Schreib uns direkt per WhatsApp – wir melden uns werktags so schnell wie möglich.</p><button class="btn lime sm" onclick="toast('WhatsApp öffnen (Nummer folgt)')">${ic('chat')} WhatsApp-Nachricht senden</button></div>
+     <div class="card" style="margin-top:14px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><span style="width:38px;height:38px;border-radius:12px;background:var(--wash);display:grid;place-items:center;color:var(--plum)">${ic('mail')}</span><b>E-Mail an uns</b></div>
+       <label class="field">Name<input value="${PARTNER.company}"></label>
+       <label class="field">Thema<select onchange="supF.topic=this.value">${['Bestellung','Produkt','Provision & Auszahlung','Netzwerk','Technisches Problem','Sonstiges'].map(t=>`<option ${supF.topic===t?'selected':''}>${t}</option>`).join('')}</select></label>
+       <label class="field">Nachricht<textarea id="supmsg" placeholder="Wie können wir dir helfen?" oninput="supF.msg=this.value">${esc(supF.msg)}</textarea></label>
+       <button class="btn lime sm" onclick="supF.msg='';toast('Nachricht gesendet (Demo)');render()">${ic('mail')} Nachricht senden</button></div>
+   </div></div>`;
+P.documents=()=>hero({eye:'Dokumente',title:'Alles für deinen Erfolg',text:'Alles, was du brauchst, um unsere Produkte zu verstehen, sie überzeugend zu bewerben und dein Netzwerk auszubauen.',
+   chips:DOC_CATS.map(d=>`<span class="st p">${d[1]} · 0</span>`).join('')})
+  +`<div class="swipe">${DOC_CATS.map((d,i)=>`<a class="tile" href="#documents" onclick="document.getElementById('dc${i}').scrollIntoView({behavior:'smooth'});return false"><span class="bubble">${ic(d[0])}</span><b>${d[1]}</b><span>0 Dokumente</span></a>`).join('')}</div>`
+  +DOC_CATS.map((d,i)=>`<div id="dc${i}">${sec(d[1],0,d[2])}<div class="card"><div class="empty">Noch nichts hier. Neue Dokumente erscheinen automatisch, sobald sie veröffentlicht sind.</div></div></div>`).join('');
+
+let pTab='person';
+P.profile=()=>{const T={person:['user','Profil'],company:['bank','Firma'],contracts:['sign','Verträge & Empfehlungen']};
+  const B={
+   person:`<div class="grid g2"><div class="card"><div style="display:flex;justify-content:space-between"><b>Persönliche Daten</b><button class="btn line sm" onclick="toast('Bearbeiten')">Bearbeiten</button></div><dl class="kv"><dt>Anrede</dt><dd>Herr</dd><dt>Vorname</dt><dd>John</dd><dt>Nachname</dt><dd>Doe</dd><dt>Geschlecht</dt><dd>Männlich</dd></dl></div>
+     <div class="card"><div style="display:flex;justify-content:space-between"><b>Kontaktdaten</b><button class="btn line sm" onclick="toast('Bearbeiten')">Bearbeiten</button></div><dl class="kv"><dt>Kunden-E-Mail</dt><dd>np_ct_NPDW2412@email.com</dd><dt>Telefon</dt><dd>+43 660 0000000</dd></dl></div>
+     <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>${ic('lock')} Passwort</b><button class="btn line sm" onclick="toast('Weiter zur Novogenia-Anmeldeseite')">Ändern</button></div><p style="color:var(--soft);font-size:13px">Die Änderung öffnet sich auf der Novogenia-Anmeldeseite. Danach meldest du dich mit dem neuen Passwort an und kommst hierher zurück.</p></div>
+     <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>${ic('shield')} Zwei-Faktor-Anmeldung</b><button class="btn lime sm" onclick="toast('Weiter zur Novogenia-Anmeldeseite')">Einrichten</button></div><p style="color:var(--soft);font-size:13px"><span class="st r">Aus</span> Ein zweiter Schritt bei der Anmeldung schützt dein Konto. Die Einrichtung öffnet sich auf der Novogenia-Anmeldeseite und führt dich hierher zurück.</p></div></div>`,
+   company:`<div class="grid g2"><div class="card"><div style="display:flex;justify-content:space-between"><b>Firmendaten</b><button class="btn line sm" onclick="toast('Bearbeiten')">Bearbeiten</button></div><dl class="kv"><dt>Firmenname</dt><dd>Company NPDW2412</dd><dt>Firmen-E-Mail</dt><dd>partner@example.com</dd><dt>Firmen-Telefon</dt><dd>+43 662 000000</dd><dt>Straße</dt><dd>Strass 1ß</dd><dt>Ort</dt><dd>5301 Strasswalchen</dd><dt>Land</dt><dd>Österreich</dd><dt>UID-Nummer</dt><dd>—</dd><dt>MwSt.-Anzeige</dt><dd>inkl. MwSt.</dd><dt>Branche</dt><dd>—</dd><dt>Position</dt><dd>—</dd></dl></div>
+     <div class="card"><div style="display:flex;justify-content:space-between"><b>Bankverbindung</b><button class="btn line sm" onclick="toast('Bearbeiten')">Bearbeiten</button></div><dl class="kv"><dt>Kontoinhaber</dt><dd>John Doe</dd><dt>IBAN</dt><dd>AT09090909090909</dd><dt>BIC</dt><dd>SBGY67688</dd><dt>Bank</dt><dd>Sparkasse</dd></dl></div></div>`,
+   contracts:`<div class="grid g2"><div class="card"><b>Vertragsdokumente</b><p style="color:var(--soft);font-size:13px">Deine aktiven Verträge und Vereinbarungen – jederzeit ansehen oder herunterladen.</p><div class="empty">Keine Dokumente vorhanden.</div>
+       <div style="margin-top:14px"><b>Unterschriebene Verträge</b><p style="color:var(--soft);font-size:13px">Lade hier deine unterschriebenen Verträge hoch.</p><div class="drop">Verträge hier ablegen oder klicken zum Auswählen<br><small>Nur PDF, max. 5 MB pro Datei</small></div></div></div>
+     <div class="card"><b>Einwilligungen & Empfehlungen</b><p style="color:var(--soft);font-size:13px">Verwalte deine Gesundheits-Einwilligung und deine Empfehlungs-Einstellungen.</p>
+       <div class="toggle"><div><b>Gesundheits- & Werbe-Einwilligung</b><div style="color:var(--soft);font-size:13px">Ich bestätige, dass ich die Gesundheits- und Werberichtlinien gelesen habe</div></div><button class="sw on" onclick="this.classList.toggle('on')"></button></div>
+       <div class="toggle"><div><b>Empfehlungen erlauben</b><div style="color:var(--soft);font-size:13px">Andere können sich über deinen Empfehlungslink als Partner registrieren</div></div><button class="sw on" onclick="this.classList.toggle('on')"></button></div>
+       <p style="font-size:13px;margin-top:12px"><b>Vertragsart:</b> Standardvertrag <span style="color:var(--soft)">· bei der Registrierung festgelegt, nicht änderbar</span></p></div></div>`};
+  return hero({eye:'Profil',title:'Company NPDW2412',text:'Partner-ID NPDW2412 · deine persönlichen Daten, Firmendaten, Bankverbindung und Verträge.'})
+  +`<div class="swipe">${Object.entries(T).map(([k,v])=>`<button class="tile ${pTab===k?'on':''}" onclick="pTab='${k}';render()"><span class="bubble">${ic(v[0])}</span><b>${v[1]}</b></button>`).join('')}</div>`+B[pTab]};
+
+let set={lang:'Deutsch',tz:'Europe/Berlin',disp:'Lokal',dark:'Hell'};
+P.settings=()=>hero({eye:'Einstellungen',title:'Einstellungen',text:'Sprache, Zeitzone und Darstellung des Partnerportals.'})
+  +`<div class="card"><b>Präferenzen</b>
+   <label class="field" style="margin-top:12px">Sprache<select onchange="set.lang=this.value"><option>Deutsch</option><option>English</option></select></label>
+   <label class="field">Zeitzone<select><option>Europe/Berlin</option><option>Europe/Vienna</option><option>UTC</option></select></label>
+   <div class="field">Anzeige der Uhrzeit<div class="seg" style="margin:0">${['Lokal','UTC'].map(v=>`<button class="${set.disp===v?'on':''}" onclick="set.disp='${v}';render()">${v}</button>`).join('')}</div></div>
+   <div class="field">Darstellung<div class="seg" style="margin:0">${['Hell','Dunkel'].map(v=>`<button class="${set.dark===v?'on':''}" onclick="set.dark='${v}';render()">${v}</button>`).join('')}</div></div></div>`;
+
+/* ===================== Router ===================== */
+/* ===================== Tutorial (wie GEN(e)IUS) ===================== */
+// [Route, Ziel-Selektor auf der Seite (leer = Navigationspunkt), Titel, Text]
+const TOUR=[
+ ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte klappt alle Bestellungen darunter auf.'],
+ ['customers','.pbtn:not(.locked)','Kundenportal öffnen','Mit diesem Button steigst du direkt in das Kundenportal deines Kunden ein und siehst dort seine Berichte, Bestellungen und Ergebnisse – so kannst du ihn optimal beraten. Das geht nur, wenn diese Funktion für dich aktiviert wurde. Ist sie nicht aktiviert, ist der Button grau und mit einem Schloss gesperrt.'],
+ ['orders','','Bestellungen','Alle Bestellungen deiner Kunden mit Status, Probenstatus und Barcode. Filtere nach Produkt, Status, Zeitraum oder Kunde – die Karten zeigen dir auf einen Blick, wann bestellt wurde und wo die Probe gerade steht.'],
+ ['neu','','Neue Bestellung','In fünf Schritten bestellst du für einen bestehenden oder neuen Kunden: Kunde wählen, Produkt wählen, Fragen beantworten, Adresse eingeben, prüfen. Viele Bestellungen auf einmal lädst du per Sammel-Upload hoch.'],
+ ['finances','','Deine Direktverkaufsprovision','Für jedes Produkt, das du selbst an deine Kunden verkaufst – über deinen Shop oder über „Neue Bestellung“ –, erhältst du eine Direktverkaufsprovision. Hier siehst du Bestellungen, Einnahmen, Kunden und den Verlauf deiner Provisionen; jede Provision erscheint als Karte mit ihrem Status.'],
+ ['finances','.paybtn','Auszahlung beantragen','Freigegebene Provisionen werden als „auszahlbar“ angezeigt. Mit „Auszahlung beantragen“ forderst du die Auszahlung auf dein in den Firmendaten hinterlegtes Bankkonto an. In der Liste siehst du, welche Provisionen noch ausstehend und welche bereits ausbezahlt sind.'],
+ ['network','','Dein Netzwerk','Die Visualisierung zeigt, wer dich empfohlen hat und welche Partner du selbst eingeladen hast. Zoome hinein oder heraus und fahre mit der Maus über einen Partner, um Details wie das Beitrittsdatum zu sehen.'],
+ ['network','.ntiles','Erweitere dein Netzwerk','Lade Kolleginnen und Kollegen als Partner ein: Kopiere deinen persönlichen Einladungslink, teile ihn per WhatsApp, E-Mail oder Social Media, erstelle einen QR-Code für Flyer und Visitenkarten oder teile deine Empfehlungsdaten. Wer sich darüber registriert, wird automatisch dir zugeordnet.'],
+ ['network','.paybtn','Netzwerkprovision auszahlen','Verkaufen deine Partner, erhältst du eine Netzwerkprovision. Sie wird hier gesammelt – mit Bestellungen, Einnahmen und dem auszahlbaren Betrag. Über „Auszahlung beantragen“ lässt du sie dir genauso auszahlen wie deine Direktverkaufsprovision.'],
+ ['support','','Support','Unser Chatbot wurde mit allem trainiert, was für dich wichtig ist – Produkte, Bestellungen, Provisionen, Netzwerk und Portal. Er ist rund um die Uhr erreichbar und damit die schnellste Antwortmöglichkeit. Brauchst du doch einen Menschen, schreib uns per WhatsApp oder über das E-Mail-Formular.'],
+ ['x:academy','','Academy','In der Academy bildest du dich zu allen unseren Produkten fort – damit du deine Kunden kompetent beraten kannst.'],
+ ['documents','','Dokumente','Hier findest du Unterlagen zum Herunterladen, Lesen und Lernen – alles rund um unsere Produkte und deinen Verkauf.'],
+ ['x:ads','','Werbematerial','Hier kaufst du physisches Werbematerial für deinen Verkauf.']
+];
+let tourI=-1,tourHi=null;
+const tourEl=()=>{const [r,sel]=TOUR[tourI];return sel?document.querySelector('.main '+sel)||document.querySelector(sel):document.querySelector(`.rail .nav[data-r="${r}"]`)};
+function tourPlace(){const t=tourEl(),tip=document.getElementById('tourTip');if(!t)return;const b=t.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+  if(innerWidth-b.right>w+30){let y=Math.max(12,Math.min(innerHeight-h-12,b.top+b.height/2-34));tip.className='tour-tip on left';tip.style.left=(b.right+16)+'px';tip.style.top=y+'px';tip.style.setProperty('--ay',(b.top+b.height/2-y-8)+'px')}
+  else{let x=Math.max(12,Math.min(innerWidth-w-12,b.left+b.width/2-w/2));const below=b.bottom+h+24<innerHeight;tip.className='tour-tip on '+(below?'down':'up');tip.style.left=x+'px';tip.style.top=(below?b.bottom+14:b.top-h-14)+'px';tip.style.setProperty('--ax',(b.left+b.width/2-x-8)+'px')}}
+function tourShow(n){tourI=Math.max(0,Math.min(TOUR.length-1,n));const [r,sel,t,p]=TOUR[tourI];
+  if(tourHi)tourHi.classList.remove('tour-hi');
+  if(!r.startsWith('x:')&&location.hash!=='#'+r){location.hash='#'+r;render()}
+  setTimeout(()=>{const el=tourEl();tourHi=el;if(el){el.classList.add('tour-hi');if(sel){const r=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,r.top+scrollY-innerHeight/2+r.height/2-120))}else window.scrollTo(0,0)}
+    const tip=document.getElementById('tourTip');
+    document.getElementById('tourN').textContent=tourI+1;document.getElementById('tourOf').textContent='von '+TOUR.length;
+    document.getElementById('tourT').textContent=t;document.getElementById('tourP').textContent=p;
+    document.getElementById('tourDots').innerHTML=TOUR.map((_,k)=>`<b class="${k===tourI?'on':''}"></b>`).join('');
+    document.getElementById('tourBack').disabled=tourI===0;document.getElementById('tourNext').textContent=tourI===TOUR.length-1?'Fertig':'Weiter';
+    tip.hidden=false;tourPlace()},180)}
+function tourStart(){document.body.classList.add('touring');tourShow(0)}
+function tourEnd(){document.body.classList.remove('touring');if(tourHi)tourHi.classList.remove('tour-hi');const tip=document.getElementById('tourTip');tip.classList.remove('on');setTimeout(()=>tip.hidden=true,250);tourI=-1}
+function tourGo(d){if(d>0&&tourI===TOUR.length-1){tourEnd();toast('Tutorial beendet – du kannst es oben jederzeit neu starten.')}else tourShow(tourI+d)}
+addEventListener('keydown',e=>{if(tourI<0)return;if(e.key==='Escape')tourEnd();else if(e.key==='ArrowRight')tourGo(1);else if(e.key==='ArrowLeft')tourGo(-1)});
+addEventListener('resize',()=>{if(tourI>=0)tourPlace()});
+addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
+
+function render(keepFocus){const id=(location.hash.slice(1)||'customers');const page=P[id]&&id!=='home'?id:'customers';renderRail(page);
+  const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="https://academy.novopilot.com" target="_blank">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026) · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
+  if(!keepFocus)window.scrollTo(0,0)}
+addEventListener('hashchange',()=>{closeDrawer();render()});render();
+</script>
+<div class="tour-dim" onclick="tourEnd()"></div>
+<div class="tour-tip" id="tourTip" role="dialog" aria-labelledby="tourT" hidden>
+  <button class="tour-x" onclick="tourEnd()" aria-label="Tutorial beenden">✕</button>
+  <div class="tour-k"><i id="tourN">1</i><span id="tourOf">von 13</span></div>
+  <h3 id="tourT"></h3><p id="tourP"></p>
+  <div class="tour-f"><span class="tour-dots" id="tourDots"></span><button class="btn line sm" id="tourBack" onclick="tourGo(-1)">Zurück</button><button class="btn lime sm" id="tourNext" onclick="tourGo(1)">Weiter</button></div>
+</div>
+</body>
+</html>
