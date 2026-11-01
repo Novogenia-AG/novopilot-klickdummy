@@ -184,14 +184,35 @@ a{color:inherit;text-decoration:none}
 .psec:first-child{margin-top:4px}
 .psec b{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink)}.psec .s{font-size:12px;color:var(--soft)}
 .psic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--tint);color:var(--acc)}
-.pcard{position:relative;display:flex;gap:14px;align-items:flex-start;padding:16px 64px 16px 16px;border-radius:18px;background:var(--tint);border:2px solid transparent;cursor:pointer;transition:border-color .15s,transform .15s}
+.pcard{position:relative;display:flex;flex-direction:column;border-radius:18px;background:#fff;
+  border:2px solid transparent;overflow:hidden;cursor:pointer;
+  transition:border-color .15s,transform .15s;box-shadow:0 10px 24px -20px rgba(0,8,24,.7)}
 .pcard:hover{transform:translateY(-1px)}
-.pico{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;flex:none;background:#fff;color:var(--acc);box-shadow:0 6px 14px -10px rgba(0,0,0,.4)}
-.pico .ic{width:36px;height:36px;stroke-width:1.7}
-.pn{display:block;font-size:15px;line-height:1.3;color:var(--ink)}
-.po{font-size:11.5px;color:#9a929e;margin-top:3px}.po .mono{font-size:11px;color:#9a929e}
-.pchk{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:2.5px solid rgba(0,0,0,.18);background:#fff;display:grid;place-items:center;color:transparent;transition:.15s}
-.pchk .ic{width:24px;height:24px;stroke-width:3.4}
+.pcard .phd{position:relative;padding:16px 64px 15px 16px;background:var(--tint)}
+.ptb{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;
+  font-size:11px;font-weight:800;letter-spacing:.04em;background:#fff;color:var(--acc)}
+.ptb::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pn{display:block;margin-top:10px;font-size:17px;font-weight:800;line-height:1.28;
+  letter-spacing:-.01em;color:var(--ink)}
+.pbrand{margin-top:5px;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--acc);opacity:.85}
+.pdesc{margin:8px 0 0;font-size:12.5px;color:var(--soft);line-height:1.55}
+.pcard .pbd{flex:1;padding:14px 16px 15px}
+.pcard .pbd h5{margin:0 0 10px;font-size:10px;font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--plum)}
+.pinc{list-style:none;margin:0;padding:0}
+.pinc li{display:flex;gap:10px;align-items:flex-start;padding:4px 0;font-size:12.5px;
+  line-height:1.45;font-weight:500;color:var(--ink)}
+.pbu{flex:none;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;margin-top:1px}
+.pbu .ic{width:12.5px;height:12.5px;stroke-width:2.1}
+.pbu.b{background:#DCEBFA;color:#1F5A93}.pbu.v{background:#E9E1F8;color:#5A3AA6}
+.pbu.g{background:#D9F0C6;color:#2B6E12}.pbu.a{background:#FFE9B8;color:#8A5D00}
+.pbu.i{background:#D7EEF0;color:#17666E}.pbu.r{background:#FBDDE6;color:#A3204D}
+.pcard .pft{padding:10px 16px 11px;background:var(--wash);border-top:1px solid var(--line);
+  font-family:ui-monospace,Consolas,monospace;font-size:10.5px;color:var(--soft);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchk{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:2.5px solid rgba(0,0,0,.18);background:#fff;display:grid;place-items:center;color:transparent;transition:.15s}
+.pchk .ic{width:21px;height:21px;stroke-width:3.4}
 .pcard.on{border-color:#3E9B1F;box-shadow:0 0 0 4px rgba(111,191,42,.25)}
 .pcard.on .pchk{background:#3E9B1F;border-color:#3E9B1F;color:#fff;transform:scale(1.08)}
 .bun{--tint:#E6F4D7;--acc:#2F7D14}.ana{--tint:#F1ECFA;--acc:#6A4BB8}.nem{--tint:#FFF3D9;--acc:#B07A00}.book{--tint:#E7F0FA;--acc:#2F6AA6}
@@ -309,7 +330,7 @@ body.touring .rail{z-index:89}
   .g4{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.g3,.g2{grid-template-columns:minmax(0,1fr)}
   .stat{flex-direction:column;align-items:flex-start;gap:10px}.stat .sic{width:42px;height:42px}.kpi .val{font-size:24px}
   .bigsec h2{font-size:24px}
-  .pgrid{grid-template-columns:minmax(0,1fr)}.pcard{padding:14px 56px 14px 14px}.pico{width:48px;height:48px}.pico .ic{width:28px;height:28px}
+  .pgrid{grid-template-columns:minmax(0,1fr)}.pcard .phd{padding:14px 56px 13px 14px}.pn{font-size:16px}
   .chatwin{height:480px}.msg{max-width:90%}
   .steps{overflow-x:auto;scrollbar-width:none}.steps::-webkit-scrollbar{display:none}
   .netviz{border-radius:20px;padding:4px}.netviz .lgd{left:12px;top:10px;flex-wrap:wrap;gap:6px 10px;font-size:10.5px;max-width:70%}.netviz .lgd span:last-child{display:none}.nvctl{right:10px;top:auto;bottom:10px;flex-direction:row}.nvctl button{width:32px;height:32px}
@@ -387,6 +408,11 @@ const I={
  send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
  bot:'<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+ helix:'<path d="M8 2c0 5 8 5 8 10s-8 5-8 10"/><path d="M16 2c0 5-8 5-8 10s8 5 8 10"/><path d="M9.4 6.5h5.2"/><path d="M9.4 17.5h5.2"/>',
+ tube:'<path d="M8 2h8"/><path d="M14 2v16a3 3 0 0 1-6 0V2"/><path d="M8 12.5h6"/>',
+ shipbox:'<path d="M3 7.5h18V20H3z"/><path d="M3 7.5L5 3h14l2 4.5"/><path d="M12 3v4.5"/><path d="M9.5 12.5h5"/>',
+ drop:'<path d="M12 2.5s6.5 7 6.5 11a6.5 6.5 0 0 1-13 0c0-4 6.5-11 6.5-11z"/>',
+ db:'<ellipse cx="12" cy="5.5" rx="7" ry="3"/><path d="M5 5.5v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/><path d="M5 11.5v7c0 1.7 3.1 3 7 3s7-1.3 7-3v-7"/>',
  lab:'<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>'
 };
 const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${I[n]||''}</svg>`;
@@ -657,30 +683,49 @@ function custDrawer(email){const c=CUSTOMERS.find(x=>x.email===email);const os=c
   <a class="btn lime sm" href="#neu" onclick="closeDrawer()">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a>
   <div style="margin:18px 0 8px;font-weight:800">Bestellungen</div><div class="rows">${os.map(o=>orderCard(o)).join('')}</div>`)}
 
-// [Originalname, Code, Typ (Original), Icon, Anzeigename, Sektion, enthaltene Leistungen]
-const FEAT={kit:['Proben-Set-Versand','box','b'],dna:['DNA-Labor-Analyse','lab','r'],rep:['Analyse-Report digital','report','v'],
- shape:['Shape-Analyse digital','report','v'],life:['Lifestyle-Analyse digital','report','v'],book:['Gedrucktes Buch','book','i'],
- abo12:['12 Monate Abo','abo','g'],shapebook:['Shape-Buch gedruckt','book','i'],lifebook:['Lifestyle-Buch gedruckt','book','i'],nem:['Nahrungsergänzungsmittel personalisiert','pill','a'],
- at:['Versand nach Österreich','truck','b'],de:['Versand nach Deutschland','truck','b']};
+// [Originalname, Code, Typ (Original), Icon, Anzeigename, Sektion, enthaltene Leistungen,
+//  Marke, Endkundentext]
+/* [Text, Symbol, Farbe, Rang] - der Rang bestimmt die Reihenfolge auf der Karte und
+   folgt dem Weg des Kunden: buchen, Probe, Labor, Auswertung, Lieferung. */
+const FEAT={kit:['Proben-Set-Versand','tube','b',40],dna:['DNA-Labor-Analyse','helix','r',50],
+ rep:['Analyse-Report digital','report','v',70],
+ shape:['Shape-Analyse digital','report','v',70],life:['Lifestyle-Analyse digital','report','v',70],
+ book:['Gedrucktes Buch','book','i',80],
+ abo12:['12 Monate Abo','abo','g',10],shapebook:['Shape-Buch gedruckt','book','i',80],
+ lifebook:['Lifestyle-Buch gedruckt','book','i',80],
+ nem:['Nahrungsergänzungsmittel personalisiert','pill','a',90],
+ at:['Versand nach Österreich','shipbox','b',130],de:['Versand nach Deutschland','shipbox','b',130]};
+/* Einzahl fuer das Typ-Schild auf der Karte - PSEC fuehrt die Mehrzahl. */
+const PTYP={abo:'Abo',bun:'Bundle',ana:'Analyse',upg:'Upgrade',nem:'Nahrungsergänzung',
+ book:'Gedrucktes Booklet',ein:'Einzelkomponente'};
 const PRODUCTS=[
- ['ND - Drug Response (Digital PDF) - AT','I-B-ND-DRDIGIAT-1','Test-Bundle','dna','NovoDaily Drug Response Analyse (Austria)','ana',['kit','dna','rep','at']],
- ['Lifestyle (Digital PDF) - AT','I-B-ND-LDIGIAT-1','Test-Bundle','dna','NovoDaily Lifestyle Analyse (Austria)','ana',['kit','dna','rep','at']],
- ['Lifestyle+ Subsc. (First Order) - AT','I-B-ND-LPSFOAT-1','Abo','abo','NovoDaily Lifestyle+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','life','shapebook','lifebook','nem','at']],
- ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','bundle','NovoDaily Lifestyle Bundle (Austria)','bun',['kit','dna','shape','life','shapebook','lifebook','at']],
- ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','pill','NovoDaily Nahrungsergänzung (Austria)','nem',['nem','at']],
- ['ND - Performance (Digital PDF) Upsell','I-B-ND-PDIGIUP-1','Test-Bundle','dna','NovoDaily Performance Upgrade','upg',['rep']],
- ['ND - Shape (Digital PDF) Upsell','I-B-ND-SDIGIUP-1','Test-Bundle','dna','NovoDaily Shape Upgrade','upg',['rep']],
- ['Shape+ Subsc. (First Order) - AT','I-B-ND-SPSFOAT-1','Abo','abo','NovoDaily Shape+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','nem','at']],
- ['STD - Pharmaco Sensor (Digital PDF) - DE','I-B-STD-PHDIGIDE-1','Test-Bundle','dna','Pharmaco Sensor Medikamenten-Analyse (Deutschland)','ana',['kit','dna','rep','de']],
- ['STD - Pharmaco Sensor (Printed) - AT','I-B-STD-PHPRINAT-1','Test-Bundle','book','Pharmaco Sensor Booklet, gedruckt (Austria)','book',['book','at']]
+ ['ND - Drug Response (Digital PDF) - AT','I-B-ND-DRDIGIAT-1','Test-Bundle','dna','NovoDaily Drug Response Analyse (Austria)','ana',['kit','dna','rep','at'],'NovoDaily','Zeigt, wie der Körper gängige Medikamente verarbeitet – als Grundlage für das Gespräch mit Arzt oder Apotheke.'],
+ ['Lifestyle (Digital PDF) - AT','I-B-ND-LDIGIAT-1','Test-Bundle','dna','NovoDaily Lifestyle Analyse (Austria)','ana',['kit','dna','rep','at'],'NovoDaily','Die genetische Standortbestimmung für den Alltag: Ernährung, Bewegung, Regeneration.'],
+ ['Lifestyle+ Subsc. (First Order) - AT','I-B-ND-LPSFOAT-1','Abo','abo','NovoDaily Lifestyle+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','life','shapebook','lifebook','nem','at'],'NovoDaily','Das volle Programm über zwölf Monate: Analyse, gedruckte Bücher und die auf die eigenen Werte abgestimmte Nahrungsergänzung.'],
+ ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','bundle','NovoDaily Lifestyle Bundle (Austria)','bun',['kit','dna','shape','life','shapebook','lifebook','at'],'NovoDaily','Analyse, Auswertung und die gedruckten Bücher in einem Paket.'],
+ ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','pill','NovoDaily Nahrungsergänzung (Austria)','nem',['nem','at'],'NovoDaily','Die auf die eigenen genetischen Werte abgestimmte Nahrungsergänzung, monatlich geliefert.'],
+ ['ND - Performance (Digital PDF) Upsell','I-B-ND-PDIGIUP-1','Test-Bundle','dna','NovoDaily Performance Upgrade','upg',['rep'],'NovoDaily','Baut auf der bereits vorhandenen DNA-Analyse auf – ohne neue Probe.'],
+ ['ND - Shape (Digital PDF) Upsell','I-B-ND-SDIGIUP-1','Test-Bundle','dna','NovoDaily Shape Upgrade','upg',['rep'],'NovoDaily','Baut auf der bereits vorhandenen DNA-Analyse auf – ohne neue Probe.'],
+ ['Shape+ Subsc. (First Order) - AT','I-B-ND-SPSFOAT-1','Abo','abo','NovoDaily Shape+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','nem','at'],'NovoDaily','Zwölf Monate Begleitung rund um Gewicht und Stoffwechsel, mit passender Nahrungsergänzung.'],
+ ['STD - Pharmaco Sensor (Digital PDF) - DE','I-B-STD-PHDIGIDE-1','Test-Bundle','dna','Pharmaco Sensor Medikamenten-Analyse (Deutschland)','ana',['kit','dna','rep','de'],'Novogenia','Zeigt, wie der Körper gängige Medikamente verarbeitet – als Grundlage für das Gespräch mit Arzt oder Apotheke.'],
+ ['STD - Pharmaco Sensor (Printed) - AT','I-B-STD-PHPRINAT-1','Test-Bundle','book','Pharmaco Sensor Booklet, gedruckt (Austria)','book',['book','at'],'Novogenia','Der Bericht als gebundenes Buch, zum Nachschlagen und Mitnehmen.']
 ];
 const PSEC=[['abo','Abos','abo','Laufende Abos mit Analyse und Nahrungsergänzung'],['bun','Bundles','bundle','Analyse und Nahrungsergänzung im Paket'],['ana','Analysen','dna','Genanalysen als digitaler Bericht'],['upg','Upgrades','report','Auf Basis bereits vorhandener DNA-Daten neue Analysen bestellen'],['nem','Nahrungsergänzung','pill','Einzelne Nahrungsergänzungen'],['book','Gedruckte Booklets','book','Berichte als gedrucktes Booklet'],['ein','Einzelkomponenten','puzzle','Einzeln bestellbare Bestandteile']];
+/* Die Karte zeigt das Produkt so, wie der Endkunde es sieht: Marke, Name, kurzer Text
+   und darunter die enthaltenen Leistungen untereinander. Code und technische
+   Bezeichnung stehen nur im Fuss, fuer den Partner. */
 function prodCard(p,i){const on=wProd.has(i);
-  return `<div class="pcard ${p[5]} ${on?'on':''}" onclick="wProd.has(${i})?wProd.delete(${i}):wProd.add(${i});render(true)"><span class="pico">${ic(p[3])}</span>
-   <div style="min-width:0"><b class="pn">${p[4]} <span class="pcode">(${p[1]})</span></b><div class="po">${p[0]}</div>
-   <div class="feats">${p[6].map(k=>`<span class="feat ${FEAT[k][2]}">${ic(FEAT[k][1])}${FEAT[k][0]}</span>`).join('')}</div>
+  const feats=[...p[6]].sort((a,b)=>(FEAT[a][3]||150)-(FEAT[b][3]||150)||FEAT[a][0].localeCompare(FEAT[b][0],'de'));
+  return `<div class="pcard ${p[5]} ${on?'on':''}" onclick="wProd.has(${i})?wProd.delete(${i}):wProd.add(${i});render(true)">
+   <div class="phd"><span class="ptb">${PTYP[p[5]]||''}</span>
+    <b class="pn">${p[4]}</b>
+    ${p[7]?`<div class="pbrand">${p[7]}</div>`:''}
+    ${p[8]?`<p class="pdesc">${p[8]}</p>`:''}
+    <span class="pchk">${ic('check')}</span></div>
+   <div class="pbd"><h5>Das ist enthalten</h5>
+    <ul class="pinc">${feats.map(k=>`<li><span class="pbu ${FEAT[k][2]}">${ic(FEAT[k][1])}</span><span>${FEAT[k][0]}</span></li>`).join('')}</ul>
    </div>
-   <span class="pchk">${ic('check')}</span></div>`}
+   <div class="pft">${p[1]} &middot; ${p[0]}</div></div>`}
 let wStep=1,wMode='single',wCust='existing',wPick=null,wProd=new Set(),wPF='all',wQ='',wSame=true;
 P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPick!=null?CUSTOMERS[wPick]:null;
   const prods=[...wProd].map(i=>PRODUCTS[i]);
@@ -692,7 +737,7 @@ P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPi
    2:()=>`<p style="color:var(--soft);font-size:13px;margin-top:0">Der bestellbare Katalog deines Mandanten – wähle ein oder mehrere Produkte für diesen Kunden.</p>
      <div class="pfchips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">${[['all','Alle'],...PSEC.map(([k,t])=>[k,t])].map(([k,t])=>[k,`${t} · ${k==='all'?PRODUCTS.length:PRODUCTS.filter(p=>p[5]===k).length}`]).map(([k,v])=>`<button class="fchip" style="${wPF===k?'background:var(--plum);color:#fff':'background:var(--wash);color:var(--plum);border-color:transparent'}" onclick="wPF='${k}';render()">${v}</button>`).join('')}</div>
      <label class="search" style="border:1px solid var(--line);margin-bottom:12px">${ic('search')}<input placeholder="Nach Name, Code oder Typ suchen …" value="${wQ}" oninput="wQ=this.value;render(true)"></label>
-     ${(()=>{const vis=PRODUCTS.map((p,i)=>[p,i]).filter(([p])=>(wPF==='all'||p[5]===wPF)&&(!wQ||(p[0]+p[1]+p[2]+p[4]).toLowerCase().includes(wQ.toLowerCase())));
+     ${(()=>{const vis=PRODUCTS.map((p,i)=>[p,i]).filter(([p])=>(wPF==='all'||p[5]===wPF)&&(!wQ||(p[0]+p[1]+p[2]+p[4]+(p[7]||'')).toLowerCase().includes(wQ.toLowerCase())));
        return PSEC.filter(([k])=>wPF==='all'||k===wPF).map(([k,t,icn,sub])=>{const ps=vis.filter(([p])=>p[5]===k);return `<div class="psec ${k}"><span class="psic">${ic(icn)}</span><div><b>${t}</b> <span class="count">${ps.length}</span><div class="s">${sub}</div></div></div>`
          +(ps.length?`<div class="grid g2 pgrid">${ps.map(([p,i])=>prodCard(p,i)).join('')}</div>`:`<div class="empty" style="margin-bottom:8px">In deinem Katalog ist derzeit kein Produkt dieser Art freigeschaltet.</div>`)}).join('')})()}
      <p style="font-size:13px;font-weight:700;margin-bottom:0">${wProd.size?`Ausgewählt: ${wProd.size}`:'Noch kein Produkt ausgewählt.'}</p>`,
