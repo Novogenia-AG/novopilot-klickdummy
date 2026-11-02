@@ -528,11 +528,11 @@ document.getElementById('scrim').onclick=closeDrawer;document.addEventListener('
 
 /* ===================== Navigation ===================== */
 const NAV=[
- ['home','Start','home'],['x:shop','Shop','shop',PARTNER.shop],
+ ['home','Start','home'],['shop','Shop','shop'],
  ['customers','Kunden','users'],['orders','Bestellungen','box'],['neu','Neue Bestellung','plus'],
  ['finances','Finanzen','wallet'],['network','Netzwerk','net'],['support','Support','chat'],
  null,
- ['x:academy','Academy','cap','https://academy.novopilot.com'],['documents','Dokumente','doc'],['x:ads','Werbe­material','mega','https://market.novogenia.com/novodaily-werbematerialien/'],
+ ['academy','Academy','cap'],['documents','Dokumente','doc'],['ads','Werbe­material','mega'],
  'grow',
  ['profile','Profil','user'],['settings','Einstellungen','cog'],['x:logout','Abmelden','out','#']
 ];
@@ -553,20 +553,32 @@ const totalComm=179.65,available=148.56,pending=0,paid=31.09;
 const P={};
 
 P.home=()=>hero({eye:'Start',title:'Willkommen zurück',text:`${PARTNER.company} · Partner-ID ${PARTNER.id}. Dein Shop, deine Provisionen und deine neuen Kunden auf einen Blick.`,
-    acts:`<a class="btn lime" href="#neu">${ic('plus')} Neue Bestellung</a><a class="btn ghost" href="${PARTNER.shop}" target="_blank">${ic('shop')} Zum Shop</a>`})
-  +payBand(true)
+    acts:`<a class="btn lime" href="#neu">${ic('plus')} Neue Bestellung</a><a class="btn ghost" href="#shop">${ic('shop')} Dein Shop</a>`})
+  +`<div class="grid g2 homepay">${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available),`<a class="btn paybtn" href="#finances">${ic('wallet')} Zu den Finanzen</a>`)}${stat('hl','net','Netzwerk&shy;provision auszahlbar',eur(netAvail()),`<a class="btn paybtn" href="#network">${ic('net')} Zum Netzwerk</a>`)}</div>`
   +bigsec('Dein Endkundenshop','Teile deinen persönlichen Shop – jede Bestellung darüber wird dir zugeordnet.')
-  +`<div class="card shopcard"><div class="qrbox">${qrSvg(PARTNER.shop,170)}</div><div class="shopinfo"><b>Dein Shop-Link</b><div class="linkbox" style="margin-top:8px"><code>${PARTNER.shop}</code></div>
-     <div class="shopacts"><button class="btn lime sm" onclick="copy('${PARTNER.shop}')">${ic('copy')} Link kopieren</button><button class="btn lime sm" onclick="shareLink('${PARTNER.shop}')">${ic('share')} Teilen</button><button class="btn line sm" onclick="toast('QR-Code als PNG heruntergeladen (Demo)')">${ic('dl')} QR-Code herunterladen</button></div>
-     <p class="hint">Für Flyer, Visitenkarten und das persönliche Gespräch: Der QR-Code führt direkt in deinen Shop.</p></div></div>`
+  +shopCard()
+  +`<div style="margin-top:12px"><a class="btn ghost sm" href="#shop">Mehr zu deinem Shop ${ic('chev')}</a></div>`
   +sec('Neue Kunden',5,'Tippe einen Kunden an, um Details und Bestellungen zu sehen.')
   +`<div class="rows">${CUSTOMERS.slice().sort((a,b)=>parseD(b.first)-parseD(a.first)).slice(0,5).map(c=>custCard(c,{click:`custDrawer('${c.email}')`})).join('')}</div>
    <div style="margin-top:12px"><a class="btn ghost sm" href="#customers">Alle Kunden ${ic('chev')}</a></div>`;
+// Shop-Karte: QR-Code, Link, Teilen, Herunterladen (Startseite + Shop-Seite)
+const shopCard=()=>`<div class="card shopcard"><div class="qrbox">${qrSvg(PARTNER.shop,170)}</div><div class="shopinfo"><b>Dein Shop-Link</b><div class="linkbox" style="margin-top:8px"><code>${PARTNER.shop}</code></div>
+     <div class="shopacts"><button class="btn lime sm" onclick="copy('${PARTNER.shop}')">${ic('copy')} Link kopieren</button><button class="btn lime sm" onclick="shareLink('${PARTNER.shop}')">${ic('share')} Teilen</button><button class="btn line sm" onclick="toast('QR-Code als PNG heruntergeladen (Demo)')">${ic('dl')} QR-Code herunterladen</button></div>
+     <p class="hint">Für Flyer, Visitenkarten und das persönliche Gespräch: Der QR-Code führt direkt in deinen Shop.</p></div></div>`;
+// Zwischenseite: erst erklären, dann extern öffnen
+const gate=(eye,title,text,url,btn,tiles)=>hero({eye,title,text,acts:`<a class="btn lime" href="${url}" target="_blank" rel="noopener">${ic('ext')} ${btn}</a>`})
+  +`<div class="grid g3 gtiles">${tiles.map(([i,t,p])=>`<div class="card atile"><span class="sic">${ic(i)}</span><b>${t}</b><p>${p}</p></div>`).join('')}</div>`;
+P.shop=()=>gate('Dein Shop','Dein persönlicher Endkundenshop','In deinem NovoDaily-Shop bestellen deine Kundinnen und Kunden selbst. Jede Bestellung über deinen Link wird automatisch dir zugeordnet – dafür erhältst du die Direktverkaufsprovision.',PARTNER.shop,'Shop öffnen',
+   [['share','1 · Link teilen','Schick deinen Shop-Link per WhatsApp, E-Mail oder Social Media – oder zeig den QR-Code im Gespräch.'],['shop','2 · Kunde bestellt','Dein Kunde wählt im Shop sein Produkt und bestellt selbst. Du musst nichts weiter eingeben.'],['wallet','3 · Provision','Die Bestellung erscheint bei deinen Kunden und Bestellungen, die Provision unter Finanzen.']])
+  +bigsec('Link und QR-Code weitergeben','Alles, was du zum Weiterleiten brauchst – an einem Ort.')+shopCard()
+  +`<div style="margin-top:14px"><a class="btn lime" href="${PARTNER.shop}" target="_blank" rel="noopener">${ic('ext')} Zum Shop</a></div>`;
+P.academy=()=>gate('Academy','NOVO Academy','In der Academy bildest du dich zu allen unseren Produkten weiter – damit du deine Kunden kompetent beraten kannst. Die Academy ist eine eigene Lernplattform und öffnet sich in einem neuen Fenster.',
+   'https://academy.novopilot.com','Zur Academy',
+   [['cap','Produktwissen','Lerneinheiten zu allen Produkten: was sie analysieren, für wen sie passen und wie du sie erklärst.'],['star','Beratung','So führst du Kundengespräche sicher und beantwortest die häufigsten Fragen.'],['book','Jederzeit','Lerne in deinem Tempo und schau Inhalte so oft an, wie du willst.']]);
+P.ads=()=>gate('Werbematerial','Werbematerial bestellen','Hier kaufst du physisches Werbematerial für deinen Verkauf – gedruckte Unterlagen für Gespräche, Veranstaltungen und deine Geschäftsräume. Die Bestellung läuft über den Novogenia-Marktplatz, der sich in einem neuen Fenster öffnet.',
+   'https://market.novogenia.com/novodaily-werbematerialien/','Zum Werbematerial',
+   [['mega','Gedruckte Materialien','Physisches Werbematerial für deinen Verkauf, fertig gestaltet.'],['box','Lieferung','Du bestellst im Marktplatz, die Materialien werden dir zugeschickt.'],['doc','Digitale Vorlagen','Kostenlose digitale Materialien findest du unter Dokumente.']]);
 function shareLink(u){navigator.share?navigator.share({url:u}).catch(()=>{}):(copy(u),toast('Link kopiert – zum Teilen einfügen'))}
-// Summe aller auszahlbaren Provisionen: eine Auszahlung für Direktverkauf und Netzwerk
-const allAvail=()=>available+netAvail();
-const payBand=(link)=>`<div class="payband"><div class="pbsum"><div><span>Direktverkauf</span><b>${eur(available)}</b></div><i>+</i><div><span>Netzwerk</span><b>${eur(netAvail())}</b></div><i>=</i><div class="tot"><span>Gesamt auszahlbar</span><b>${eur(allAvail())}</b></div></div>
-  <div class="pbact"><button class="btn paybtn" onclick="toast('Auszahlung von ${eur(allAvail())} beantragt (Demo)')">${ic('bank')} Gesamtbetrag auszahlen</button><small>Eine Auszahlung für beides – auf dein hinterlegtes Bankkonto.${link?' <a href="#finances" style="color:inherit;font-weight:800">Details ›</a>':''}</small></div></div>`;
 
 /* ===================== Filter (Kunden + Bestellungen) ===================== */
 const NOW=new Date('2026-10-30T12:00');
@@ -654,7 +666,7 @@ function commCard(c){const o=ORDERS.find(x=>x.no===c.no)||{no:c.no,prod:'Bestell
   const net=c.pct&&c.amt?Math.round(c.amt/c.pct*1e4)/100:(o.price||0);
   return `<div class="ocard comm" onclick="ORDERS.find(x=>x.no==='${c.no}')&&orderDrawer('${c.no}')"><div class="lead"><span class="lic">${ic('box')}</span><div style="min-width:0"><div class="t">${o.prod}</div><div class="ocust">${ic('user')} ${o.cust}</div>${calcLine(net,c.pct,c.amt)}</div></div>
     <div class="r">${stDate(c)}</div></div>`}
-// Herleitung: [Ebene] · Bestellwert netto × Satz = Provision
+// Herleitung: [Ebene] · Bestellwert netto × Provision in % = Provision
 const calcLine=(net,pct,amt,lvl)=>`<div class="calc">${lvl?`<span>Ebene ${lvl}</span>`:''}<span>Netto ${eur(net)}</span><i>×</i><span>${pct.toLocaleString('de-AT')} %</span><i>=</i><b>${eur(amt)}</b></div>`;
 const stDate=c=>`${st(c.status)}<div class="sdate">${c.status==='Paid out'?'ausbezahlt':'gebucht'} am ${dshort(c.date)}<br>${ago(c.date)}</div>`;
 const csum=cs=>cs.reduce((s,c)=>s+c.amt,0);
@@ -795,19 +807,18 @@ P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPi
 
 P.finances=()=>{const months=[['Mai',0],['Jun',0],['Jul',0],['Aug',124.36],['Sep',0],['Okt',34.5]];const mx=Math.max(...months.map(m=>m[1]))||1;
   return hero({eye:'Finanzen',title:'Deine Provisionen',text:'Deine Provisionen aus selbst verkauften Produkten – verdient, ausstehend und ausbezahlt. Hier beantragst du deine Auszahlung.',
-     chips:`<span class="st g">Gesamt auszahlbar · ${eur(allAvail())}</span><span class="st y">Ausstehend · ${eur(pending)}</span>`,
-     acts:`<button class="btn ghost" onclick="toast('Export Provisionen')">${ic('csv')} Provisionen exportieren</button>`})
-  +payBand()
+     chips:`<span class="st g">Auszahlbar · ${eur(available)}</span><span class="st y">Ausstehend · ${eur(pending)}</span>`,
+     acts:`<button class="btn ghost" onclick="toast('Export Direktverkaufsprovisionen')">${ic('csv')} Direktverkaufsprovisionen exportieren</button>`})
   +bigsec('Deine Direktverkaufsprovisionen','Provisionen aus Produkten, die du selbst verkauft hast.')+directStats()
   +sec('Überblick',null,'Provisionen der letzten sechs Monate (Demo-Werte aus den Provisionsdaten).')
   +`<div class="card"><div class="chart">${months.map((m,i)=>`<div><span style="font-weight:700;color:var(--ink)">${m[1]?eur(m[1]):''}</span><span class="b ${i===5?'l':''}" style="height:${Math.max(4,m[1]/mx*110)}px"></span>${m[0]}</div>`).join('')}</div></div>`
-  +sec('Letzte Direktverkaufsprovisionen',COMMISSIONS.length,'Jede Zeile zeigt die Herleitung: Bestellwert netto × Satz = Provision.')
+  +sec('Letzte Direktverkaufsprovisionen',COMMISSIONS.length,'Jede Zeile zeigt die Herleitung: Bestellwert netto × Provision in % = deine Provision.')
   +`<div class="rows">${COMMISSIONS.map(commCard).join('')}</div>`
 };
 const bigsec=(t,sub)=>`<div class="bigsec"><h2>${t}</h2></div>${sub?`<p class="sub">${sub}</p>`:''}`;
-const partOf=`<div class="trend" style="color:inherit;opacity:.75">Teil der Gesamtauszahlung</div>`;
-const directStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',ORDERS.length)}${stat('','wallet','Einnahmen gesamt',eur(totalComm),'<div class="trend">↑ ggü. Vormonat</div>')}${stat('c','users','Kunden',CUSTOMERS.length)}${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available),partOf)}</div>`;
-const netStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',NET_COMMISSIONS.length)}${stat('','wallet','Einnahmen gesamt',eur(csum(NET_COMMISSIONS)))}${stat('c','users','Kunden',new Set(NET_COMMISSIONS.map(c=>c.kunde)).size)}${stat('hl','bank','Netzwerk&shy;provision auszahlbar',eur(netAvail()),partOf)}</div>`;
+const payBtn=w=>`<button class="btn paybtn" onclick="toast('Auszahlung der ${w} beantragt (Demo)')">${ic('bank')} Auszahlung beantragen</button>`;
+const directStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',ORDERS.length)}${stat('','wallet','Einnahmen gesamt',eur(totalComm),'<div class="trend">↑ ggü. Vormonat</div>')}${stat('c','users','Kunden',CUSTOMERS.length)}${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available),payBtn('Direktverkaufsprovision'))}</div>`;
+const netStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',NET_COMMISSIONS.length)}${stat('','wallet','Einnahmen gesamt',eur(csum(NET_COMMISSIONS)))}${stat('c','users','Kunden',new Set(NET_COMMISSIONS.map(c=>c.kunde)).size)}${stat('hl','bank','Netzwerk&shy;provision auszahlbar',eur(netAvail()),payBtn('Netzwerkprovision'))}</div>`;
 const netAvail=()=>NET_COMMISSIONS.filter(c=>c.status!=="Paid out").reduce((s,c)=>s+c.amt,0);
 
 P.network=()=>`${hero({eye:'Mein Netzwerk',title:'Dein Netzwerk',text:'Lade neue Partner ein und verfolge, was dein Netzwerk bewegt.',
@@ -821,7 +832,7 @@ P.network=()=>`${hero({eye:'Mein Netzwerk',title:'Dein Netzwerk',text:'Lade neue
     <div class="card atile"><span class="sic">${ic('user')}</span><b>Empfehlungsdaten</b><p>Empfehlungs-ID <b style="color:var(--ink)">${PARTNER.id}</b><br>Empfohlen von ${PARTNER.refBy.split(' (')[0]}</p><button class="btn lime sm" onclick="copy('Empfehlungs-ID: ${PARTNER.id} · https://stage.novopilot.com/r/${PARTNER.id}')">${ic('share')} Daten teilen</button></div>
   </div>
   <div style="margin-top:22px">${netViz()}</div>
-  ${sec('Deine Partner',PARTNERS.length,'Tippe einen Partner an – im Baum oder hier: Du siehst seine Bestellungen mit Bestellwert, Ebene, Satz und deiner Provision daraus.')}
+  ${sec('Dein Netzwerk',PARTNERS.length,'Tippe einen Partner an – im Baum oder hier: Du siehst seine Bestellungen mit Bestellwert, Ebene, Provision in % und deiner Provision daraus.')}
   <div class="rows prow">${PARTNERS.map(partnerRow).join('')}</div>
   ${bigsec('Netzwerkprovisionen','Provisionen aus Bestellungen deiner Netzwerk-Partner.')}
   ${netStats()}
@@ -842,18 +853,19 @@ const NET_COMMISSIONS=[
 // Provisionszeile eines Partners: Endkunde anonymisiert (Kundennummer + Ort)
 function netCard(c,showP=true){return `<div class="ocard comm" onclick="location.hash='#partner-${c.partner.id}'"><div class="lead"><span class="lic">${ic('box')}</span><div style="min-width:0"><div class="t">${c.prod}</div><div class="ocust">${ic('user')} ${c.kunde}, ${c.ort}${showP?` · über ${c.partner.name}`:''}</div>${calcLine(c.net,c.pct,c.amt,c.lvl)}</div></div><div class="r">${stDate(c)}</div></div>`}
 const parName=p=>PARTNERS.find(x=>x.id===p.par).name;
+const lastOrd=p=>{const cs=NET_COMMISSIONS.filter(c=>c.partner===p);return cs.length?'Letzte Bestellung '+ago(cs[0].date):'Noch keine Bestellung'};
 function partnerRow(p){const cs=NET_COMMISSIONS.filter(c=>c.partner===p);
-  return `<div class="ccard"><div class="row" onclick="location.hash='#partner-${p.id}'"><div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${p.name}${p.demo?'<span class="demo">Demo</span>':''}</div><div class="s">Ebene ${p.lvl} · ${p.lvl===1?'direkt von dir eingeladen':'eingeladen von '+parName(p)} · Satz ${NET_RATE[p.lvl]} %</div><div class="lastord">${ic('clock')} Beigetreten ${ago(p.joined)}</div></div></div>
+  return `<div class="ccard"><div class="row" onclick="location.hash='#partner-${p.id}'"><div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${p.name}${p.demo?'<span class="demo">Demo</span>':''}</div><div class="s" style="white-space:normal;overflow:visible">Ebene ${p.lvl} · ${p.lvl===1?'direkt von dir eingeladen':'eingeladen von '+parName(p)} · Provision: ${NET_RATE[p.lvl]} % · beigetreten ${ago(p.joined)}</div><div class="lastord">${ic('clock')} ${lastOrd(p)}</div></div></div>
     <div class="cright"><span class="obadge">${ic('box')}<b>${cs.length}</b><span>Bestellung${cs.length===1?'':'en'}</span></span><span class="obadge">${ic('wallet')}<b>${eur(csum(cs))}</b><span>deine Provision</span></span><span class="chevw">${ic('chev')}</span></div></div></div>`}
 let pSel=null;
 P.partner=()=>{const p=PARTNERS.find(x=>x.id===pSel);if(!p)return P.network();
   const cs=NET_COMMISSIONS.filter(c=>c.partner===p),subs=PARTNERS.filter(x=>x.par===p.id);
   return `<a class="btn ghost sm backlink" href="#network">${ic('back')} Zurück zum Netzwerk</a>`
   +hero({eye:`Partner · Ebene ${p.lvl}`,title:p.name,text:`${p.lvl===1?'Direkt von dir eingeladen':'Eingeladen von '+parName(p)+' – damit deine Ebene 2'} · beigetreten am ${dshort(p.joined)} (${ago(p.joined)}). Für jede Bestellung dieses Partners erhältst du ${NET_RATE[p.lvl]} % vom Netto-Bestellwert.`,
-     chips:`<span class="st p">Ebene ${p.lvl}</span><span class="st g">Satz ${NET_RATE[p.lvl]} %</span>${p.demo?'<span class="st y">Beispieldaten</span>':''}`})
+     chips:`<span class="st p">Ebene ${p.lvl}</span><span class="st g">Provision: ${NET_RATE[p.lvl]} %</span><span class="st y">${lastOrd(p)}</span>${p.demo?'<span class="st y">Beispieldaten</span>':''}`})
   +`<div class="grid g4">${stat('o','box','Bestellungen',cs.length)}${stat('','wallet','Bestellwert netto',eur(cs.reduce((s,c)=>s+c.net,0)))}${stat('c','users','Kunden',new Set(cs.map(c=>c.kunde)).size)}${stat('hl','bank','Deine Provision daraus',eur(csum(cs)))}</div>`
   +`<div class="privacy">${ic('shield')}<div><b>Datenschutz (DSGVO)</b><br>Die Endkunden deiner Partner siehst du nur anonymisiert – mit Kundennummer und Ort, ohne Name und E-Mail.</div></div>`
-  +sec('Bestellungen von '+p.name,cs.length,'Bestellwert netto × Satz = deine Provision.')
+  +sec('Bestellungen von '+p.name,cs.length,'Bestellwert netto × Provision in % = deine Provision.')
   +`<div class="rows">${cs.map(c=>netCard(c,false)).join('')||'<div class="empty">Noch keine Bestellungen.</div>'}</div>`
   +(subs.length?sec('Von '+p.name+' eingeladen',subs.length,'Diese Partner sind deine Ebene 2 – tippe einen an für seine Bestellungen.')+`<div class="rows">${subs.map(partnerRow).join('')}</div>`:'')};
 // Netzwerk-Visualisierung: Zoom (Buttons, Mausrad), Verschieben (Ziehen), Infos per Hover
@@ -878,7 +890,7 @@ function netViz(){
     <g class="nvn" ${tipA(`<b>Du · ${PARTNER.id}</b><br>${PARTNER.company}<br>${PARTNERS.length} Partner im Netzwerk<br>Netzwerkprovision bisher: ${eur(csum(NET_COMMISSIONS))}`)}><circle cx="${cx}" cy="200" r="48" fill="#C6D63F" opacity=".22"/><circle cx="${cx}" cy="200" r="38" fill="#00225E" stroke="#C6D63F" stroke-width="4"/></g>${glyph(cx,200,34,'#fff')}
     <text x="${cx+60}" y="196" fill="#fff" font-weight="800" font-size="17">Du · ${PARTNER.id}</text><text x="${cx+60}" y="215" fill="#C6D63F" font-size="12" font-weight="700">${PARTNERS.length} Partner im Netzwerk</text>
     ${PARTNERS.map(p=>{const [x,y]=pos[p.id],cs=NET_COMMISSIONS.filter(c=>c.partner===p),r=p.lvl===1?(mob?26:30):(mob?22:25);
-      const tip=`<b>${p.name}</b>${p.demo?' (Beispiel)':''}<br>Ebene ${p.lvl} · ${p.lvl===1?'direkt von dir eingeladen':'eingeladen von '+parName(p)}<br>Beigetreten am ${dshort(p.joined)} (${ago(p.joined)})<br>${cs.length} Bestellung${cs.length===1?'':'en'} · Satz ${NET_RATE[p.lvl]} %<br>Deine Provision daraus: ${eur(csum(cs))}<br><i>Klicken für Details</i>`;
+      const tip=`<b>${p.name}</b>${p.demo?' (Beispiel)':''}<br>Ebene ${p.lvl} · ${p.lvl===1?'direkt von dir eingeladen':'eingeladen von '+parName(p)}<br>Beigetreten am ${dshort(p.joined)} (${ago(p.joined)})<br>${cs.length} Bestellung${cs.length===1?'':'en'} · Provision: ${NET_RATE[p.lvl]} %<br>${lastOrd(p)}<br>Deine Provision daraus: ${eur(csum(cs))}<br><i>Klicken für Details</i>`;
       return node(x,y,r,p.lvl===1?'#F7F9E6':'rgba(247,249,230,.7)',p.lvl===1?'#C6D63F':'#9DB01B',p.name,ago(p.joined),tip,p.id)+glyph(x,y,r*.85,'#000E26')}).join('')}
    </g></svg>
    <div class="lgd"><span><i style="background:rgba(255,255,255,.6)"></i>Empfohlen von</span><span><i style="background:#C6D63F"></i>Ebene 1</span><span><i style="background:#9DB01B"></i>Ebene 2</span><span style="opacity:.75">Partner anklicken für Details · Ziehen · Mausrad zum Zoomen</span></div>
@@ -959,20 +971,21 @@ P.settings=()=>hero({eye:'Einstellungen',title:'Einstellungen',text:'Sprache, Ze
 /* ===================== Tutorial (wie GEN(e)IUS) ===================== */
 // [Route, Ziel-Selektor auf der Seite (leer = Navigationspunkt), Titel, Text]
 const TOUR=[
- ['home','','Start','Dein Startpunkt: oben die Summe deiner Provisionen (Direktverkauf + Netzwerk = eine Auszahlung), darunter dein Endkundenshop mit QR-Code zum Teilen und Herunterladen und deine neuesten Kunden.'],
+ ['home','','Start','Dein Startpunkt: oben deine auszahlbare Direktverkaufs- und Netzwerkprovision, darunter dein Endkundenshop mit QR-Code zum Teilen und Herunterladen und deine neuesten Kunden.'],
+ ['shop','','Dein Shop','Bevor dein Shop sich öffnet, erklärt dir diese Seite, wie er funktioniert. Hier teilst du deinen Shop-Link, lädst den QR-Code herunter und öffnest den Shop.'],
  ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte klappt alle Bestellungen darunter auf.'],
  ['customers','.pbtn:not(.locked)','Kundenportal öffnen','Mit diesem Button steigst du direkt in das Kundenportal deines Kunden ein und siehst dort seine Berichte, Bestellungen und Ergebnisse – so kannst du ihn optimal beraten. Das geht nur, wenn diese Funktion für dich aktiviert wurde. Ist sie nicht aktiviert, ist der Button grau und mit einem Schloss gesperrt.'],
  ['orders','','Bestellungen','Alle Bestellungen deiner Kunden mit Status, Probenstatus und Barcode. Filtere nach Produkt, Status, Zeitraum oder Kunde – die Karten zeigen dir auf einen Blick, wann bestellt wurde und wo die Probe gerade steht.'],
  ['neu','','Neue Bestellung','In fünf Schritten bestellst du für einen bestehenden oder neuen Kunden: Kunde wählen, Produkt wählen, Fragen beantworten, Adresse eingeben, prüfen. Viele Bestellungen auf einmal lädst du per Sammel-Upload hoch.'],
  ['finances','','Deine Direktverkaufsprovision','Für jedes Produkt, das du selbst an deine Kunden verkaufst – über deinen Shop oder über „Neue Bestellung“ –, erhältst du eine Direktverkaufsprovision. Hier siehst du Bestellungen, Einnahmen, Kunden und den Verlauf deiner Provisionen; jede Provision erscheint als Karte mit ihrem Status.'],
- ['finances','.paybtn','Eine Auszahlung für alles','Direktverkaufs- und Netzwerkprovision werden zusammengezählt und gemeinsam ausbezahlt – auf dein in den Firmendaten hinterlegtes Bankkonto. Mit „Gesamtbetrag auszahlen“ beantragst du sie. Jede Zeile in der Liste zeigt die Herleitung: Produkt, Kunde, Bestellwert netto, Satz, Provision und Status mit Datum.'],
+ ['finances','.paybtn','Auszahlung beantragen','Freigegebene Provisionen werden als „auszahlbar“ angezeigt. Mit „Auszahlung beantragen“ forderst du die Auszahlung auf dein in den Firmendaten hinterlegtes Bankkonto an. Jede Zeile in der Liste zeigt die Herleitung: Produkt, Kunde, Bestellwert netto, Provision in %, deine Provision und Status mit Datum.'],
  ['network','','Dein Netzwerk','Die Visualisierung zeigt, wer dich empfohlen hat und welche Partner du selbst eingeladen hast. Ebene 1 hast du selbst eingeladen, Ebene 2 deine Partner. Zoome hinein oder heraus und fahre mit der Maus über einen Partner, um Details zu sehen.'],
  ['network','.ntiles','Erweitere dein Netzwerk','Lade Kolleginnen und Kollegen als Partner ein: Kopiere deinen persönlichen Einladungslink, teile ihn per WhatsApp, E-Mail oder Social Media, erstelle einen QR-Code für Flyer und Visitenkarten oder teile deine Empfehlungsdaten. Wer sich darüber registriert, wird automatisch dir zugeordnet.'],
- ['network','.prow','Partner im Detail','Tippe einen Partner an – im Baum oder in dieser Liste. Du siehst seine Bestellungen mit Bestellwert netto, Ebene, Satz und deiner Provision daraus. Endkunden deiner Partner erscheinen aus Datenschutzgründen nur anonymisiert, z. B. „Kunde #1042, Wien“. Die Netzwerkprovision wird zusammen mit deiner Direktverkaufsprovision in einer Auszahlung ausbezahlt.'],
+ ['network','.prow','Partner im Detail','Tippe einen Partner an – im Baum oder in dieser Liste. Du siehst seine letzte Bestellung, seine Bestellungen mit Bestellwert netto, Ebene, Provision in % und deiner Provision daraus. Endkunden deiner Partner erscheinen aus Datenschutzgründen nur anonymisiert, z. B. „Kunde #1042, Wien“. Deine Netzwerkprovision lässt du dir weiter unten über „Auszahlung beantragen“ auszahlen.'],
  ['support','','Support','Unser Chatbot wurde mit allem trainiert, was für dich wichtig ist – Produkte, Bestellungen, Provisionen, Netzwerk und Portal. Er ist rund um die Uhr erreichbar und damit die schnellste Antwortmöglichkeit. Brauchst du doch einen Menschen, schreib uns per WhatsApp oder über das E-Mail-Formular.'],
- ['x:academy','','Academy','In der Academy bildest du dich zu allen unseren Produkten fort – damit du deine Kunden kompetent beraten kannst.'],
+ ['academy','','Academy','In der Academy bildest du dich zu allen unseren Produkten fort – damit du deine Kunden kompetent beraten kannst. Diese Seite erklärt die Academy und bringt dich mit einem Klick hin.'],
  ['documents','','Dokumente','Hier findest du Unterlagen zum Herunterladen, Lesen und Lernen – alles rund um unsere Produkte und deinen Verkauf.'],
- ['x:ads','','Werbematerial','Hier kaufst du physisches Werbematerial für deinen Verkauf.']
+ ['ads','','Werbematerial','Hier kaufst du physisches Werbematerial für deinen Verkauf. Diese Seite erklärt das Angebot und führt dich zum Bestellen in den Marktplatz.']
 ];
 let tourI=-1,tourHi=null;
 const tourEl=()=>{const [r,sel]=TOUR[tourI];return sel?document.querySelector('.main '+sel)||document.querySelector(sel):document.querySelector(`.rail .nav[data-r="${r}"]`)};
@@ -998,7 +1011,7 @@ addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
 
 function render(keepFocus){let id=location.hash.slice(1)||'home';if(id.startsWith('partner-')){pSel=id.slice(8);id='partner'}const page=P[id]?id:'home';renderRail(page==='partner'?'network':page);
   const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
-  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="https://academy.novopilot.com" target="_blank">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026) · Netzwerk-Details, Sätze und Partner-Bestellungen sind Beispieldaten · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
   if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
   if(!keepFocus)window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{closeDrawer();render()});render();
