@@ -121,6 +121,19 @@ a{color:inherit;text-decoration:none}
 .ocard{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#fff;color:var(--ink);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 8px 18px -14px rgba(0,3,8,.7)}
 .ocard .t{font-weight:800;font-size:14px}.ocard .s{font-size:12px;color:var(--soft)}.ocard .r{text-align:right}
 .sublist .btn{align-self:flex-start}
+/* Gendaten je Kunde (wie GEN(e)IUS): Download Rohdaten / Upload Fremddaten */
+.gbox{background:#F3F6FB;border:1px solid rgba(0,34,94,.14);border-radius:16px;padding:16px;color:var(--ink);display:flex;flex-direction:column;gap:12px;min-width:0}
+.ghead{display:flex;gap:12px;align-items:center}.ghead>div{flex:1;min-width:0}.ghead .s{color:var(--soft);font-size:13px}
+.ghead .gic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--plum);color:#fff}
+.glbl{font-weight:800;font-size:13px}
+.gfmt,.gacts,.gsrc{display:flex;flex-wrap:wrap;gap:8px}.gbox .btn{align-self:auto}
+.gok{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;cursor:pointer}
+.gnote{margin:0;font-size:12px;color:var(--soft);display:flex;gap:6px;align-items:flex-start}.gnote .ic{flex:none;width:14px;height:14px;margin-top:1px}
+.gdrop{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px;background:#fff}.gdrop.on{border-color:var(--lime);background:#f8fbe6}.gdrop b{color:var(--ink)}.gdrop span{font-size:12px}
+.gbar{height:6px;border-radius:9px;background:#dde4ee;overflow:hidden}.gbar i{display:block;height:100%;width:40%;background:var(--lime);animation:gbar 1.2s ease-in-out infinite}
+@keyframes gbar{0%{margin-left:-40%}100%{margin-left:100%}}
+.gbox .btn[disabled]{opacity:.45;pointer-events:none}
+.lastord.gtag{color:#3d7a12;display:flex;margin-top:2px}
 .lead{display:flex;align-items:center;gap:12px;min-width:0}
 .lic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none}
 /* Kunde = zartes Plum, Bestellung = zartes Lime */
@@ -400,6 +413,7 @@ const I={
  out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
  dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+ up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
  copy:'<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
  qr:'<rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/>',
  ext:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
@@ -701,12 +715,12 @@ P.customers=()=>{const list=CUSTOMERS.filter(c=>cMatch(c,cF));
   +fBar(cF,'cF',C_DEFS,'Suche: Name, E-Mail oder Barcode',list.length,CUSTOMERS.length,'Kunden')
   +sec('Kunden',list.length,'Tippe einen Kunden an – darunter klappen alle seine Bestellungen auf.')
   +`<div class="rows">${list.map(c=>{const open=cOpen===c.email,os=custOrders(c);return custCard(c,{open,click:`cOpen=cOpen==='${c.email}'?null:'${c.email}';render(true)`,
-       body:open?`<div class="sublist">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}
+       body:open?`<div class="sublist">${geneBox(c)}${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}
        <a class="btn lime sm" href="#neu" onclick="wPick=${CUSTOMERS.indexOf(c)};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a></div>`:''})}).join('')||'<div class="empty">Keine Kunden für diese Filter.</div>'}</div>`};
 // Kundenkarte – überall dieselbe (Kunden, Dashboard, Neue Bestellung)
 function custCard(c,{open=false,click='',body='',sel=false}={}){return `<div class="ccard ${open?'open':''} ${sel?'sel':''}">
      <div class="row" onclick="${click}">
-       <div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${c.name}</div><div class="s">${c.email}</div><div class="lastord">${ic('clock')} Letzte Bestellung ${ago(c.last)}</div></div></div>
+       <div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${c.name}</div><div class="s">${c.email}</div><div class="lastord">${ic('clock')} Letzte Bestellung ${ago(c.last)}</div>${geneOf(c)?`<div class="lastord gtag">${ic('dna')} Gendaten vorhanden</div>`:''}</div></div>
        <div class="cright">
          ${portalBtn(c)}
          <span class="obadge">${ic('box')}<b>${c.orders}</b><span>Bestellung${c.orders>1?'en':''}</span></span>
@@ -721,11 +735,50 @@ function portalBtn(c){const ok=PARTNER.portal;
   return `<button class="pbtn ${ok?'':'locked'}" title="${ok?'Kundenportal öffnen':'Kundenportal gesperrt – Funktion für dich nicht aktiviert'}" onclick="event.stopPropagation();toast('${ok?`Kundenportal von ${c.name} wird geöffnet (Demo)`:'Kundenportal gesperrt – diese Funktion ist für dich nicht aktiviert'}')"><span class="pic">${ic('portal')}${ok?'':`<span class="plock">${ic('lock')}</span>`}</span><span class="pl">Kundenportal</span></button>`}
 function custOrders(c){const a=+parseD(c.first)-6e4,b=+parseD(c.last)+6e4;return ORDERS.filter(o=>o.cust===c.name&&+parseD(o.date)>=a&&+parseD(o.date)<=b)}
 CUSTOMERS.forEach(c=>custOrders(c).forEach(o=>o.email=c.email));
-function custDrawer(email){const c=CUSTOMERS.find(x=>x.email===email);const os=custOrders(c);
+function custDrawer(email){const c=CUSTOMERS.find(x=>x.email===email);const os=custOrders(c);gDrawer=email;
   drawer(`<div class="eyebrow" style="color:var(--berry)">Kunde</div><h3>${c.name}</h3><div class="s" style="color:var(--soft)">${c.email}</div>
   <dl class="kv"><dt>Bestellungen</dt><dd>${c.orders}</dd><dt>Erste Bestellung</dt><dd>${c.first}</dd><dt>Letzte Bestellung</dt><dd>${c.last} (${ago(c.last)})</dd><dt>Provision</dt><dd>${eur(c.comm)}</dd></dl>
   <a class="btn lime sm" href="#neu" onclick="closeDrawer()">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a>
+  <div style="margin:18px 0 8px;font-weight:800">Gendaten</div>${geneBox(c)}
   <div style="margin:18px 0 8px;font-weight:800">Bestellungen</div><div class="rows">${os.map(o=>orderCard(o)).join('')}</div>`)}
+
+// Gendaten je Kunde – gleiche Funktionen wie in GEN(e)IUS: Rohdaten aus dem Novogenia-Labor herunterladen (TXT/CSV/VCF)
+// oder vorhandene Rohdaten eines anderen DNA-Tests hochladen (23andMe, AncestryDNA …) → Analysen ohne neue Probe
+const NON_DNA=['Monthly Subscription Payment','NovoDailies'];
+const GFMT=[['txt','TXT (23andMe-Format)'],['csv','CSV'],['vcf','VCF']];
+const GSRC=['Novogenia','23andMe','AncestryDNA','MyHeritage','FamilyTreeDNA','Living DNA'];
+let GENE_UP={},gFmt='txt',gOk={},gDrawer=null;
+function geneOf(c){if(GENE_UP[c.email])return GENE_UP[c.email];
+  const o=custOrders(c).filter(o=>o.status==='Completed'&&!NON_DNA.includes(o.prod)).sort((a,b)=>parseD(a.date)-parseD(b.date))[0];
+  return o?{src:'Novogenia-Labor',date:o.date,snps:'≈ 700.000',state:'ready',lab:true}:null}
+function geneRefresh(e){if(gDrawer===e&&document.body.classList.contains('open'))custDrawer(e);else render(true)}
+function geneBox(c){const g=geneOf(c),e=c.email,ok=gOk[e],fn=c.name.split(' ')[0],busy=g&&g.state==='processing';
+  const head=`<div class="ghead"><span class="gic">${ic('dna')}</span><div><b>Gendaten</b><div class="s">${!g?'Noch keine Gendaten vorhanden':busy?`${g.file} wird geprüft …`:g.lab?`${g.src} · ${g.snps} Marker · Analyse abgeschlossen ${ago(g.date)}`:`${g.src} · ${g.snps} Marker · hochgeladen ${ago(g.date)}`}</div></div>${g?`<span class="st ${busy?'y':'g'}">${busy?'Wird geprüft':'Vorhanden'}</span>`:''}</div>`;
+  if(busy)return `<div class="gbox">${head}<div class="gbar"><i></i></div></div>`;
+  if(g)return `<div class="gbox">${head}
+    <div class="glbl">Rohdaten herunterladen</div>
+    <div class="gfmt">${GFMT.map(([k,l])=>`<button class="btn ${gFmt===k?'lime':'line'} sm" onclick="gFmt='${k}';geneRefresh('${e}')">${l}</button>`).join('')}</div>
+    <label class="gok"><input type="checkbox" ${ok?'checked':''} onchange="gOk['${e}']=this.checked;geneRefresh('${e}')"> ${fn} hat dem Download zugestimmt</label>
+    <div class="gacts"><button class="btn lime sm" ${ok?'':'disabled'} onclick="geneDl('${e}')">${ic('dl')} Herunterladen</button>
+      ${g.lab?'':`<button class="btn line sm" onclick="geneDel('${e}')">Datei entfernen</button>`}
+      <a class="btn line sm" href="#neu" onclick="wPick=${CUSTOMERS.indexOf(c)};wStep=1;wCust='existing';closeDrawer()">${ic('plus')} Analyse ohne neue Probe</a></div>
+    <p class="gnote">${ic('shield')} Genetische Daten sind besonders geschützt (Art. 9 DSGVO). Download nur mit Zustimmung von ${fn} – jeder Download wird protokolliert.</p></div>`;
+  return `<div class="gbox">${head}
+    <div class="drop gdrop" onclick="this.nextElementSibling.click()" ondragover="event.preventDefault();this.classList.add('on')" ondragleave="this.classList.remove('on')" ondrop="event.preventDefault();geneUp('${e}',event.dataTransfer.files[0])">${ic('up')}<b>Gendaten hochladen</b><span>Datei hierher ziehen oder antippen · .txt, .csv, .vcf, .zip</span></div>
+    <input type="file" accept=".txt,.csv,.vcf,.zip,.gz" hidden onchange="geneUp('${e}',this.files[0])">
+    <div class="gsrc">${GSRC.map(s=>`<span class="st p">${s}</span>`).join('')}</div>
+    <p class="gnote">${ic('dna')} ${fn} hat schon einen DNA-Test gemacht? Lade die Rohdaten hoch – viele Analysen gibt es dann ohne neue Probe. Nur mit Zustimmung von ${fn}.</p></div>`}
+function geneUp(e,f){if(!f)return;if(!/\.(txt|csv|vcf|zip|gz)$/i.test(f.name)){toast('Dateiformat nicht unterstützt – bitte .txt, .csv, .vcf oder .zip');return}
+  const n=f.name.toLowerCase(),src=/23andme/.test(n)?'23andMe':/ancestry/.test(n)?'AncestryDNA':/myheritage/.test(n)?'MyHeritage':/ftdna|familytree/.test(n)?'FamilyTreeDNA':/living/.test(n)?'Living DNA':'Rohdaten-Upload';
+  GENE_UP[e]={src,file:f.name,date:'30/10/2026 12:00',snps:'≈ 640.000',state:'processing'};geneRefresh(e);
+  setTimeout(()=>{GENE_UP[e].state='ready';geneRefresh(e);toast(`Gendaten geprüft und gespeichert (${src})`)},1800)}
+function geneDel(e){delete GENE_UP[e];gOk[e]=false;geneRefresh(e);toast('Hochgeladene Datei entfernt')}
+function geneDl(e){const c=CUSTOMERS.find(x=>x.email===e),g=geneOf(c);
+  const rows=[['rs4477212','1','82154','AA'],['rs3094315','1','752566','AG'],['rs1801133','1','11856378','CT'],['rs4988235','2','135851076','AG'],['rs429358','19','44908684','TT'],['rs7412','19','44908822','CC']];
+  let t;if(gFmt==='vcf')t='##fileformat=VCFv4.2\n##source=NovoPilot (Demo-Auszug)\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE\n'+rows.map(r=>`${r[1]}\t${r[2]}\t${r[0]}\t${r[3][0]}\t${r[3][1]===r[3][0]?'.':r[3][1]}\t.\tPASS\t.\tGT\t${r[3][1]===r[3][0]?'0/0':'0/1'}`).join('\n');
+  else{const s=gFmt==='csv'?',':'\t';t=`# Rohdaten (Demo-Auszug) · Quelle: ${g.src}\n`+['rsid','chromosome','position','genotype'].join(s)+'\n'+rows.map(r=>r.join(s)).join('\n')}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=`gendaten-kunde-${CUSTOMERS.indexOf(c)+1}.${gFmt}`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast('Rohdaten heruntergeladen (Demo-Auszug) – Download protokolliert')}
 
 // [Originalname, Code, Typ (Original), Icon, Anzeigename, Sektion, enthaltene Leistungen,
 //  Marke, Endkundentext]
@@ -973,7 +1026,7 @@ P.settings=()=>hero({eye:'Einstellungen',title:'Einstellungen',text:'Sprache, Ze
 const TOUR=[
  ['home','','Start','Dein Startpunkt: oben deine auszahlbare Direktverkaufs- und Netzwerkprovision, darunter dein Endkundenshop mit QR-Code zum Teilen und Herunterladen und deine neuesten Kunden.'],
  ['shop','','Dein Shop','Bevor dein Shop sich öffnet, erklärt dir diese Seite, wie er funktioniert. Hier teilst du deinen Shop-Link, lädst den QR-Code herunter und öffnest den Shop.'],
- ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte klappt alle Bestellungen darunter auf.'],
+ ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte klappt die Gendaten und alle Bestellungen darunter auf: Rohdaten herunterladen oder die Rohdaten eines anderen DNA-Tests hochladen.'],
  ['customers','.pbtn:not(.locked)','Kundenportal öffnen','Mit diesem Button steigst du direkt in das Kundenportal deines Kunden ein und siehst dort seine Berichte, Bestellungen und Ergebnisse – so kannst du ihn optimal beraten. Das geht nur, wenn diese Funktion für dich aktiviert wurde. Ist sie nicht aktiviert, ist der Button grau und mit einem Schloss gesperrt.'],
  ['orders','','Bestellungen','Alle Bestellungen deiner Kunden mit Status, Probenstatus und Barcode. Filtere nach Produkt, Status, Zeitraum oder Kunde – die Karten zeigen dir auf einen Blick, wann bestellt wurde und wo die Probe gerade steht.'],
  ['neu','','Neue Bestellung','In fünf Schritten bestellst du für einen bestehenden oder neuen Kunden: Kunde wählen, Produkt wählen, Fragen beantworten, Adresse eingeben, prüfen. Viele Bestellungen auf einmal lädst du per Sammel-Upload hoch.'],
