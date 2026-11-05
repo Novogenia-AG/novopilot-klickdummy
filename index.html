@@ -734,19 +734,19 @@ P.customers=()=>{const list=CUSTOMERS.filter(c=>cMatch(c,cF));
      chips:`<span class="st p">Kunden · ${CUSTOMERS.length}</span><span class="st g">Provision · ${eur(CUSTOMERS.reduce((s,c)=>s+c.comm,0))}</span>`,
      acts:`<a class="btn lime" href="#neu">${ic('plus')} Bestellung für Kunden</a><button class="btn ghost" onclick="toast('CSV-Export gestartet')">${ic('csv')} CSV exportieren</button>`})
   +fBar(cF,'cF',C_DEFS,'Suche: Name, E-Mail oder Barcode',list.length,CUSTOMERS.length,'Kunden')
-  +sec('Kunden',list.length,'Tippe einen Kunden an – darunter klappen alle seine Bestellungen auf.')
-  +`<div class="rows">${list.map(c=>{const open=cOpen===c.email,os=custOrders(c);return custCard(c,{open,click:`cOpen=cOpen==='${c.email}'?null:'${c.email}';render(true)`,
+  +sec('Kunden',list.length,'Tippe einen Kunden an, um seine Kundenseite zu öffnen. Mit dem Pfeil rechts klappst du seine Bestellungen darunter auf.')
+  +`<div class="rows">${list.map(c=>{const open=cOpen===c.email,os=custOrders(c);return custCard(c,{open,click:`location.hash='kunde-${CUSTOMERS.indexOf(c)}'`,tog:`cOpen=cOpen==='${c.email}'?null:'${c.email}';render(true)`,
        body:open?`<div class="sublist">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}
-       <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn lime sm" href="#kunde-${CUSTOMERS.indexOf(c)}">${ic('user')} Kundenseite öffnen</a><a class="btn line sm" href="#neu" onclick="wPick=${CUSTOMERS.indexOf(c)};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a></div></div>`:''})}).join('')||'<div class="empty">Keine Kunden für diese Filter.</div>'}</div>`};
+       <a class="btn lime sm" href="#neu" onclick="wPick=${CUSTOMERS.indexOf(c)};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung für ${c.name.split(' ')[0]}</a></div>`:''})}).join('')||'<div class="empty">Keine Kunden für diese Filter.</div>'}</div>`};
 // Kundenkarte – überall dieselbe (Kunden, Dashboard, Neue Bestellung)
-function custCard(c,{open=false,click='',body='',sel=false}={}){return `<div class="ccard ${open?'open':''} ${sel?'sel':''}">
+function custCard(c,{open=false,click='',body='',sel=false,tog=''}={}){return `<div class="ccard ${open?'open':''} ${sel?'sel':''}">
      <div class="row" onclick="${click}">
        <div class="lead"><span class="lic">${ic('user')}</span><div style="min-width:0"><div class="t">${c.name}</div><div class="s">${c.email}</div><div class="lastord">${ic('clock')} Letzte Bestellung ${ago(c.last)}</div>${geneOf(c)?`<div class="lastord gtag">${ic('dna')} Gendaten vorhanden</div>`:''}</div></div>
        <div class="cright">
          ${portalBtn(c)}
          <span class="obadge">${ic('box')}<b>${c.orders}</b><span>Bestellung${c.orders>1?'en':''}</span></span>
          <span class="info" tabindex="0" onclick="event.stopPropagation()">i<span class="tip">Erste Bestellung: ${dshort(c.first)} (${ago(c.first)})<br>Letzte Bestellung: ${dshort(c.last)} (${ago(c.last)})<br>Provision: ${eur(c.comm)}</span></span>
-         <span class="chevw">${ic(sel?'check':'chev')}</span>
+         <span class="chevw" ${tog?`role="button" tabindex="0" title="${open?'Bestellungen zuklappen':'Bestellungen aufklappen'}" onclick="event.stopPropagation();${tog}"`:''}>${ic(sel?'check':'chev')}</span>
        </div>
      </div>${body}
    </div>`}
@@ -775,17 +775,17 @@ function geneOf(c){if(GENE_UP[c.email])return GENE_UP[c.email];
 function geneRefresh(){render(true)}
 const gFirst=c=>c.name.split(' ')[0],dDot=d=>d.split(' ')[0].replace(/\//g,'.');
 function geneDown(c){const g=geneOf(c),e=c.email,ok=gOk[e],fn=gFirst(c),ready=g&&g.state==='ready';
-  return `<div class="gsec"><h4><span class="gic">${ic('dl')}</span>DNA-Daten herunterladen${ready?'<span class="count">2</span>':''}</h4>
+  return `<div class="gsec"><h4><span class="gic">${ic('dl')}</span>DNA-Daten herunterladen<span class="count">2</span></h4>
   <p>Die genetischen Rohdaten von ${fn} aus der Analyse – zum Speichern oder für andere Tools.</p>
-  ${!ready?`<div class="empty">Noch keine Rohdaten vorhanden – sobald die Analyse abgeschlossen ist oder Gendaten hochgeladen wurden, kannst du sie hier herunterladen.</div>`:`
-  <label class="gok"><input type="checkbox" ${ok?'checked':''} onchange="gOk['${e}']=this.checked;geneRefresh()"> ${fn} hat dem Download der Rohdaten zugestimmt</label>
+  ${!ready?`<div class="gok" style="cursor:default">${ic('clock')} Noch keine Rohdaten – die Downloads werden frei, sobald die Analyse von ${fn} abgeschlossen ist oder Gendaten hochgeladen wurden.</div>`:`
+  <label class="gok"><input type="checkbox" ${ok?'checked':''} onchange="gOk['${e}']=this.checked;geneRefresh()"> ${fn} hat dem Download der Rohdaten zugestimmt</label>`}
   <div class="gopts">${GOPT.map(o=>`<div class="gopt ${o.cls}"><div class="oh"><span class="num">${o.n}</span><div><div class="oe">OPTION ${o.n}</div><div class="ot">${o.t}</div><span class="gtg">${o.tag}</span></div></div>
     <div class="gbig">${o.snp}<small>SNPs</small></div><div class="gmeter"><i style="width:${o.w}%"></i></div>
     <dl class="gkv"><dt>INHALT</dt><dd>${o.inh}</dd><dt>DATEI</dt><dd>${o.dat}</dd><dt>IDEAL FÜR</dt><dd>${o.fur}</dd></dl>
-    <button class="btn ${o.cls?'':'lime'}" ${ok?'':'disabled'} onclick="geneDl('${e}',${o.n})">${ic('dl')} Option ${o.n} herunterladen</button></div>`).join('')}</div>
+    <button class="btn ${o.cls?'':'lime'}" ${ready&&ok?'':'disabled'} onclick="geneDl('${e}',${o.n})">${ic(ready?'dl':'lock')} ${ready?`Option ${o.n} herunterladen`:'Noch nicht verfügbar'}</button></div>`).join('')}</div>
   <p class="gscale">Die Balken sind maßstabsgetreu: Option 2 enthält rund 115-mal so viele Varianten wie Option 1.</p>
   <details class="gwhat"><summary>${ic('dna')} Was heißt „imputiert“?${ic('chev')}</summary><p>Im Labor werden rund 600.000 Stellen im Erbgut direkt gemessen. Mit großen Referenzdatenbanken lässt sich daraus statistisch ableiten, welche Varianten an vielen weiteren Stellen sehr wahrscheinlich vorliegen – das nennt man Imputation. So entstehen rund 70 Millionen Varianten. Sie sind gut begründete Wahrscheinlichkeiten, aber keine Messwerte.</p></details>
-  <p class="gscale">${ic('shield')} Genetische Daten sind besonders geschützt (Art. 9 DSGVO). Download nur mit Zustimmung von ${fn} – jeder Download wird protokolliert.</p>`}</div>`}
+  <p class="gscale">${ic('shield')} Genetische Daten sind besonders geschützt (Art. 9 DSGVO). Download nur mit Zustimmung von ${fn} – jeder Download wird protokolliert.</p></div>`}
 function geneUpSec(c){const u=GENE_UP[c.email],e=c.email,fn=gFirst(c),i=CUSTOMERS.indexOf(c);
   return `<div class="gsec"><h4><span class="gic">${ic('up')}</span>Gendaten hochladen</h4>
   <p>${fn} hat bereits einen DNA-Test bei einem anderen Anbieter gemacht? Lade die Rohdaten hoch und lass sie auswerten.</p>
@@ -1078,7 +1078,7 @@ P.settings=()=>hero({eye:'Einstellungen',title:'Einstellungen',text:'Sprache, Ze
 const TOUR=[
  ['home','','Start','Dein Startpunkt: oben deine auszahlbare Direktverkaufs- und Netzwerkprovision, darunter dein Endkundenshop mit QR-Code zum Teilen und Herunterladen und deine neuesten Kunden.'],
  ['shop','','Dein Shop','Bevor dein Shop sich öffnet, erklärt dir diese Seite, wie er funktioniert. Hier teilst du deinen Shop-Link, lädst den QR-Code herunter und öffnest den Shop.'],
- ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte klappt alle Bestellungen darunter auf. Über „Kundenseite öffnen“ siehst du alle Details, den Weg ins Kundenportal und die Gendaten – herunterladen oder Rohdaten eines anderen DNA-Tests hochladen.'],
+ ['customers','','Deine Kunden','Hier findest du alle Kundinnen und Kunden, die über dich bestellt haben. Mit Suche und Filtern (Name, E-Mail, Barcode, Probenstatus, Zeitraum, Anzahl Bestellungen) findest du jeden sofort. Ein Klick auf eine Kundenkarte öffnet die Kundenseite mit allen Details, dem Weg ins Kundenportal und den Gendaten. Mit dem Pfeil rechts klappst du die Bestellungen direkt darunter auf.'],
  ['customers','.pbtn:not(.locked)','Kundenportal öffnen','Mit diesem Button steigst du direkt in das Kundenportal deines Kunden ein und siehst dort seine Berichte, Bestellungen und Ergebnisse – so kannst du ihn optimal beraten. Das geht nur, wenn diese Funktion für dich aktiviert wurde. Ist sie nicht aktiviert, ist der Button grau und mit einem Schloss gesperrt.'],
  ['orders','','Bestellungen','Alle Bestellungen deiner Kunden mit Status, Probenstatus und Barcode. Filtere nach Produkt, Status, Zeitraum oder Kunde – die Karten zeigen dir auf einen Blick, wann bestellt wurde und wo die Probe gerade steht.'],
  ['neu','','Neue Bestellung','In fünf Schritten bestellst du für einen bestehenden oder neuen Kunden: Kunde wählen, Produkt wählen, Fragen beantworten, Adresse eingeben, prüfen. Viele Bestellungen auf einmal lädst du per Sammel-Upload hoch.'],
