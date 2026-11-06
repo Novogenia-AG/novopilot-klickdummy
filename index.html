@@ -121,6 +121,17 @@ a{color:inherit;text-decoration:none}
 .ocard{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#fff;color:var(--ink);border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 8px 18px -14px rgba(0,3,8,.7)}
 .ocard .t{font-weight:800;font-size:14px}.ocard .s{font-size:12px;color:var(--soft)}.ocard .r{text-align:right}
 .sublist .btn{align-self:flex-start}
+/* Kundenseite */
+.knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
+.kaddr{margin:0 0 10px;font-size:14px;line-height:1.55;font-weight:600}
+.klist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:10px}
+.klist li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}.klist li>.ic{flex:none;width:22px;height:22px;padding:3px;border-radius:50%}
+.klist li.ok>.ic{background:#E3F2D2;color:#3d7a12}.klist li.no>.ic{background:#F1F3F7;color:#8a93a3}.klist li.no b{color:var(--soft)}
+.klist small,.kline small,.ktl small{display:block;color:var(--soft);font-size:12px;font-weight:500;margin-top:2px}
+.klines{display:flex;flex-direction:column}.kline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.kline:last-child{border-bottom:0}.kline>div{min-width:0}.kline b{font-size:13.5px;overflow-wrap:anywhere}.kline .st{flex:none}
+.ktl .ev{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.ktl .ev:last-child{border-bottom:0}.ktl b{font-size:13.5px}
+.ktl .evi{width:32px;height:32px;border-radius:10px;background:#F3F6FB;color:var(--plum);display:grid;place-items:center;flex:none}
 /* Gendaten je Kunde (wie GEN(e)IUS): Download Rohdaten / Upload Fremddaten */
 .gbox{background:#F3F6FB;border:1px solid rgba(0,34,94,.14);border-radius:18px;padding:16px;color:var(--ink);display:flex;flex-direction:column;gap:22px;min-width:0}
 .gsec{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -815,22 +826,71 @@ function geneDl(e,n){const c=CUSTOMERS.find(x=>x.email===e);
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=`dna-daten-kunde-${CUSTOMERS.indexOf(c)+1}-option${n}.${GOPT[n-1].ext}`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   toast(`Option ${n} heruntergeladen (Demo-Auszug) – Download protokolliert`)}
 
-// Kundenseite (#kunde-N): alle Details, Kundenportal, Gendaten, Bestellungen
-let kSel=null;
-P.kunde=()=>{const c=CUSTOMERS[kSel];if(!c)return P.customers();const os=custOrders(c),g=geneOf(c),fn=gFirst(c),ok=PARTNER.portal,bc=os.find(o=>o.barcode);
+// Kundenseite (#kunde-N): alles, was ein Partner über seinen Kunden wissen sollte –
+// Stammdaten, Adressen, Einwilligungen, Analysen & Abo, Proben, Gendaten, Bestellungen, Verlauf, eigene Notizen.
+// CUST_X = Beispieldaten (Stage liefert hier noch keine Adress-/Stammdaten); Index = Index in CUSTOMERS.
+const CUST_X=[
+ {kd:'K-10482',anr:'Frau',geb:'14/03/1988',tel:'+43 664 0000 101',lang:'Deutsch',bill:['Getreidegasse 12','5020 Salzburg','Österreich'],ship:null,src:'Über deinen Shop-Link',pay:'Kreditkarte (Visa ···· 4242)',login:'28/10/2026 18:40',cons:{agb:1,ds:1,gen:1,portal:1,mkt:0,contact:1}},
+ {kd:'K-10377',anr:'Herr',geb:'02/11/1979',tel:'+43 676 0000 202',lang:'Deutsch',bill:['Mariahilfer Straße 88/4','1070 Wien','Österreich'],ship:['Büro: Wiedner Hauptstraße 23','1040 Wien','Österreich'],src:'Von dir angelegt (Partnerbestellung)',pay:'Rechnung',login:'26/10/2026 07:55',cons:{agb:1,ds:1,gen:1,portal:1,mkt:1,contact:1}},
+ {kd:'K-10291',anr:'Frau',geb:'23/07/1992',tel:'+43 650 0000 303',lang:'Deutsch',bill:['Landstraße 41','4020 Linz','Österreich'],ship:null,src:'Über deinen Shop-Link',pay:'PayPal',login:'',cons:{agb:1,ds:1,gen:0,portal:0,mkt:0,contact:1}},
+ {kd:'K-10288',anr:'Herr',geb:'30/01/1985',tel:'+43 699 0000 404',lang:'Englisch',bill:['Herrengasse 7','8010 Graz','Österreich'],ship:null,src:'Von dir angelegt (Sammel-Upload)',pay:'Rechnung',login:'28/10/2026 13:10',cons:{agb:1,ds:1,gen:1,portal:1,mkt:0,contact:0}},
+ {kd:'K-10154',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Maximilianstraße 15','80539 München','Deutschland'],ship:['Packstation 112','80331 München','Deutschland'],src:'Über deinen Shop-Link',pay:'SEPA-Lastschrift',login:'29/10/2026 20:02',cons:{agb:1,ds:1,gen:1,portal:1,mkt:1,contact:1}},
+ {kd:'K-10151',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Maximilianstraße 15','80539 München','Deutschland'],ship:null,src:'Über deinen Shop-Link',pay:'Kreditkarte (Mastercard ···· 5100)',login:'18/08/2026 16:20',cons:{agb:1,ds:1,gen:1,portal:1,mkt:0,contact:1}},
+ {kd:'K-10120',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Leopoldstraße 3','80802 München','Deutschland'],ship:null,src:'Von dir angelegt (Partnerbestellung)',pay:'Rechnung',login:'',cons:{agb:1,ds:1,gen:0,portal:1,mkt:0,contact:1}}];
+const CONS=[['agb','AGB akzeptiert'],['ds','Datenschutzerklärung akzeptiert'],['gen','Gendaten-Freigabe für dich (Download der Rohdaten)'],['portal','Einblick ins Kundenportal für dich'],['contact','Darf von dir kontaktiert werden'],['mkt','Newsletter & Angebote']];
+const UPGR=['Performance','Shape','Nutrition','Beauty'];
+let kSel=null,KNOTE={};
+const kGo=id=>document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+const kHead=(i,t,act='')=>`<div class="kh"><b>${ic(i)} ${t}</b>${act}</div>`;
+const kEdit=w=>`<button class="btn line sm" onclick="toast('${w} bearbeiten (Demo) – Änderungen bestätigt ${'dein Kunde'} per E-Mail')">Bearbeiten</button>`;
+const kAddr=(c,a)=>`${c.name}<br>${a.join('<br>')}`;
+function kEvents(c,x){const os=custOrders(c),ev=os.map(o=>({d:o.date,i:'box',t:`Bestellung: ${o.prod}`,s:(ST[o.status]||[0,o.status])[1]}));
+  if(x.login)ev.push({d:x.login,i:'portal',t:'Hat sich im Kundenportal angemeldet',s:''});
+  const u=GENE_UP[c.email];if(u&&u.state==='ready')ev.push({d:u.date,i:'up',t:`Gendaten hochgeladen: ${u.file}`,s:'geprüft & zugeordnet'});
+  ev.push({d:c.first,i:'user',t:'Kunde angelegt',s:x.src});
+  return ev.sort((a,b)=>parseD(b.d)-parseD(a.d))}
+P.kunde=()=>{const c=CUSTOMERS[kSel];if(!c)return P.customers();const x=CUST_X[kSel]||CUST_X[0];
+  const os=custOrders(c),g=geneOf(c),fn=gFirst(c),ok=PARTNER.portal,umsatz=os.reduce((s,o)=>s+o.price,0);
+  const ana=os.filter(o=>!NON_DNA.includes(o.prod)),abo=os.some(o=>/Subscription|Lifestyle\+|Abo/.test(o.prod)),aboPay=os.filter(o=>o.prod==='Monthly Subscription Payment').length;
+  const kits=os.filter(o=>o.barcode),upg=g?UPGR.filter(u=>!os.some(o=>o.prod.includes(u))):[];
+  const nav=[['k-stamm','Stammdaten'],['k-addr','Adressen'],['k-cons','Einwilligungen'],['k-ana','Analysen & Abo'],['k-gen','Gendaten'],['k-ord','Bestellungen'],['k-tl','Verlauf'],['k-note','Notizen']];
   return `<a class="btn ghost sm backlink" href="#customers">${ic('back')} Zurück zu den Kunden</a>`
-  +hero({eye:'Kunde',title:c.name,text:`${c.email} · Kunde seit ${dshort(c.first)} (${ago(c.first)}) · letzte Bestellung ${ago(c.last)}.`,
-     chips:`<span class="st p">${c.orders} Bestellung${c.orders>1?'en':''}</span><span class="st g">Provision · ${eur(c.comm)}</span><span class="st ${g?'g':'y'}">${g?'Gendaten vorhanden':'Noch keine Gendaten'}</span>`,
-     acts:`<button class="btn ${ok?'lime':'ghost'}" onclick="toast('${ok?`Kundenportal von ${c.name} wird geöffnet (Demo)`:'Kundenportal gesperrt – diese Funktion ist für dich nicht aktiviert'}')">${ic(ok?'portal':'lock')} Kundenportal öffnen</button><a class="btn ghost" href="#neu" onclick="wPick=${kSel};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung</a>`})
-  +`<div class="grid g4">${stat('o','box','Bestellungen',c.orders)}${stat('','clock','Erste Bestellung',ago(c.first))}${stat('c','clock','Letzte Bestellung',ago(c.last))}${stat('hl','wallet','Provision',eur(c.comm))}</div>`
-  +sec('Kundendetails',null)
-  +`<div class="grid g2"><div class="card"><dl class="kv" style="margin:0"><dt>Name</dt><dd>${c.name}</dd><dt>E-Mail</dt><dd style="word-break:break-all">${c.email}</dd><dt>Kunde seit</dt><dd>${dshort(c.first)} (${ago(c.first)})</dd><dt>Letzte Bestellung</dt><dd>${dshort(c.last)} (${ago(c.last)})</dd><dt>Zuletzt bestellt</dt><dd>${c.prod}</dd><dt>Barcode</dt><dd>${bc?bc.barcode:'— (noch kein Kit)'}</dd></dl></div>
-     <div class="card"><b>${ic('portal')} Kundenportal</b><p style="color:var(--soft);font-size:13px">Steig direkt ins Kundenportal von ${fn} ein: Berichte, Bestellungen und Ergebnisse – so kannst du optimal beraten.</p>
-       ${ok?`<button class="btn lime sm" onclick="toast('Kundenportal von ${c.name} wird geöffnet (Demo)')">${ic('portal')} Kundenportal öffnen</button>`:`<button class="btn line sm" onclick="toast('Kundenportal gesperrt – diese Funktion ist für dich nicht aktiviert')">${ic('lock')} Gesperrt – Funktion nicht aktiviert</button>`}</div></div>`
-  +sec('Gendaten',null,`Rohdaten von ${fn} herunterladen oder Gendaten eines anderen Anbieters hochladen – genau wie in der GEN(e)IUS-App.`)
+  +hero({eye:`Kunde · ${x.kd}`,title:c.name,text:`${c.email} · Kunde seit ${dshort(c.first)} (${ago(c.first)}) · letzte Bestellung ${ago(c.last)}.`,
+     chips:`<span class="st p">${c.orders} Bestellung${c.orders>1?'en':''}</span><span class="st g">Provision · ${eur(c.comm)}</span>${abo?'<span class="st g">Abo aktiv</span>':''}<span class="st ${g?'g':'y'}">${g?'Gendaten vorhanden':'Noch keine Gendaten'}</span>`,
+     acts:`<button class="btn ${ok?'lime':'ghost'}" onclick="toast('${ok?`Kundenportal von ${c.name} wird geöffnet (Demo)`:'Kundenportal gesperrt – diese Funktion ist für dich nicht aktiviert'}')">${ic(ok?'portal':'lock')} Kundenportal öffnen</button><a class="btn ghost" href="#neu" onclick="wPick=${kSel};wStep=1;wCust='existing'">${ic('plus')} Neue Bestellung</a><a class="btn ghost" href="mailto:${c.email}">${ic('mail')} E-Mail</a><a class="btn ghost" href="tel:${x.tel.replace(/\s/g,'')}">${ic('phone')} Anrufen</a>`})
+  +`<div class="knav pfchips">${nav.map(([id,l])=>`<button class="btn ghost sm" onclick="kGo('${id}')">${l}</button>`).join('')}</div>`
+  +`<div class="grid g4">${stat('o','box','Bestellungen',c.orders)}${stat('','wallet','Umsatz',eur(umsatz))}${stat('c','clock','Letzte Bestellung',ago(c.last))}${stat('hl','bank','Deine Provision',eur(c.comm))}</div>`
+  // Stammdaten + Konto
+  +`<div id="k-stamm"></div>`+sec('Stammdaten & Konto',null)
+  +`<div class="grid g2"><div class="card">${kHead('user','Persönliche Daten',kEdit('Stammdaten'))}<dl class="kv" style="margin:0"><dt>Kundennummer</dt><dd class="mono">${x.kd}</dd><dt>Anrede</dt><dd>${x.anr}</dd><dt>Name</dt><dd>${c.name}</dd><dt>Geburtsdatum</dt><dd>${dshort(x.geb)}</dd><dt>E-Mail</dt><dd style="word-break:break-all">${c.email}</dd><dt>Telefon</dt><dd>${x.tel}</dd><dt>Sprache</dt><dd>${x.lang}</dd></dl></div>
+     <div class="card">${kHead('portal','Kundenkonto & Herkunft')}<dl class="kv" style="margin:0"><dt>Kundenkonto</dt><dd>${x.login?`<span class="st g">Aktiv</span>`:`<span class="st y">Einladung offen</span>`}</dd><dt>Letzter Login</dt><dd>${x.login?ago(x.login):'— noch nie angemeldet'}</dd><dt>Kunde seit</dt><dd>${dshort(c.first)} (${ago(c.first)})</dd><dt>Gewonnen</dt><dd>${x.src}</dd><dt>Zahlungsart</dt><dd>${x.pay}</dd><dt>Kundenportal</dt><dd>${ok?(x.cons.portal?'Einblick für dich freigegeben':'Kunde hat keinen Einblick freigegeben'):'Für dich nicht aktiviert'}</dd></dl>
+       ${x.login?'':`<button class="btn lime sm" style="margin-top:12px" onclick="toast('Einladung zum Kundenkonto erneut gesendet (Demo)')">${ic('send')} Einladung erneut senden</button>`}</div></div>`
+  // Adressen
+  +`<div id="k-addr"></div>`+sec('Adressen',null)
+  +`<div class="grid g2"><div class="card">${kHead('doc','Rechnungsadresse',kEdit('Rechnungsadresse'))}<p class="kaddr">${kAddr(c,x.bill)}</p></div>
+     <div class="card">${kHead('truck','Lieferadresse',kEdit('Lieferadresse'))}<p class="kaddr">${kAddr(c,x.ship||x.bill)}</p>${x.ship?'<span class="st y">Abweichend von der Rechnungsadresse</span>':'<span class="st p">Wie Rechnungsadresse</span>'}</div></div>`
+  // Einwilligungen
+  +`<div id="k-cons"></div>`+sec('Einwilligungen',null,'Was dein Kunde erlaubt hat – erteilt bei der Bestellung bzw. im Kundenportal. Ändern kann sie nur der Kunde selbst.')
+  +`<div class="card"><ul class="klist">${CONS.map(([k,l])=>`<li class="${x.cons[k]?'ok':'no'}">${ic(x.cons[k]?'check':'lock')}<span><b>${l}</b><small>${x.cons[k]?`erteilt ${ago(c.first)}`:'nicht erteilt'}</small></span></li>`).join('')}</ul></div>`
+  // Analysen & Abo, Proben, Upgrades
+  +`<div id="k-ana"></div>`+sec('Analysen & Abo',ana.length)
+  +`<div class="grid g2"><div class="card">${kHead('report','Analysen & Berichte')}<div class="klines">${ana.map(o=>`<div class="kline"><div><b>${o.prod}</b><small>bestellt ${ago(o.date)}</small></div>${o.status==='Completed'?'<span class="st g">Bericht verfügbar</span>':st(o.status)}</div>`).join('')||'<div class="empty">Noch keine Analysen.</div>'}</div></div>
+     <div class="card">${kHead('abo','Abo')}${abo?`<dl class="kv" style="margin:0"><dt>Status</dt><dd><span class="st g">Aktiv</span></dd><dt>Abo</dt><dd>${(os.find(o=>/Lifestyle\+|Subsc/.test(o.prod))||{prod:'NovoDaily Abo'}).prod}</dd><dt>Monatszahlungen</dt><dd>${aboPay?aboPay+' bezahlt':'erste Zahlung mit der Bestellung'}</dd><dt>Nächste Lieferung</dt><dd>in 12 Tagen</dd><dt>Laufzeit</dt><dd>12 Monate</dd></dl>`:'<div class="empty">Kein aktives Abo.</div>'}</div>
+     <div class="card">${kHead('tube','Proben & Kits')}<div class="klines">${kits.map(o=>`<div class="kline"><div><b class="mono">${o.barcode}</b><small>${o.prod} · ${ago(o.date)}</small></div><span class="st ${probeOf(o)==='done'?'g':'y'}">${PROBE[probeOf(o)][0]}</span></div>`).join('')||'<div class="empty">Noch kein Kit versendet.</div>'}</div></div>
+     <div class="card">${kHead('star','Passende Upgrades')}${g?(upg.length?`<p style="color:var(--soft);font-size:13px;margin:0 0 10px">Auf Basis der vorhandenen Gendaten – ohne neue Probe:</p><div class="gchips">${upg.map(u=>`<span class="gchip">${u}</span>`).join('')}</div><a class="btn lime sm" style="margin-top:12px" href="#neu" onclick="wPick=${kSel};wStep=1;wCust='existing'">${ic('plus')} Upgrade bestellen</a>`:'<div class="empty">Alle Upgrades bereits bestellt.</div>'):`<div class="empty">Upgrades sind möglich, sobald Gendaten vorliegen.</div>`}</div></div>`
+  // Gendaten
+  +`<div id="k-gen"></div>`+sec('Gendaten',null,`Rohdaten von ${fn} herunterladen oder Gendaten eines anderen Anbieters hochladen – genau wie in der GEN(e)IUS-App.`)
   +`<div class="gbox">${geneDown(c)}${geneUpSec(c)}</div>`
-  +sec('Bestellungen',os.length)
-  +`<div class="rows">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}</div>`};
+  // Bestellungen
+  +`<div id="k-ord"></div>`+sec('Bestellungen',os.length)
+  +`<div class="rows">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}</div>`
+  // Verlauf
+  +`<div id="k-tl"></div>`+sec('Verlauf',null,'Alles, was bei diesem Kunden passiert ist – neueste zuerst.')
+  +`<div class="card"><div class="ktl">${kEvents(c,x).map(e=>`<div class="ev"><span class="evi">${ic(e.i)}</span><div><b>${e.t}</b><small>${ago(e.d)}${e.s?' · '+e.s:''}</small></div></div>`).join('')}</div></div>`
+  // Notizen
+  +`<div id="k-note"></div>`+sec('Deine Notizen',null,'Nur für dich sichtbar – dein Kunde sieht diese Notizen nicht.')
+  +`<div class="card"><label class="field" style="margin:0"><textarea id="knote" placeholder="z. B. Ziele, Vorlieben, nächster Anruf …" oninput="KNOTE[${kSel}]=this.value">${esc(KNOTE[kSel]||'')}</textarea></label></div>`
+  +`<div class="privacy">${ic('shield')}<div><b>Beispieldaten</b><br>Stammdaten, Adressen, Einwilligungen, Abo-Details und Logins sind Demo-Werte – Stage liefert sie hier noch nicht.</div></div>`};
 
 // [Originalname, Code, Typ (Original), Icon, Anzeigename, Sektion, enthaltene Leistungen,
 //  Marke, Endkundentext]
