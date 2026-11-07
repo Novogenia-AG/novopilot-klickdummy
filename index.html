@@ -170,7 +170,7 @@ a{color:inherit;text-decoration:none}
 .rhtml{position:relative;height:460px;overflow-y:auto;scrollbar-width:none;border:1px solid var(--line);border-radius:16px;padding:4px 20px;margin-top:10px}.rhtml::-webkit-scrollbar{display:none}
 .rhtml section{padding:16px 0;border-bottom:1px solid var(--line)}.rhtml h4{margin:0 0 8px;font-size:18px;color:var(--plum)}.rhtml section.cur h4{color:var(--berry)}.rhtml p{font-size:14px;margin:10px 0 6px}
 .dose{color:var(--plum);text-align:right}
-.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
+.clamp2{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.fgrid3{max-height:520px;overflow-y:auto;scrollbar-width:none}.fgrid3::-webkit-scrollbar{display:none}.fgrp li .st{font-size:10.5px;padding:1px 7px;margin-left:4px}.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
 .medpg{background:var(--wash);border-radius:16px;padding:14px 16px;margin-top:10px}.medpg h4{margin:0 0 4px;font-size:17px;color:var(--plum)}
 .hand{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9E6;border-radius:14px;padding:12px 14px;margin-top:14px}.hand small{display:block;color:var(--soft);font-size:12px}
 .okt{display:inline-flex;align-items:center;gap:6px;color:#3d7a12;font-weight:800;font-size:13.5px}
@@ -1352,18 +1352,23 @@ const MEDS=[['Schmerzmittel',[['Ibuprofen','Normale Wirkung','g'],['Codein','Wir
  ['Antidepressiva',[['Sertralin','Normale Wirkung','g'],['Citalopram','Spiegel niedriger · CYP2C19','y'],['Amitriptylin','Dosis prüfen · CYP2D6','r']]],
  ['Cholesterinsenker',[['Simvastatin','Erhöhtes Muskelrisiko · SLCO1B1','r'],['Rosuvastatin','Normale Wirkung','g']]],
  ['Magenschutz',[['Omeprazol','Wirkung vermindert · CYP2C19','y'],['Pantoprazol','Wirkung vermindert · CYP2C19','y']]]];
+const cBed=()=>{const d=bApi.cd[rSel];return d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>[x.name,x.dose||'',[x.reason,x.group].filter(Boolean).join(' · ')]):BEDARF};
+const FRC=n=>n>=5?'g':n>=3?'b':'y';
+const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.map(g=>[g.group,'b',(g.items||[]).map(i=>`${esc(i.name)}${i.label?` <span class="st ${FRC(i.rating)}">${esc(i.label)}</span>`:''}`)]):FOOD};
 const VLBL={reports:'Berichtsliste',bedarf:'Mein Bedarf',food:'Lebensmittelliste',meds:'Medikamente'};
 const RSS={},RJ={},ALOG={},RNOTE={},HAND={};let RTI=null,rPtr=false;
 const BC=(()=>{try{return new BroadcastChannel('novopilot-beratung')}catch(e){return null}})(); // Demo-Kanal im selben Browser
 if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list)};
 const rB=()=>BOOKINGS.find(b=>b.id===rSel);
-const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
+const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:bApi.on?rSel:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
 const rRep=()=>(bApi.reps[rSel]||REPORTS).find(x=>x.id===rS().reportId);
 const tNow=()=>new Date().toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 const logHtml=()=>(ALOG[rSel]||[]).map(l=>`<li><small>${l.t}</small>${esc(l.x)}</li>`).join('')||'<li class="mut">Noch keine Zugriffe.</li>';
 function alog(x){(ALOG[rSel]=ALOG[rSel]||[]).unshift({t:tNow(),x});const e=document.getElementById('rlog');if(e)e.innerHTML=logHtml()}
 function rPub(){const s=rS();if(BC)BC.postMessage({type:'state',state:s});bApi.state(s);const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1)}
-function rSend(p,lg){Object.assign(rS(),{highlight:null},p,{by:'advisor',at:Date.now()});rPub();if(lg)alog(lg);rStage()}
+function rSend(p,lg){const s=rS(),was=s.view+'|'+s.reportId;Object.assign(s,{highlight:null},p,{by:'advisor',at:Date.now()});rPub();if(lg)alog(lg);
+ const r=rRep();if(s.view==='report-html'&&r&&r.html&&was===s.view+'|'+s.reportId&&document.getElementById('rhf')){rHl();return}rStage()}
+function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;const o=rin.querySelector(':scope > .hl');if(o)o.remove();rin.insertAdjacentHTML('beforeend',hlAt(rS(),null))}
 const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="hl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
 function rPg(e,p){if(!rPtr)return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
 function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
@@ -1377,7 +1382,7 @@ function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.
 function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur=null;for(const x of h.querySelectorAll('section'))if(x.offsetTop-h.scrollTop<=40)cur=x;const s=rS();
  if(cur&&cur.id!==s.htmlAnchor){Object.assign(s,{htmlAnchor:cur.id,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===cur.id));
   h.querySelectorAll('section').forEach(x=>x.classList.toggle('cur',x===cur));const hl=document.querySelector('#rstage .hl');if(hl)hl.remove();alog(`${rRep().t} (HTML): ${cur.querySelector('h4').textContent}`)}}
-function rHand(list){HAND[rSel+':'+list]={st:'sent'};const payload=list==='bedarf'?BEDARF.map(x=>({name:x[0],dose:x[1],reason:x[2]})):FOOD.map(g=>({group:g[0],items:g[2]}));
+function rHand(list){HAND[rSel+':'+list]={st:'sent'};const d=bApi.cd[rSel],payload=list==='bedarf'?(d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>({name:x.name,dose:x.dose,reason:x.reason})):BEDARF.map(x=>({name:x[0],dose:x[1],reason:x[2]}))):(d&&d.food&&d.food.length?d.food:FOOD.map(g=>({group:g[0],items:g[2]})));
  if(BC)BC.postMessage({type:'handover',sessionId:rS().sessionId,list,payload});alog(`Übergabe gesendet: ${VLBL[list]}`);rStage();
  if(bApi.on)bApi.handover(list,payload);else setTimeout(()=>rAck(list),1500)} // Demo: Kunde bestätigt nach 1,5 s
 function rAck(list){const k=rSel+':'+list;if(!HAND[k]||HAND[k].st==='ok')return;HAND[k]={st:'ok',t:tNow().slice(0,5)};alog(`${bFirst(rB())} hat ${VLBL[list]} empfangen`);rStage()}
@@ -1400,8 +1405,8 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="rframe"><iframe id="rhf" title="${esc(r.t)}"></iframe><div class="rfov"></div></div>`:'<div class="empty">Für diesen Bericht gibt es keine HTML-Version.</div>'}`;
  else if(s.view==='report-html')h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${x[1]}</button>`).join('')}</div>
   <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
- else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${BEDARF.map(x=>`<div class="kline"><div><b>${x[0]}</b><small>${x[2]}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
- else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3">${FOOD.map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
+ else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${cBed().map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small class="clamp2">${esc(x[2])}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
+ else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3 fgrid3">${cFood().map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
  else if(s.view==='meds'){const i=s.spread,g=MEDS[i]||MEDS[0];h=`<div class="kh"><b>${ic('pill')} Medikamente</b>${sees}</div><p class="mut">Aus dem Bericht Medikamente (PGx). Medikamente nie selbst absetzen oder ändern, immer mit Ärztin oder Arzt besprechen.</p>
   <div class="pfchips knav">${MEDS.map((m,k)=>`<button class="rchip ${k===i?'on':''}" onclick="event.stopPropagation();rMed(${k})">${m[0]}</button>`).join('')}</div>
   <div class="medpg"><h4>${g[0]}</h4><div class="klines">${g[1].map(d=>`<div class="kline"><div><b>${d[0]}</b><small>${d[1]}</small></div><span class="st ${d[2]}">${{g:'Normal',y:'Angepasst',r:'Prüfen'}[d[2]]}</span></div>`).join('')}</div></div>
@@ -1425,7 +1430,7 @@ function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now
 const lockCard=(t,x)=>`<div class="card lockc"><span class="lki">${ic('lock')}</span><div><b>${t}</b><p class="mut" style="margin:6px 0 0">${x}</p></div></div>`;
 P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div class="backlink"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a></div>`;
  if(!advOk(b))return back+lockCard('Kein Zugriff','Dieser Kunde ist dir nicht zugewiesen.');
- if(!bWin(b))return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:bWhen(b)})+lockCard(b.done?'Termin abgeschlossen':'Der Raum ist noch geschlossen',b.done?'Die Berichte des Kunden sind nur während eines gebuchten Termins sichtbar.':`Der Beratungsraum öffnet am ${dLong(b.d)} um ${hm(b.t-10)} Uhr, 10 Minuten vor Beginn. Die Berichte des Kunden siehst du nur im Terminfenster.`);
+ if(!bWin(b))return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:bWhen(b)})+lockCard(b.done?'Termin abgeschlossen':bS(b)<+BNOW?'Das Terminfenster ist vorbei':'Der Raum ist noch geschlossen',b.done||bS(b)<+BNOW?'Die Berichte des Kunden sind nur während eines gebuchten Termins sichtbar (bis 90 Minuten nach Ende).':`Der Beratungsraum öffnet am ${dLong(b.d)} um ${hm(b.t-10)} Uhr, 10 Minuten vor Beginn. Die Berichte des Kunden siehst du nur im Terminfenster.`);
  if(!RJ[b.id]){const src=b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
   return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:`${bWhen(b)} · ${bPrice(b)}. ${esc(bFirst(b))} tritt über die GEN(e)IUS-App bei.`,chips:'<span class="st g">Jetzt im Terminfenster</span>'})
   +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">${b.live?'Beim Start fragt dein Browser nach Kamera und Mikrofon.':'Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.'}</p></div>
@@ -1445,7 +1450,7 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
 /* ---------- Live-Backend "geneius-beratung" (PocketBase, gebaut von GENIUS APP) ----------
    Erreichbar → ersetzt die Demo-Daten. Freie Zeiten liegen dort als einzelne Termin-Einheiten (slots).
    Video: WebRTC 1:1, Signalisierung über events (hello/ready → Berater sendet offer, Kunde answer, ICE beidseitig). */
-const bApi={on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps:{},room:{},hand:{},pb:null,pc:null,qc:[],local:null,remote:null,joinAt:0,
+const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps:{},room:{},hand:{},pb:null,pc:null,qc:[],local:null,remote:null,joinAt:0,
  async req(m,p,body){const r=await fetch(BAPI+p,{method:m,headers:Object.assign({'Content-Type':'application/json'},this.tok?{Authorization:this.tok}:{}),body:body?JSON.stringify(body):undefined});
   if(!r.ok){let t='';try{t=(await r.json()).message||''}catch(e){}throw new Error(t||r.status)}return r.status===204?null:r.json()},
  iso(d,m){return new Date(new Date(d+'T00:00').getTime()+m*6e4).toISOString()},
@@ -1460,8 +1465,9 @@ const bApi={on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps:{},ro
  async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
   this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
   this.req('GET',`/api/advisor/reports/${id}`).then(x=>{this.reps[id]=(x.items||[]).map(r=>({id:r.id||r.ref,t:r.title,pages:r.pages||1,img:r.img,pad:r.pad||3,html:r.htmlUrl,
-   sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,''),z.title,z.page||1,'',z.target||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
+   sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,''),z.title,z.page||1,'',z.target||'',z.ref||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
    alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
+  this.req('GET',`/api/advisor/customer/${id}`).then(x=>{this.cd[id]=x;rStage()}).catch(e=>toast('Kundendaten nicht verfügbar: '+e.message));
   this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${id}"`)}`).then(x=>{const r=x.items&&x.items[0];if(r){this.room[id]=r.id;rPub()}}).catch(()=>{});
   navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(m=>{if(rSel!==id){m.getTracks().forEach(t=>t.stop());return}this.local=m;this.vAttach();if(this.pc)this.call()}).catch(()=>toast('Kamera/Mikrofon nicht freigegeben – du siehst und hörst den Kunden trotzdem')); // nicht blockieren: Signalisierung startet sofort
   const pb=await this.loadPb().catch(()=>null);
@@ -1487,16 +1493,14 @@ const bApi={on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps:{},ro
  tog(k,on){if(this.local)this.local.getTracks().filter(t=>t.kind===(k==='mic'?'audio':'video')).forEach(t=>t.enabled=on)},
  hang(id){this.ev('bye',{},id);if(this.pc)this.pc.close();this.pc=null;if(this.local)this.local.getTracks().forEach(t=>t.stop());this.local=this.remote=null;if(this.pb)this.pb.collection('events').unsubscribe('*').catch(()=>{})},
  end(b){if(!this.on||!b.live)return;const id=b.id;this.hang(id);this.req('POST',`/api/booking/${id}/end`,{note:b.done.note}).then(x=>{if(x){if(x.billedMinutes!=null)b.done.min=x.billedMinutes;toast(`Am Server abgerechnet: ${x.billedMinutes??b.done.min} Min.${x.billedEur!=null?' · '+eur(x.billedEur):''}`)}}).catch(e=>toast('Beenden am Server fehlgeschlagen: '+e.message))},
+ ref(r,a){const sc=r.sec.find(x=>'abschnitt-'+x[0]===a);return sc&&sc[5]||''},
+ // Server liefert X-Frame-Options: SAMEORIGIN → Bericht per fetch laden, als Blob-URL zeigen (gleicher Origin); Sprung über den Hash der App: #/seite/<ref>
  async htmlLoad(r){const f=document.getElementById('rhf');if(!f)return;
-  try{if(!r._doc){const t=await fetch(r.html).then(x=>{if(!x.ok)throw new Error(x.status);return x.text()});r._doc=/<head[^>]*>/i.test(t)?t.replace(/<head[^>]*>/i,m=>m+`<base href="${r.html}">`):`<base href="${r.html}">`+t}}
+  try{if(!r._doc){const t=await fetch(r.html).then(x=>{if(!x.ok)throw new Error(x.status);return x.text()});const base=`<base href="${r.html.split('#')[0]}">`;const doc=/<head[^>]*>/i.test(t)?t.replace(/<head[^>]*>/i,m=>m+base):base+t;r._doc=URL.createObjectURL(new Blob([doc],{type:'text/html'}))}}
   catch(e){const n=document.createElement('div');n.className='empty';n.textContent='HTML-Bericht nicht verfügbar ('+e.message+')';f.replaceWith(n);return}
-  if(document.getElementById('rhf')!==f)return;
-  f.onload=()=>{const d=f.contentDocument;if(!d)return;const s=rS(),sc=r.sec.find(x=>'abschnitt-'+x[0]===s.htmlAnchor),el=sc&&sc[4]&&d.getElementById(sc[4]);if(el)el.scrollIntoView();
-   d.addEventListener('scroll',()=>this.htmlScroll(r,f),{capture:true,passive:true})};f.srcdoc=r._doc},
- htmlScroll(r,f){const d=f.contentDocument;if(!d)return;let cur=r.sec[0];for(const x of r.sec){const el=x[4]&&d.getElementById(x[4]);if(el&&el.getBoundingClientRect().top<=60)cur=x}
-  const s=rS(),a='abschnitt-'+cur[0];if(a===s.htmlAnchor)return;Object.assign(s,{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();
-  document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));const hl=document.querySelector('#rstage .hl');if(hl)hl.remove();alog(`${r.t} (HTML): ${cur[1]}`)},
- htmlGo(r,a){const f=document.getElementById('rhf'),sc=r.sec.find(x=>'abschnitt-'+x[0]===a),el=f&&f.contentDocument&&sc&&sc[4]&&f.contentDocument.getElementById(sc[4]);if(el)el.scrollIntoView({behavior:'smooth'})}};
+  if(document.getElementById('rhf')!==f)return;const ref=this.ref(r,rS().htmlAnchor);f.onload=()=>setTimeout(()=>this.htmlGo(r,rS().htmlAnchor),400);f.src=r._doc+(ref?'#/seite/'+encodeURIComponent(ref):'')},
+ htmlGo(r,a){const f=document.getElementById('rhf'),ref=this.ref(r,a),w=f&&f.contentWindow;if(!w||!ref)return;
+  try{w.location.hash='/seite/'+encodeURIComponent(ref)}catch(e){console.warn('HTML-Sprung',e)}}};
 async function bLive(){bApi.tried=true;try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),3000);
  const r=await fetch(BAPI+'/api/health',{signal:ctl.signal});if(!r.ok)return;
  const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
