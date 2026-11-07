@@ -188,6 +188,14 @@ a{color:inherit;text-decoration:none}
 @media (max-width:980px){.room{grid-template-columns:minmax(0,1fr);grid-template-areas:"vid" "st" "side"}.rvid{aspect-ratio:16/9}}
 @media (max-width:640px){.tsel{margin-left:0}.bkrow{grid-template-columns:minmax(0,1fr)}.bkr{justify-content:flex-start}.spread{grid-template-columns:minmax(0,1fr);gap:10px;padding:8px}.pg.l,.pg.r{border-radius:6px}.pg.blank{display:none}.pg{font-size:9px}
  .rhtml{height:380px;padding:4px 14px}.pgnav .btn{padding:8px 10px}.rtab.ptr{margin-left:0}.rhd h2{font-size:22px}.kh{flex-wrap:wrap}}
+.rst .knav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.rst .knav::-webkit-scrollbar{display:none}.rst .knav>*{flex:none}
+.pg.img{background:#fff}.pg.img img{object-fit:contain}
+.rvid #rvr{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.rvid.has #rvr{display:block}.rvid.has .av{display:none}
+.rvid .me{overflow:hidden;z-index:2}.rvid .me video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;transform:scaleX(-1)}.rvid .me.has video{display:block}.rvid .me.has i{display:none}.rvid .me.has.off video{display:none}.rvid .me.has.off i{display:block}.rvid .me i{font-style:normal}
+.rvid .nm{z-index:2}
+.rframe{position:relative;height:560px;margin-top:10px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.rframe iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+.rfov{position:absolute;inset:0;display:none}.ptrmode .rfov{display:block;cursor:crosshair}
+@media (max-width:640px){.rframe{height:460px}}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -1268,11 +1276,13 @@ function cDown(e,d){const col=e.currentTarget;cTouch=null;if(col.classList.conta
  col.onpointerup=()=>{col.onpointermove=col.onpointerup=null;const x=cDrag;cDrag=null;g.remove();if(x)cAdd(x.d,x.a,Math.min(x.b,CH1*60))}}
 function cTap(e,d){if(e.currentTarget.classList.contains('past')){toast('Vergangene Tage kannst du nicht mehr planen');return}
  if(!cTouch||cTouch.d!==d)return;const a=Math.min(Math.floor(cTouch.m/30)*30,CH1*60-60);cTouch=null;cAdd(d,a,a+60)}
-function cAdd(d,a,b){const old=SLOTS.filter(s=>s.d===d&&s.a<=b&&a<=s.b);old.forEach(s=>{a=Math.min(a,s.a);b=Math.max(b,s.b);SLOTS.splice(SLOTS.indexOf(s),1)});
+function cAdd(d,a,b){if(bApi.on){let n=0;for(let t=a;t+ADV.dur<=b;t+=ADV.dur+ADV.buf){if(SLOTS.some(s=>s.d===d&&t<s.b&&s.a<t+ADV.dur))continue;const s={d,a:t,b:t+ADV.dur};SLOTS.push(s);bApi.slotSave(s);n++}
+ toast(n?`${n} Termin${n>1?'e':''} à ${ADV.dur} Min. freigegeben: ${dWd(d)}, ${hm(a)}–${hm(b)} Uhr`:'Dieser Zeitraum ist schon frei');render(true);return}
+ const old=SLOTS.filter(s=>s.d===d&&s.a<=b&&a<=s.b);old.forEach(s=>{a=Math.min(a,s.a);b=Math.max(b,s.b);SLOTS.splice(SLOTS.indexOf(s),1)});
  const s={d,a,b};SLOTS.push(s);bApi.slotSave(s,old);toast(`Freie Zeit eingetragen: ${dWd(d)}, ${hm(a)}–${hm(b)} Uhr`);render(true)}
 function cSlot(i){const s=SLOTS[i],bk=BOOKINGS.filter(b=>b.d===s.d&&!b.cancel&&b.t<s.b&&s.a<b.t+b.dur);
  drawer(`<div class="eyebrow" style="color:var(--berry)">Freie Zeit</div><h3 style="margin:6px 0">${dLong(s.d)}</h3><p>${hm(s.a)}–${hm(s.b)} Uhr · ${Math.floor((s.b-s.a+ADV.buf)/(ADV.dur+ADV.buf))} Termine à ${ADV.dur} Min.</p>
- ${bk.length?`<p class="mut">${bk.length} Termin${bk.length>1?'e sind':' ist'} darin schon gebucht. Gebuchte Termine bleiben bestehen.</p>`:''}<button class="btn line sm" onclick="cDel(${i})">Freie Zeit löschen</button>`)}
+ ${bk.length?`<p class="mut">${bk.length} Termin${bk.length>1?'e sind':' ist'} darin schon gebucht. Gebuchte Termine bleiben bestehen.</p>`:''}${s.booked?'<p class="mut">Diese Zeit ist gebucht und lässt sich nicht mehr löschen.</p>':`<button class="btn line sm" onclick="cDel(${i})">Freie Zeit löschen</button>`}`)}
 function cDel(i){const s=SLOTS.splice(i,1)[0];bApi.slotDel(s);closeDrawer();toast('Freie Zeit gelöscht');render(true)}
 function cCopy(){const src=wkDays(bWk-1),today=dIso(BNOW);let n=0;SLOTS.filter(s=>src.includes(s.d)).forEach(s=>{const d=addD(s.d,7);if(d<today||SLOTS.some(x=>x.d===d&&x.a<s.b&&s.a<x.b))return;const x={d,a:s.a,b:s.b};SLOTS.push(x);bApi.slotSave(x,[]);n++});
  toast(n?`${n} freie Zeit${n>1?'en':''} aus der Vorwoche übernommen`:'Nichts zu übernehmen – Vorwoche leer oder schon übernommen');render(true)}
@@ -1363,7 +1373,7 @@ const spLbl=(r,n)=>n===0?'Titelseite':n+1>r.pages?'Seite '+n:`Seite ${n}–${n+1
 function rTurn(n){const r=rRep();n=Math.max(0,Math.min(r.pages-r.pages%2,n));rSend({spread:n},`${r.t}: ${spLbl(r,n)}`)}
 function rView(v){rSend({view:v,reportId:v==='meds'?'pgx':null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
 function rMed(i){rSend({spread:i},`Medikamente: ${MEDS[i][0]}`)}
-function rAnchor(a){const sc=rRep().sec.find(x=>'abschnitt-'+x[0]===a);rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
+function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.html){Object.assign(rS(),{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));alog(`${r.t} (HTML): ${sc[1]}`);bApi.htmlGo(r,a);return}rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
 function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur=null;for(const x of h.querySelectorAll('section'))if(x.offsetTop-h.scrollTop<=40)cur=x;const s=rS();
  if(cur&&cur.id!==s.htmlAnchor){Object.assign(s,{htmlAnchor:cur.id,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===cur.id));
   h.querySelectorAll('section').forEach(x=>x.classList.toggle('cur',x===cur));const hl=document.querySelector('#rstage .hl');if(hl)hl.remove();alog(`${rRep().t} (HTML): ${cur.querySelector('h4').textContent}`)}}
@@ -1374,7 +1384,7 @@ function rAck(list){const k=rSel+':'+list;if(!HAND[k]||HAND[k].st==='ok')return;
 const handBar=list=>{const H=HAND[rSel+':'+list];return `<div class="hand"><div><b>${VLBL[list]} übergeben</b><small>Danach ist die Liste in der GEN(e)IUS-App von ${esc(bFirst(rB()))} gespeichert.</small></div>
  ${H&&H.st==='ok'?`<span class="okt">übergeben ✓ · ${H.t} Uhr</span>`:H?'<span class="st y">Wird übergeben …</span>':`<button class="btn lime sm" onclick="event.stopPropagation();rHand('${list}')">${ic('send')} An ${esc(bFirst(rB()))} übergeben</button>`}</div>`};
 function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg ${side} blank"></div>`;
- if(r.img)return `<div class="pg ${side} img" onclick="rPg(event,${p})"><img src="${r.img.replace('{n}',p)}" alt="Seite ${p}">${hlAt(s,p)}</div>`;
+ if(r.img)return `<div class="pg ${side} img" onclick="rPg(event,${p})"><img src="${r.img.replace('{n}',String(p).padStart(r.pad||3,'0'))}" loading="lazy" alt="Seite ${p}">${hlAt(s,p)}</div>`;
  if(p===1)return `<div class="pg ${side} cover" onclick="rPg(event,1)"><div class="pe" style="color:var(--lime)">GEN(e)IUS</div><h3>${r.t}</h3><p>${esc(bCust(rB()).name)}</p><div class="pno">1</div>${hlAt(s,1)}</div>`;
  const sc=[...r.sec].reverse().find(x=>x[2]<=p)||r.sec[0],first=sc[2]===p;
  return `<div class="pg ${side}" onclick="rPg(event,${p})"><div class="pe">${sc[1]}</div>${first?`<h3>${sc[1]}</h3>${sc[3]?`<div class="res">Dein Ergebnis: ${sc[3]}</div>`:''}`:''}
@@ -1383,9 +1393,11 @@ const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
  if(s.view==='reports')h=`<div class="kh"><b>${ic('report')} Berichte von ${fn}</b>${sees}</div><div class="klines">${reps.map(r=>`<div class="kline"><div><b>${r.t}</b><small>${r.pages} Seiten · ${r.sec.length} Abschnitte</small></div><div class="rhb"><button class="btn lime sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button><button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML</button></div></div>`).join('')}</div>`;
- else if(s.view==='report'){const L=s.spread,mx=r.pages-r.pages%2,cur=[...r.sec].reverse().find(x=>x[2]<=Math.max(L,1));
+ else if(s.view==='report'){const L=s.spread,mx=r.pages-r.pages%2,cur=[...r.sec].reverse().find(x=>x[2]<=Math.max(Math.min(L+1,r.pages),1));
   h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${cur===x?'on':''}" onclick="event.stopPropagation();rTurn(${x[2]-x[2]%2})">${x[1]}</button>`).join('')}</div>
   <div class="spread">${pgHtml(r,L,'l')}${pgHtml(r,L+1,'r')}</div><div class="pgnav"><button class="btn line sm" ${L<=0?'disabled':''} onclick="event.stopPropagation();rTurn(${L-2})">${ic('back')} Zurück</button><b>${spLbl(r,L)} von ${r.pages}</b><button class="btn lime sm" ${L>=mx?'disabled':''} onclick="event.stopPropagation();rTurn(${L+2})">Weiter ${ic('chev')}</button></div>`}
+ else if(s.view==='report-html'&&bApi.reps[rSel])h=`${rHead(r,s)}${r.html?`<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${esc(x[1])}</button>`).join('')}</div>
+  <div class="rframe"><iframe id="rhf" title="${esc(r.t)}"></iframe><div class="rfov"></div></div>`:'<div class="empty">Für diesen Bericht gibt es keine HTML-Version.</div>'}`;
  else if(s.view==='report-html')h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${x[1]}</button>`).join('')}</div>
   <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
  else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${BEDARF.map(x=>`<div class="kline"><div><b>${x[0]}</b><small>${x[2]}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
@@ -1398,13 +1410,14 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
 function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();el.innerHTML=stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
  const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);
+ const rr=rRep();if(s.view==='report-html'&&rr&&rr.html)bApi.htmlLoad(rr);
  if(s.view==='report-html'){const h=document.getElementById('rhtml'),t=s.htmlAnchor&&document.getElementById(s.htmlAnchor);if(h&&t)h.scrollTop=t.offsetTop-8}}
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
  document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
-function rMount(){rStage();rPub();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
+function rMount(){rStage();rPub();bApi.vAttach();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
 function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:true,cam:true};bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
-function rTog(el,k){const j=RJ[rSel];j[k]=!j[k];el.classList.toggle('off',!j[k]);if(k==='cam')document.getElementById('rme').textContent=j.cam?'Du':'Kamera aus';toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
+function rTog(el,k){const j=RJ[rSel];j[k]=!j[k];el.classList.toggle('off',!j[k]);bApi.tog(k,j[k]);if(k==='cam'){document.querySelector('#rme i').textContent=j.cam?'Du':'Kamera aus';document.getElementById('rme').classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
  b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
  const given=['bedarf','food'].filter(l=>(HAND[id+':'+l]||{}).st==='ok').map(l=>VLBL[l]).join(', ')||'nichts';bTab='termine';location.hash='beratung';
@@ -1413,16 +1426,16 @@ const lockCard=(t,x)=>`<div class="card lockc"><span class="lki">${ic('lock')}</
 P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div class="backlink"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a></div>`;
  if(!advOk(b))return back+lockCard('Kein Zugriff','Dieser Kunde ist dir nicht zugewiesen.');
  if(!bWin(b))return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:bWhen(b)})+lockCard(b.done?'Termin abgeschlossen':'Der Raum ist noch geschlossen',b.done?'Die Berichte des Kunden sind nur während eines gebuchten Termins sichtbar.':`Der Beratungsraum öffnet am ${dLong(b.d)} um ${hm(b.t-10)} Uhr, 10 Minuten vor Beginn. Die Berichte des Kunden siehst du nur im Terminfenster.`);
- if(!RJ[b.id]){const src=(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
+ if(!RJ[b.id]){const src=b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
   return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:`${bWhen(b)} · ${bPrice(b)}. ${esc(bFirst(b))} tritt über die GEN(e)IUS-App bei.`,chips:'<span class="st g">Jetzt im Terminfenster</span>'})
-  +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.</p></div>
-  <div class="card">${kHead('shield','Einwilligung & Zugriff')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>erteilt in der GEN(e)IUS-App · ${b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr'}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
+  +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">${b.live?'Beim Start fragt dein Browser nach Kamera und Mikrofon.':'Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.'}</p></div>
+  <div class="card">${kHead('shield','Einwilligung & Zugriff')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
   <p class="mut" style="margin:12px 0">Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.</p><button class="btn lime" onclick="rJoin()">${ic('video')} Beratung starten</button></div></div>`}
  const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();setTimeout(rMount);
  return back+`<div class="rhd"><div><div class="eyebrow">Beratungsraum · ${b.id}</div><h2>${esc(c.name)}</h2><span>${bWhen(b)} · ${bPrice(b)}</span></div><span class="st g">Live</span></div>
  <div class="room ${rPtr?'ptrmode':''}" id="room">
  <div class="card rst"><div class="rtabs">${[['reports','report','Berichte'],['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittel'],['meds','pill','Medikamente']].map(t=>`<button class="rtab" data-v="${t[0]}" onclick="rView('${t[0]}')">${ic(t[1])} ${t[2]}</button>`).join('')}<button class="rtab ptr ${rPtr?'on':''}" onclick="rPtrT(this)" title="Stelle für den Kunden markieren">${ic('ptr')} Zeiger</button></div><div id="rstage" class="rstage"></div></div>
- <div class="card rvidc"><div class="rvid"><span class="av">${ini}</span><span class="nm">${esc(c.name)} · GEN(e)IUS-App</span><span class="me" id="rme">${RJ[b.id].cam?'Du':'Kamera aus'}</span></div>
+ <div class="card rvidc"><div class="rvid"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · GEN(e)IUS-App</span><span class="me" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RJ[b.id].cam?'Du':'Kamera aus'}</i></span></div>
   <div class="rctl"><button class="rbtn ${RJ[b.id].mic?'':'off'}" onclick="rTog(this,'mic')" title="Mikrofon">${ic('mic')}</button><button class="rbtn ${RJ[b.id].cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera">${ic('video')}</button><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button></div>
   <div class="rtimer"><div><div class="lbl">Dauer</div><div class="rtime" id="rtime">00:00</div></div><div style="text-align:right"><div class="lbl">Abgerechnet</div><div id="rbill" class="rbill"></div></div></div></div>
  <div class="rside"><div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
@@ -1430,33 +1443,74 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
   <div class="card"><details class="rjson"><summary>Gemeinsamer Zustand (für die Entwicklung)</summary><pre id="rjson"></pre></details></div></div></div>`};
 
 /* ---------- Live-Backend "geneius-beratung" (PocketBase, gebaut von GENIUS APP) ----------
-   Ist es erreichbar, ersetzt es die Demo-Daten. Fehler → Demo bleibt aktiv. */
-const bApi={on:false,tried:false,tok:'',adv:null,reps:{},room:{},t:null,
- async req(m,p,body){const r=await fetch(BAPI+p,{method:m,headers:Object.assign({'Content-Type':'application/json'},this.tok?{Authorization:this.tok}:{}),body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(m+' '+p+' '+r.status);return r.status===204?null:r.json()},
+   Erreichbar → ersetzt die Demo-Daten. Freie Zeiten liegen dort als einzelne Termin-Einheiten (slots).
+   Video: WebRTC 1:1, Signalisierung über events (hello/ready → Berater sendet offer, Kunde answer, ICE beidseitig). */
+const bApi={on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps:{},room:{},hand:{},pb:null,pc:null,qc:[],local:null,remote:null,joinAt:0,
+ async req(m,p,body){const r=await fetch(BAPI+p,{method:m,headers:Object.assign({'Content-Type':'application/json'},this.tok?{Authorization:this.tok}:{}),body:body?JSON.stringify(body):undefined});
+  if(!r.ok){let t='';try{t=(await r.json()).message||''}catch(e){}throw new Error(t||r.status)}return r.status===204?null:r.json()},
  iso(d,m){return new Date(new Date(d+'T00:00').getTime()+m*6e4).toISOString()},
- slotSave(s,old){if(!this.on)return;old.forEach(o=>this.slotDel(o));this.req('POST','/api/collections/slots/records',{advisor:this.adv,start:this.iso(s.d,s.a),end:this.iso(s.d,s.b),booked:false}).then(x=>s.rid=x.id).catch(e=>toast('Speichern fehlgeschlagen'))},
- slotDel(s){if(this.on&&s.rid)this.req('DELETE','/api/collections/slots/records/'+s.rid).catch(()=>{})},
- advSave(){if(!this.on)return;clearTimeout(this.ta);this.ta=setTimeout(()=>this.req('PATCH','/api/collections/advisors/records/'+this.adv,{rateEur:ADV.rate,slotMin:ADV.dur,langs:ADV.langs.split(',').map(x=>x.trim()).filter(Boolean),bio:ADV.intro}).catch(()=>{}),600)},
- state(s){if(!this.on||!this.room[rSel])return;clearTimeout(this.t);this.t=setTimeout(()=>this.req('PATCH','/api/collections/rooms/records/'+this.room[rSel],{state:s}).catch(()=>{}),120)},
- handover(list,payload){this.req('POST','/api/collections/events/records',{booking:rSel,from:'advisor',type:'handover',data:{list,payload}}).then(x=>{(this.hand=this.hand||{})[x.id]=[rSel,list]}).catch(()=>toast('Übergabe fehlgeschlagen'))},
- start(b){if(!this.on||!b.live)return;this.req('POST',`/api/booking/${b.id}/start`).catch(()=>{});
-  this.req('GET',`/api/advisor/reports/${b.id}`).then(x=>{const it=x.items||x;this.reps[b.id]=it.map(r=>({id:r.ref||r.id,t:r.title,pages:r.pages,img:r.img,sec:(r.sections||[]).map(z=>[z.id,z.title,z.page,z.result||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start','Bericht',1,'']]}));rStage()}).catch(()=>{});
-  this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${b.id}"`)}`).then(x=>{if(x.items[0])this.room[b.id]=x.items[0].id;else return this.req('POST','/api/collections/rooms/records',{booking:b.id,state:rS()}).then(y=>this.room[b.id]=y.id)}).then(()=>rPub()).catch(()=>{})},
- end(b){if(this.on&&b.live)this.req('POST',`/api/booking/${b.id}/end`,{note:b.done.note}).catch(()=>{})},
- sub(){/* Realtime: handover-ack über PocketBase-SDK */const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';
-  s.onload=()=>{try{const pb=new PocketBase(BAPI);pb.authStore.save(this.tok,null);pb.collection('events').subscribe('*',e=>{const d=e.record;if(d.type==='handover-ack'&&this.hand&&this.hand[d.data.handoverId]){const[bk,list]=this.hand[d.data.handoverId];if(bk===rSel)rAck(list)}})}catch(e){}};document.head.appendChild(s)}};
-async function bLive(){bApi.tried=true;try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),2500);
+ slotSave(s){if(!this.on)return;this.req('POST','/api/collections/slots/records',{start:this.iso(s.d,s.a),end:this.iso(s.d,s.b)}).then(x=>s.rid=x.id).catch(e=>toast('Freie Zeit nicht gespeichert: '+e.message))},
+ slotDel(s){if(this.on&&s.rid)this.req('DELETE','/api/collections/slots/records/'+s.rid).catch(e=>toast('Löschen fehlgeschlagen: '+e.message))},
+ advSave(){if(!this.on||!this.advRec)return;clearTimeout(this.ta);this.ta=setTimeout(()=>this.req('PATCH','/api/collections/advisors/records/'+this.advRec,{rateEur:ADV.rate,slotMin:ADV.dur,langs:ADV.langs.split(',').map(x=>x.trim()).filter(Boolean),bio:ADV.intro}).catch(()=>{}),600)},
+ state(s){if(!this.on||!this.room[rSel])return;const id=this.room[rSel];clearTimeout(this.t);this.t=setTimeout(()=>this.req('PATCH','/api/collections/rooms/records/'+id,{state:s}).catch(()=>{}),120)},
+ ev(type,data,bk){return this.req('POST','/api/collections/events/records',{booking:bk||rSel,type,data:data||{}}).catch(()=>null)},
+ handover(list,payload){const bk=rSel;this.ev('handover',{list,payload},bk).then(x=>{if(x)this.hand[x.id]=[bk,list];else toast('Übergabe fehlgeschlagen')})},
+ async loadPb(){if(this.pb)return this.pb;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+  this.pb=new PocketBase(BAPI);this.pb.authStore.save(this.tok,this.rec);return this.pb},
+ async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
+  this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
+  this.req('GET',`/api/advisor/reports/${id}`).then(x=>{this.reps[id]=(x.items||[]).map(r=>({id:r.id||r.ref,t:r.title,pages:r.pages||1,img:r.img,pad:r.pad||3,html:r.htmlUrl,
+   sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,''),z.title,z.page||1,'',z.target||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
+   alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
+  this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${id}"`)}`).then(x=>{const r=x.items&&x.items[0];if(r){this.room[id]=r.id;rPub()}}).catch(()=>{});
+  navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(m=>{if(rSel!==id){m.getTracks().forEach(t=>t.stop());return}this.local=m;this.vAttach();if(this.pc)this.call()}).catch(()=>toast('Kamera/Mikrofon nicht freigegeben – du siehst und hörst den Kunden trotzdem')); // nicht blockieren: Signalisierung startet sofort
+  const pb=await this.loadPb().catch(()=>null);
+  if(pb){await pb.collection('events').unsubscribe('*').catch(()=>{});await pb.collection('events').subscribe('*',e=>{if(e.action==='create')this.onEv(e.record)},{filter:`booking="${id}"`}).catch(e=>console.warn('Realtime',e))}
+  await this.ev('hello',{},id);
+  const since=new Date(Date.now()-6e5).toISOString().replace('T',' ');
+  this.req('GET',`/api/collections/events/records?perPage=1&sort=-created&filter=${encodeURIComponent(`booking="${id}" && type="hello" && from!="advisor" && created>="${since}"`)}`).then(x=>{if(x.items&&x.items.length)this.call()}).catch(()=>{})},
+ onEv(d){if(!d||d.from==='advisor'||d.booking!==rSel)return;const t=d.created?Date.parse(d.created.replace(' ','T')):Date.now();if(t<this.joinAt-3000)return;const x=d.data||{};
+  if(d.type==='hello'||d.type==='ready'){alog('Kunde ist beigetreten');this.call()}
+  else if(d.type==='signal')this.sig(x);
+  else if(d.type==='handover-ack'){const h=this.hand[x.handoverId];if(h&&h[0]===rSel)rAck(h[1]);else if(x.list)rAck(x.list)}
+  else if(d.type==='bye'){const v=document.querySelector('.rvid');if(v)v.classList.remove('has');this.remote=null;alog('Kunde hat den Raum verlassen')}},
+ async call(){if(this.pc)this.pc.close();const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});this.qc=[];
+  if(this.local)this.local.getTracks().forEach(t=>pc.addTrack(t,this.local));else{pc.addTransceiver('audio',{direction:'recvonly'});pc.addTransceiver('video',{direction:'recvonly'})}
+  pc.ontrack=e=>{this.remote=e.streams[0]||new MediaStream([e.track]);this.vAttach()};
+  pc.onicecandidate=e=>{if(e.candidate)this.ev('signal',{candidate:e.candidate.toJSON()})};
+  pc.onconnectionstatechange=()=>{if(pc!==this.pc)return;if(pc.connectionState==='connected')alog('Video verbunden');if(pc.connectionState==='failed')toast('Videoverbindung unterbrochen')};
+  const o=await pc.createOffer();await pc.setLocalDescription(o);this.ev('signal',{sdp:{type:'offer',sdp:o.sdp}})},
+ async sig(x){const pc=this.pc;if(!pc)return;try{if(x.sdp&&x.sdp.type==='answer'){if(pc.signalingState!=='have-local-offer')return;await pc.setRemoteDescription(x.sdp);for(const c of this.qc)await pc.addIceCandidate(c);this.qc=[]}
+  else if(x.candidate){if(pc.remoteDescription)await pc.addIceCandidate(x.candidate);else this.qc.push(x.candidate)}}catch(e){console.warn('Signal',e)}},
+ vAttach(){const r=document.getElementById('rvr'),l=document.getElementById('rvl');if(l&&this.local&&l.srcObject!==this.local){l.srcObject=this.local;l.closest('.me').classList.add('has')}
+  if(r&&this.remote){if(r.srcObject!==this.remote)r.srcObject=this.remote;r.closest('.rvid').classList.add('has')}},
+ tog(k,on){if(this.local)this.local.getTracks().filter(t=>t.kind===(k==='mic'?'audio':'video')).forEach(t=>t.enabled=on)},
+ hang(id){this.ev('bye',{},id);if(this.pc)this.pc.close();this.pc=null;if(this.local)this.local.getTracks().forEach(t=>t.stop());this.local=this.remote=null;if(this.pb)this.pb.collection('events').unsubscribe('*').catch(()=>{})},
+ end(b){if(!this.on||!b.live)return;const id=b.id;this.hang(id);this.req('POST',`/api/booking/${id}/end`,{note:b.done.note}).then(x=>{if(x){if(x.billedMinutes!=null)b.done.min=x.billedMinutes;toast(`Am Server abgerechnet: ${x.billedMinutes??b.done.min} Min.${x.billedEur!=null?' · '+eur(x.billedEur):''}`)}}).catch(e=>toast('Beenden am Server fehlgeschlagen: '+e.message))},
+ async htmlLoad(r){const f=document.getElementById('rhf');if(!f)return;
+  try{if(!r._doc){const t=await fetch(r.html).then(x=>{if(!x.ok)throw new Error(x.status);return x.text()});r._doc=/<head[^>]*>/i.test(t)?t.replace(/<head[^>]*>/i,m=>m+`<base href="${r.html}">`):`<base href="${r.html}">`+t}}
+  catch(e){const n=document.createElement('div');n.className='empty';n.textContent='HTML-Bericht nicht verfügbar ('+e.message+')';f.replaceWith(n);return}
+  if(document.getElementById('rhf')!==f)return;
+  f.onload=()=>{const d=f.contentDocument;if(!d)return;const s=rS(),sc=r.sec.find(x=>'abschnitt-'+x[0]===s.htmlAnchor),el=sc&&sc[4]&&d.getElementById(sc[4]);if(el)el.scrollIntoView();
+   d.addEventListener('scroll',()=>this.htmlScroll(r,f),{capture:true,passive:true})};f.srcdoc=r._doc},
+ htmlScroll(r,f){const d=f.contentDocument;if(!d)return;let cur=r.sec[0];for(const x of r.sec){const el=x[4]&&d.getElementById(x[4]);if(el&&el.getBoundingClientRect().top<=60)cur=x}
+  const s=rS(),a='abschnitt-'+cur[0];if(a===s.htmlAnchor)return;Object.assign(s,{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();
+  document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));const hl=document.querySelector('#rstage .hl');if(hl)hl.remove();alog(`${r.t} (HTML): ${cur[1]}`)},
+ htmlGo(r,a){const f=document.getElementById('rhf'),sc=r.sec.find(x=>'abschnitt-'+x[0]===a),el=f&&f.contentDocument&&sc&&sc[4]&&f.contentDocument.getElementById(sc[4]);if(el)el.scrollIntoView({behavior:'smooth'})}};
+async function bLive(){bApi.tried=true;try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),3000);
  const r=await fetch(BAPI+'/api/health',{signal:ctl.signal});if(!r.ok)return;
- const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.adv=(a.record&&(a.record.advisorId||a.record.advisor))||'a1';
- const ad=await bApi.req('GET','/api/collections/advisors/records/'+bApi.adv).catch(()=>null);if(ad)Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro});
+ const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
  const f=encodeURIComponent(`advisor="${bApi.adv}"`);
- const sl=await bApi.req('GET',`/api/collections/slots/records?perPage=500&filter=${f}`),bk=await bApi.req('GET',`/api/collections/bookings/records?perPage=500&expand=customer&filter=${f}`);
- const loc=x=>{const d=new Date(x);return[dIso(d),d.getHours()*60+d.getMinutes()]};
- SLOTS=sl.items.map(s=>{const[d,a]=loc(s.start),b=loc(s.end)[1];return{d,a,b,rid:s.id}});
- BOOKINGS=bk.items.map(x=>{const[d,t]=loc(x.start),dur=x.minutes||Math.round((new Date(x.end)-new Date(x.start))/6e4),cu=(x.expand&&x.expand.customer)||{};
-  return{id:x.id,live:true,d,t,dur,price:x.priceEur||0,free:!!x.free,cancel:x.status==='cancelled',cust:{name:cu.name||[cu.firstName,cu.lastName].filter(Boolean).join(' ')||cu.email||'Kunde'},
-   consent:x.consentAt?new Date(x.consentAt).toLocaleString('de-AT',{dateStyle:'short',timeStyle:'short'})+' Uhr':'',done:x.status==='done'?{min:x.billedMinutes||dur,extra:0,note:x.note||''}:null}});
- BNOW=new Date();bApi.on=true;bApi.sub();toast('Live-Backend verbunden');render(true)}catch(e){console.info('Online-Beratung: Demo-Daten (Backend nicht erreichbar)',e)}}
+ const ad=await bApi.req('GET',`/api/collections/advisors/records?filter=${encodeURIComponent(`ref="${bApi.adv}"`)}`).then(x=>x.items[0]).catch(()=>null);
+ if(ad){bApi.advRec=ad.id;bApi.advName=ad.name;Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro})}
+ const sl=await bApi.req('GET',`/api/collections/slots/records?perPage=500&filter=${f}`),bk=await bApi.req('GET',`/api/collections/bookings/records?perPage=500&sort=start&filter=${f}`);
+ const loc=x=>{const d=new Date(x.replace(' ','T'));return[dIso(d),d.getHours()*60+d.getMinutes()]};
+ SLOTS=sl.items.map(s=>{const[d,a]=loc(s.start),b=loc(s.end)[1];return{d,a,b,rid:s.id,booked:!!s.booked}});
+ BOOKINGS=bk.items.map(x=>{const[d,t]=loc(x.start),dur=x.minutes||Math.round((Date.parse(x.end.replace(' ','T'))-Date.parse(x.start.replace(' ','T')))/6e4);
+  return{id:x.id,live:true,d,t,dur,price:x.priceEur||0,free:!!x.free,cancel:x.status==='cancelled',cust:{name:x.customerName||'Kunde'},
+   consent:x.consentAt?new Date(x.consentAt.replace(' ','T')).toLocaleString('de-AT',{dateStyle:'short',timeStyle:'short'})+' Uhr':'',
+   done:x.status==='done'?{min:x.billedMinutes||dur,extra:0,note:''}:null}});
+ BNOW=new Date();setInterval(()=>{BNOW=new Date()},3e4);bApi.on=true;toast('Live-Backend verbunden'+(bApi.advName?' · '+bApi.advName:''));render(true)}catch(e){console.info('Online-Beratung: Demo-Daten (Backend nicht erreichbar)',e)}}
 
 const TOUR=[
  ['home','','Start','Dein Startpunkt: oben deine auszahlbare Direktverkaufs- und Netzwerkprovision, darunter dein Endkundenshop mit QR-Code zum Teilen und Herunterladen und deine neuesten Kunden.'],
@@ -1499,7 +1553,7 @@ addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
 
 function render(keepFocus){let id=location.hash.slice(1)||'home';if(id.startsWith('partner-')){pSel=id.slice(8);id='partner'}if(id.startsWith('kunde-')){kSel=+id.slice(6);id='kunde'}if(id.startsWith('raum-')){rSel=id.slice(5);id='raum'}const page=P[id]?id:'home';renderRail(page==='partner'?'network':page==='kunde'?'customers':page==='raum'?'beratung':page);
   const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
-  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)&&!bApi.on?' · Online-Beratung: Termine, Berichte und Video sind Demo':''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Mein Bedarf/Lebensmittel/Medikamente noch Beispieldaten)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
   if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
   if(!keepFocus)window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{closeDrawer();render()});render();
