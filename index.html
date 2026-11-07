@@ -1494,13 +1494,14 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
  hang(id){this.ev('bye',{},id);if(this.pc)this.pc.close();this.pc=null;if(this.local)this.local.getTracks().forEach(t=>t.stop());this.local=this.remote=null;if(this.pb)this.pb.collection('events').unsubscribe('*').catch(()=>{})},
  end(b){if(!this.on||!b.live)return;const id=b.id;this.hang(id);this.req('POST',`/api/booking/${id}/end`,{note:b.done.note}).then(x=>{if(x){if(x.billedMinutes!=null)b.done.min=x.billedMinutes;toast(`Am Server abgerechnet: ${x.billedMinutes??b.done.min} Min.${x.billedEur!=null?' · '+eur(x.billedEur):''}`)}}).catch(e=>toast('Beenden am Server fehlgeschlagen: '+e.message))},
  ref(r,a){const sc=r.sec.find(x=>'abschnitt-'+x[0]===a);return sc&&sc[5]||''},
- // Server liefert X-Frame-Options: SAMEORIGIN → Bericht per fetch laden, als Blob-URL zeigen (gleicher Origin); Sprung über den Hash der App: #/seite/<ref>
- async htmlLoad(r){const f=document.getElementById('rhf');if(!f)return;
+ // HTML-Bericht direkt im iframe (Server erlaubt per frame-ancestors github.io, 127.0.0.1, localhost); Sprung über den Hash der App: #/seite/<ref>, ohne Neuladen.
+ // Nur bei file:// (Origin null, nicht erlaubt) wird der Bericht per fetch als Blob-URL geladen.
+ async htmlLoad(r){const f=document.getElementById('rhf');if(!f)return;const frag=()=>{const ref=this.ref(r,rS().htmlAnchor);return ref?'#/seite/'+encodeURIComponent(ref):''};
+  if(location.protocol!=='file:'){f.onload=()=>{if(!f._once){f._once=1;setTimeout(()=>this.htmlGo(r,rS().htmlAnchor),400)}};f.src=r.html.split('#')[0]+frag();return}
   try{if(!r._doc){const t=await fetch(r.html).then(x=>{if(!x.ok)throw new Error(x.status);return x.text()});const base=`<base href="${r.html.split('#')[0]}">`;const doc=/<head[^>]*>/i.test(t)?t.replace(/<head[^>]*>/i,m=>m+base):base+t;r._doc=URL.createObjectURL(new Blob([doc],{type:'text/html'}))}}
   catch(e){const n=document.createElement('div');n.className='empty';n.textContent='HTML-Bericht nicht verfügbar ('+e.message+')';f.replaceWith(n);return}
-  if(document.getElementById('rhf')!==f)return;const ref=this.ref(r,rS().htmlAnchor);f.onload=()=>setTimeout(()=>this.htmlGo(r,rS().htmlAnchor),400);f.src=r._doc+(ref?'#/seite/'+encodeURIComponent(ref):'')},
- htmlGo(r,a){const f=document.getElementById('rhf'),ref=this.ref(r,a),w=f&&f.contentWindow;if(!w||!ref)return;
-  try{w.location.hash='/seite/'+encodeURIComponent(ref)}catch(e){console.warn('HTML-Sprung',e)}}};
+  if(document.getElementById('rhf')!==f)return;f.onload=()=>setTimeout(()=>this.htmlGo(r,rS().htmlAnchor),400);f.src=r._doc+frag()},
+ htmlGo(r,a){const f=document.getElementById('rhf'),ref=this.ref(r,a);if(!f||!ref)return;const base=(f.src||'').split('#')[0];if(base)f.src=base+'#/seite/'+encodeURIComponent(ref)}};
 async function bLive(){bApi.tried=true;try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),3000);
  const r=await fetch(BAPI+'/api/health',{signal:ctl.signal});if(!r.ok)return;
  const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
