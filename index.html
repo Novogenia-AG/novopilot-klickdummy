@@ -170,7 +170,8 @@ a{color:inherit;text-decoration:none}
 .rhtml{position:relative;height:460px;overflow-y:auto;scrollbar-width:none;border:1px solid var(--line);border-radius:16px;padding:4px 20px;margin-top:10px}.rhtml::-webkit-scrollbar{display:none}
 .rhtml section{padding:16px 0;border-bottom:1px solid var(--line)}.rhtml h4{margin:0 0 8px;font-size:18px;color:var(--plum)}.rhtml section.cur h4{color:var(--berry)}.rhtml p{font-size:14px;margin:10px 0 6px}
 .dose{color:var(--plum);text-align:right}
-.clamp2{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.fgrid3{max-height:520px;overflow-y:auto;scrollbar-width:none}.fgrid3::-webkit-scrollbar{display:none}.fgrp li .st{font-size:10.5px;padding:1px 7px;margin-left:4px}.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
+.clamp2{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mrow{cursor:pointer;border-radius:12px;transition:background .15s}.mrow:hover{background:var(--wash)}.mrow.mon{background:var(--wash);box-shadow:inset 0 0 0 2px var(--lime)}
+.fgrid3{max-height:520px;overflow-y:auto;scrollbar-width:none}.fgrid3::-webkit-scrollbar{display:none}.fgrp li .st{font-size:10.5px;padding:1px 7px;margin-left:4px}.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
 .medpg{background:var(--wash);border-radius:16px;padding:14px 16px;margin-top:10px}.medpg h4{margin:0 0 4px;font-size:17px;color:var(--plum)}
 .hand{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9E6;border-radius:14px;padding:12px 14px;margin-top:14px}.hand small{display:block;color:var(--soft);font-size:12px}
 .okt{display:inline-flex;align-items:center;gap:6px;color:#3d7a12;font-weight:800;font-size:13.5px}
@@ -1347,11 +1348,14 @@ const REPORTS=[
 const BEDARF=[['Vitamin D3','2.000 IE pro Tag','Erhöhter Bedarf · VDR, GC'],['Omega-3 (EPA + DHA)','1 g pro Tag','Erhöhter Bedarf · FADS1'],['Folat (aktiv)','400 µg pro Tag','Normaler Bedarf · MTHFR'],['Vitamin B12','250 µg pro Tag','Leicht erhöht · FUT2'],['Magnesium','300 mg pro Tag','Normaler Bedarf'],['Vitamin C','200 mg pro Tag','Leicht erhöht · SLC23A1']];
 const FOOD=[['Empfohlen','g',['Lachs, Makrele, Hering','Leinöl und Walnüsse','Spinat, Brokkoli, Grünkohl','Linsen und Kichererbsen','Haferflocken und Vollkorn']],
  ['In Maßen','y',['Kaffee: höchstens 2 Tassen am Tag (langsamer Koffein-Abbau)','Rotes Fleisch: 1–2× pro Woche','Weißbrot und Zucker']],['Gut verträglich','b',['Milch und Milchprodukte','Glutenhaltiges Getreide']]];
-const MEDS=[['Schmerzmittel',[['Ibuprofen','Normale Wirkung','g'],['Codein','Wirkung vermindert · CYP2D6','y'],['Tramadol','Wirkung vermindert · CYP2D6','y']]],
- ['Blutverdünner',[['Clopidogrel','Wirkung verstärkt · CYP2C19','y'],['Warfarin','Normale Wirkung','g']]],
- ['Antidepressiva',[['Sertralin','Normale Wirkung','g'],['Citalopram','Spiegel niedriger · CYP2C19','y'],['Amitriptylin','Dosis prüfen · CYP2D6','r']]],
- ['Cholesterinsenker',[['Simvastatin','Erhöhtes Muskelrisiko · SLCO1B1','r'],['Rosuvastatin','Normale Wirkung','g']]],
- ['Magenschutz',[['Omeprazol','Wirkung vermindert · CYP2C19','y'],['Pantoprazol','Wirkung vermindert · CYP2C19','y']]]];
+const MI=(name,level,label,genes)=>({name,level,label,genes,note:''});
+const MEDS=[{group:'Schmerzmittel',items:[MI('Ibuprofen','y','Achtung','LST1 / LTA / TNF'),MI('Paracetamol','g','Normal',''),MI('Codein','g','Normal','')]},
+ {group:'Blutverdünner & Blutdruck',items:[MI('Clopidogrel','g','Normal',''),MI('Warfarin','g','Normal',''),MI('Hydralazin','r','Handlungsbedarf','NAT2')]},
+ {group:'Antidepressiva',items:[MI('Sertralin','g','Normal',''),MI('Fluoxetin','y','Achtung','CYP2D6')]},
+ {group:'Cholesterinsenker',items:[MI('Simvastatin','b','Hinweis','SLCO1B1'),MI('Rosuvastatin','g','Normal','')]},
+ {group:'Magenschutz & Übelkeit',items:[MI('Omeprazol','g','Normal',''),MI('Esomeprazol','y','Achtung','CYP2C19')]}];
+const MLV={g:'Normal',b:'Hinweis',y:'Achtung',r:'Handlungsbedarf'};
+const cMeds=()=>{const d=bApi.cd[rSel],m=d&&d.meds;const g=Array.isArray(m)?m:m&&m.groups;return g&&g.length?g:MEDS};
 const cBed=()=>{const d=bApi.cd[rSel];return d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>[x.name,x.dose||'',[x.reason,x.group].filter(Boolean).join(' · ')]):BEDARF};
 const FRC=n=>n>=5?'g':n>=3?'b':'y';
 const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.map(g=>[g.group,'b',(g.items||[]).map(i=>`${esc(i.name)}${i.label?` <span class="st ${FRC(i.rating)}">${esc(i.label)}</span>`:''}`)]):FOOD};
@@ -1377,7 +1381,8 @@ function rHtml(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({
 const spLbl=(r,n)=>n===0?'Titelseite':n+1>r.pages?'Seite '+n:`Seite ${n}–${n+1}`;
 function rTurn(n){const r=rRep();n=Math.max(0,Math.min(r.pages-r.pages%2,n));rSend({spread:n},`${r.t}: ${spLbl(r,n)}`)}
 function rView(v){rSend({view:v,reportId:v==='meds'?'pgx':null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
-function rMed(i){rSend({spread:i},`Medikamente: ${MEDS[i][0]}`)}
+function rMed(i){rSend({spread:i},`Medikamente: ${cMeds()[i].group}`)}
+function rMedItem(n){const s=rS(),on=s.highlight&&s.highlight.item===n;rSend(on?{}:{highlight:{page:null,item:n}},on?null:`Medikamente: ${n} markiert`)}
 function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.html){Object.assign(rS(),{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));alog(`${r.t} (HTML): ${sc[1]}`);bApi.htmlGo(r,a);return}rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
 function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur=null;for(const x of h.querySelectorAll('section'))if(x.offsetTop-h.scrollTop<=40)cur=x;const s=rS();
  if(cur&&cur.id!==s.htmlAnchor){Object.assign(s,{htmlAnchor:cur.id,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===cur.id));
@@ -1407,10 +1412,10 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
  else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${cBed().map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small class="clamp2">${esc(x[2])}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
  else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3 fgrid3">${cFood().map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
- else if(s.view==='meds'){const i=s.spread,g=MEDS[i]||MEDS[0];h=`<div class="kh"><b>${ic('pill')} Medikamente</b>${sees}</div><p class="mut">Aus dem Bericht Medikamente (PGx). Medikamente nie selbst absetzen oder ändern, immer mit Ärztin oder Arzt besprechen.</p>
-  <div class="pfchips knav">${MEDS.map((m,k)=>`<button class="rchip ${k===i?'on':''}" onclick="event.stopPropagation();rMed(${k})">${m[0]}</button>`).join('')}</div>
-  <div class="medpg"><h4>${g[0]}</h4><div class="klines">${g[1].map(d=>`<div class="kline"><div><b>${d[0]}</b><small>${d[1]}</small></div><span class="st ${d[2]}">${{g:'Normal',y:'Angepasst',r:'Prüfen'}[d[2]]}</span></div>`).join('')}</div></div>
-  <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${MEDS.length}</b><button class="btn lime sm" ${i>=MEDS.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
+ else if(s.view==='meds'){const M=cMeds(),i=Math.min(s.spread||0,M.length-1),g=M[i],hi=s.highlight&&s.highlight.item;h=`<div class="kh"><b>${ic('pill')} Medikamente</b>${sees}</div><p class="mut">Aus dem Bericht Medikamente (PGx). Medikamente nie selbst absetzen oder ändern, immer mit Ärztin oder Arzt besprechen. Tippe auf einen Wirkstoff, um ihn für ${fn} zu markieren.</p>
+  <div class="pfchips knav">${M.map((m,k)=>`<button class="rchip ${k===i?'on':''}" onclick="event.stopPropagation();rMed(${k})">${esc(m.group)}</button>`).join('')}</div>
+  <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
+  <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
 function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();el.innerHTML=stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
