@@ -147,8 +147,8 @@ a{color:inherit;text-decoration:none}
 .advprice{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#F7F9E6;border-radius:14px;padding:12px 14px}.advprice b{font-size:18px;color:var(--plum)}.advprice span:not(.st){font-size:13px;font-weight:700;color:var(--soft)}
 .lockc{display:flex;gap:14px;align-items:flex-start}.lki{width:44px;height:44px;border-radius:14px;background:var(--wash);color:var(--plum);display:grid;place-items:center;flex:none}
 .rhd{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:0 0 14px}.rhd h2{margin:4px 0 2px;font-size:28px}.rhd span:not(.st){font-size:13px;color:rgba(255,255,255,.75)}
-.room{display:grid;grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"st vid" "st side";gap:14px;align-items:start}
-.rst{grid-area:st}.rvidc{grid-area:vid}.rside{grid-area:side;display:flex;flex-direction:column;gap:14px}
+.room{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}.rmain{min-width:0}
+.rside{display:flex;flex-direction:column;gap:14px}
 .rtabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .rtab{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-weight:800;font-size:13px;background:var(--wash);color:var(--plum)}.rtab .ic{width:17px;height:17px}
 .rtab.on{background:var(--plum);color:#fff}.rtab.ptr{margin-left:auto;border:1.5px dashed var(--plum);background:#fff}.rtab.ptr.on{background:var(--lime);color:var(--lime-ink);border-color:var(--lime)}
@@ -187,7 +187,7 @@ a{color:inherit;text-decoration:none}
 .rvidc .lbl{font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}.rtime{font-family:var(--num);font-size:30px;color:var(--plum)}.rbill{font-weight:700;font-size:13px}
 .rlog{list-style:none;margin:0;padding:0;font-size:12.5px;max-height:190px;overflow-y:auto;scrollbar-width:none}.rlog::-webkit-scrollbar{display:none}.rlog li{padding:6px 0;border-bottom:1px solid var(--line)}.rlog small{color:var(--soft);font-weight:700;margin-right:6px}
 .rjson summary{cursor:pointer;font-weight:800;font-size:13px;color:var(--plum)}.rjson pre{font-size:11px;background:var(--wash);border-radius:10px;padding:10px;white-space:pre-wrap;word-break:break-all;margin:8px 0 0}
-@media (max-width:980px){.room{grid-template-columns:minmax(0,1fr);grid-template-areas:"vid" "st" "side"}.rvid{aspect-ratio:16/9}}
+@media (max-width:980px){.room{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.tsel{margin-left:0}.bkrow{grid-template-columns:minmax(0,1fr)}.bkr{justify-content:flex-start}.spread{grid-template-columns:minmax(0,1fr);gap:10px;padding:8px}.pg.l,.pg.r{border-radius:6px}.pg.blank{display:none}.pg{font-size:9px}
  .rhtml{height:380px;padding:4px 14px}.pgnav .btn{padding:8px 10px}.rtab.ptr{margin-left:0}.rhd h2{font-size:22px}.kh{flex-wrap:wrap}}
 .rst .knav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.rst .knav::-webkit-scrollbar{display:none}.rst .knav>*{flex:none}
@@ -198,6 +198,47 @@ a{color:inherit;text-decoration:none}
 .rframe{position:relative;height:560px;margin-top:10px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.rframe iframe{width:100%;height:100%;border:0;display:block;background:#fff}
 .rfov{position:absolute;inset:0;display:none}.ptrmode .rfov{display:block;cursor:crosshair}
 @media (max-width:640px){.rframe{height:460px}}
+.hero.hside{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center}.hmain{min-width:0}
+.bigcta{display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:var(--lime);color:var(--lime-ink);border-radius:24px;padding:24px 26px;width:320px;text-align:left;box-shadow:0 20px 44px -18px rgba(198,214,63,.55);transition:transform .15s,box-shadow .15s;cursor:pointer}
+.bigcta:hover{transform:translateY(-3px);box-shadow:0 26px 50px -18px rgba(198,214,63,.7)}.bigcta .bci{width:54px;height:54px;border-radius:16px;background:var(--lime-ink);color:var(--lime);display:grid;place-items:center}.bigcta .bci .ic{width:28px;height:28px}
+.bigcta b{font-size:26px;line-height:1.1}.bigcta small{font-size:13.5px;line-height:1.4;opacity:.85}.bigcta .bgo{display:inline-flex;align-items:center;gap:4px;font-weight:800;font-size:14px;margin-top:4px}
+@media (max-width:860px){.hero.hside{grid-template-columns:1fr;gap:18px}.bigcta{width:100%}}
+.rtop{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;color:rgba(255,255,255,.75);font-size:13px}.rtop b{color:#fff;font-size:18px}
+.room .rvid{aspect-ratio:16/9;display:block;border-radius:20px;background:#0a1c3d}
+.rtiles{position:absolute;inset:0}
+.rt{position:absolute;overflow:hidden;display:grid;place-items:center;color:#fff}
+.rt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.rcust{inset:0;background:radial-gradient(circle at 50% 40%,#2a4f8f,#0a1c3d)}.rcust.has video{display:block}.rcust.has .av{display:none}
+.room .rcust .av{width:128px;height:128px;font-size:44px}.rcust.rdemo .av{animation:rtalk 2.4s ease-in-out infinite}
+@keyframes rtalk{0%,100%{box-shadow:0 0 0 0 rgba(198,214,63,0)}50%{box-shadow:0 0 0 14px rgba(198,214,63,.35)}}
+.room .rvid .me{right:14px;top:14px;width:22%;aspect-ratio:16/9;border-radius:12px;background:#33415c;border:2px solid rgba(255,255,255,.45)}.room .rvid .me .nm{display:none}
+.room .rvid .me.full{inset:0;width:auto;aspect-ratio:auto;border:0;border-radius:0;background:radial-gradient(circle at 50% 40%,#2a4f8f,#0a1c3d);font-size:16px}.room .rvid .me.full .nm{display:block}
+.rshare{display:none}
+.rvid.share{aspect-ratio:auto;display:grid;place-items:stretch;align-items:start;grid-template-columns:minmax(0,1fr) 200px;gap:10px;padding:10px}
+.rvid.share .rshare{display:flex;flex-direction:column;min-width:0;background:#fff;border-radius:14px;overflow:hidden;color:var(--ink)}
+.rsbar{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;background:#EEF4D6;color:var(--plum);font-size:13px}.rsbar>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rsdot{width:10px;height:10px;border-radius:50%;background:#e23b3b;flex:none;animation:rtalk 1.6s infinite}
+.rvid.share .rstage{padding:12px 14px;min-height:440px;max-height:calc(100vh - 230px);overflow-y:auto;scrollbar-width:none}.rvid.share .rstage::-webkit-scrollbar{display:none}
+.rvid.share .rtiles{position:static;display:flex;flex-direction:column;gap:10px}
+.rvid.share .rt{position:relative;inset:auto;top:auto;right:auto;width:100%;aspect-ratio:16/9;border-radius:12px;border:0}.rvid.share .rcust .av{width:56px;height:56px;font-size:20px}.rvid.share .me .nm{display:block}
+.rvid:fullscreen{border-radius:0;aspect-ratio:auto}.rvid.share:fullscreen .rstage{max-height:none;flex:1}
+.rbar{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin-top:12px;padding:10px 12px;background:#fff;border-radius:18px;color:var(--plum)}
+.rgrp{display:flex;align-items:center;gap:6px;background:var(--wash);border-radius:999px;padding:3px 10px 3px 3px;min-width:0}
+.rgrp .rbtn{width:38px;height:38px}.rgrp .rbtn:not(.off){background:#fff}
+.rgrp select{border:0;background:transparent;font:inherit;font-size:12px;font-weight:700;color:var(--plum);max-width:150px;min-width:0;text-overflow:ellipsis;cursor:pointer}
+.rbi{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#fff}
+.rlvl{width:34px;height:6px;border-radius:3px;background:#d6dde8;overflow:hidden;flex:none}.rlvl b{display:block;height:100%;width:0;background:#6FBF2A;transition:width .08s}
+.rsp{flex:1}.rbtn.wide{width:auto;padding:0 16px;border-radius:999px;display:inline-flex;gap:6px;align-items:center;font-weight:800}.rbtn.on{background:var(--lime);color:var(--lime-ink)}
+.rclock{display:flex;flex-direction:column;line-height:1.15;padding:0 4px;min-width:84px}.rclock b{font-size:18px;font-variant-numeric:tabular-nums}.rclock small{font-size:11px;color:var(--soft)}
+.rgo{width:100%;justify-content:center;padding:14px;font-size:16px;margin-top:6px}
+.rplist{display:flex;flex-direction:column;gap:8px;margin-top:8px}.rpi{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--wash)}.rpi.on{box-shadow:inset 0 0 0 2px var(--lime)}
+.rpi b{display:flex;align-items:center;gap:6px;font-size:14px}.rpi small{display:block;font-size:12px;color:var(--soft)}.rpi .rhb{display:flex;gap:6px;flex:none}
+.rpick.flash{animation:rflash 1s 2}@keyframes rflash{50%{box-shadow:0 0 0 4px var(--lime)}}
+.pg .ptx{font-size:1.05em;line-height:1.45;margin:.5em 0;color:#334}.pg .psub{font-size:1.25em;color:var(--plum);margin:.2em 0 .4em}
+.pscale{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:.9em 0 .2em}.pscale i{height:.8em;border-radius:3px;background:linear-gradient(90deg,#BFD9F2,#1D468C)}.pscale i:nth-child(n){opacity:.35}.pscale i:nth-child(1){opacity:.25}.pscale i:nth-child(5){opacity:.6}
+.pscale b{position:absolute;top:-.35em;width:1.5em;height:1.5em;margin-left:-.75em;border-radius:50%;background:var(--lime);border:2px solid var(--plum)}.pscl{display:flex;justify-content:space-between;font-size:.8em;color:var(--soft)}
+@media (max-width:980px){.rvid.share{grid-template-columns:1fr}.rvid.share .rtiles{flex-direction:row;order:-1}.rvid.share .rt{width:50%}.rsp{display:none}.rgrp select{max-width:110px}}
+@media (max-width:560px){.room .rvid:not(.share){aspect-ratio:3/4}.room .rvid .me{width:34%}.rgrp{flex:1 1 100%}.rgrp select{max-width:none;flex:1}.rclock{margin-left:auto}}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -507,7 +548,7 @@ body.touring .rail{z-index:89}
 /* ===================== Icons ===================== */
 /* Icons: Lucide (lucide.dev, ISC-Lizenz) */
 const I={
- video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+ screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
  cal:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
  ptr:'<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
@@ -652,7 +693,7 @@ const ago=d=>{const days=Math.round((new Date('2026-10-30T12:00')-parseD(d))/864
 const dshort=d=>d.split(' ')[0].replaceAll('/','.');
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
 function copy(t){navigator.clipboard?.writeText(t);toast('Kopiert')}
-function hero({eye,title,text,chips='',acts=''}){return `<section class="hero"><div class="eyebrow">${eye}</div><h1>${title}</h1><p>${text}</p>${chips?`<div class="chips">${chips}</div>`:''}${acts?`<div class="acts">${acts}</div>`:''}</section>`}
+function hero({eye,title,text,chips='',acts='',side=''}){const m=`<div class="eyebrow">${eye}</div><h1>${title}</h1><p>${text}</p>${chips?`<div class="chips">${chips}</div>`:''}${acts?`<div class="acts">${acts}</div>`:''}`;return side?`<section class="hero hside"><div class="hmain">${m}</div><div class="hsd">${side}</div></section>`:`<section class="hero">${m}</section>`}
 function sec(t,n,sub){return `<div class="sec"><h2>${t}</h2>${n!=null?`<span class="count">${n}</span>`:''}</div>${sub?`<p class="sub">${sub}</p>`:''}`}
 function drawer(html){const d=document.getElementById('drawer');d.innerHTML=`<button class="btn line sm" onclick="closeDrawer()" style="margin-bottom:14px">${ic('back')} Schließen</button>`+html;document.body.classList.add('open')}
 function closeDrawer(){document.body.classList.remove('open')}
@@ -1341,7 +1382,7 @@ P.beratung=()=>{if(!bApi.tried)bLive();
    <div class="klines">${ADV.assigned.map(([i,src])=>`<div class="kline"><div><b>${esc(CUSTOMERS[i].name)}</b><small>${src}</small></div><a class="btn line sm" href="#kunde-${i}">Kundenseite</a></div>`).join('')}</div></div></div></div>`};
  return hero({eye:'Online-Beratung',title:'Online-Beratung',text:'Berate deine Kundinnen und Kunden per Video und geht ihre Berichte gemeinsam durch. Sie buchen deine freien Termine direkt in der GEN(e)IUS-App.',
   chips:`${live?'<span class="st g">Termin jetzt im Terminfenster</span>':''}<span class="st">${up.length} gebuchte Termine</span><span class="st">${eur(ADV.rate)} pro Stunde</span>${bApi.on?'<span class="st b">Live-Backend verbunden</span>':''}`,
-  acts:`<button class="btn lime" onclick="bTest()">${ic('video')} Plattform testen</button>`})
+  side:`<button class="bigcta" onclick="bTest()"><span class="bci">${ic('video')}</span><b>Plattform testen</b><small>Probiere eine Beratung als Demo aus: Video, Berichte teilen, Zeiger und Übergabe, mit einer Beispielkundin.</small><span class="bgo">Demo starten ${ic('chev')}</span></button>`})
  +`<div class="card boffer ${ADV.offer?'on':''}"><div class="toggle"><div><b>${ADV.offer?'Ich biete Online-Beratung an':'Ich biete keine Online-Beratung an'}</b><div style="color:var(--soft);font-size:13px">${ADV.offer?'Deine freien Termine sind in der GEN(e)IUS-App buchbar.':'Schalte ein, um freie Zeiten, Termine und dein Profil zu verwalten. Mit „Plattform testen“ probierst du die Beratung vorher als Demo aus.'}</div></div><button class="sw ${ADV.offer?'on':''}" onclick="bOffer()" role="switch" aria-checked="${ADV.offer}" aria-label="Online-Beratung anbieten"></button></div></div>
  <div class="boff ${ADV.offer?'':'off'}" ${ADV.offer?'':'aria-disabled="true" inert'}>`
  +`<div class="grid g4">${stat('c','cal','Nächster Termin',nx?fmtDM(nx.d):'—',nx?`<div class="sdate">${hm(nx.t)} Uhr · ${esc(bFirst(nx))}</div>`:'')}${stat('','users','Gebuchte Termine',up.length)}${stat('','clock','Freie Termine',freeUnits(wkDays(0).concat(wkDays(1))),'<div class="sdate">diese und nächste Woche</div>')}${stat('o','wallet','Stundensatz',eur(ADV.rate),`<div class="sdate">${ADV.dur} Min. = ${eur(ADV.rate*ADV.dur/60)}</div>`)}</div>
@@ -1352,6 +1393,25 @@ const REPORTS=[
  {id:'lifestyle',t:'Lifestyle-Analyse',pages:24,sec:[['einleitung','Einleitung',2,''],['vitamin-d','Vitamin D',4,'Erhöhter Bedarf'],['omega-3','Omega-3-Fettsäuren',6,'Erhöhter Bedarf'],['folat','Folat',8,'Normaler Bedarf'],['koffein','Koffein',10,'Langsamer Abbau'],['laktose','Laktose',12,'Gute Verträglichkeit'],['sport','Sport & Regeneration',14,'Ausdauertyp'],['schlaf','Schlaf',18,'Frühaufsteher'],['zusammenfassung','Zusammenfassung',22,'']]},
  {id:'ernaehrung',t:'Ernährung & Stoffwechsel',pages:16,sec:[['einleitung','Einleitung',2,''],['kohlenhydrate','Kohlenhydrate',4,'Gute Verwertung'],['fette','Fette',6,'Empfindlich'],['eiweiss','Eiweiß',8,'Normaler Bedarf'],['gewicht','Gewicht & Sättigung',10,'Erhöhte Neigung'],['plan','Dein Ernährungsplan',12,'']]},
  {id:'pgx',t:'Medikamente (PGx)',pages:12,sec:[['einleitung','Einleitung',2,''],['cyp2d6','CYP2D6',4,'Langsamer Abbau'],['cyp2c19','CYP2C19',6,'Schneller Abbau'],['slco1b1','SLCO1B1',8,'Erhöhtes Risiko'],['uebersicht','Medikamentenübersicht',10,'']]}];
+const DTXT={einleitung:'Dein Bericht zeigt, wie deine Gene Ernährung, Bewegung und Alltag beeinflussen. Jede Seite erklärt ein Thema und was du konkret tun kannst.',
+ 'vitamin-d':'Varianten in VDR und GC beeinflussen, wie gut Vitamin D transportiert und genutzt wird. Lass deinen Spiegel prüfen und plane Zeit im Tageslicht ein.',
+ 'omega-3':'FADS1 bestimmt, wie gut dein Körper pflanzliche Omega-3-Fettsäuren umwandelt. Fettreicher Fisch zweimal pro Woche oder Algenöl hilft.',
+ folat:'Deine MTHFR-Variante arbeitet normal. Grünes Blattgemüse und Hülsenfrüchte decken deinen Bedarf gut.',
+ koffein:'CYP1A2 baut Koffein bei dir langsam ab. Kaffee am Nachmittag kann deinen Schlaf stören.',
+ laktose:'Deine MCM6-Variante spricht für eine gute Laktoseverträglichkeit. Milchprodukte darfst du normal essen.',
+ sport:'ACTN3 und weitere Gene zeigen ein Profil, das besonders von Ausdauertraining profitiert.',
+ schlaf:'Varianten in PER3 und CLOCK sprechen für einen frühen Rhythmus. Feste Schlafenszeiten helfen dir am meisten.',
+ zusammenfassung:'Die wichtigsten Empfehlungen aus deinem Bericht auf einen Blick, zum Mitnehmen in den Alltag.',
+ kohlenhydrate:'AMY1 und TCF7L2 zeigen eine gute Verwertung von Kohlenhydraten. Vollkorn hält dich lange satt.',
+ fette:'APOA2 und FTO deuten auf eine Empfindlichkeit für gesättigte Fette hin. Pflanzliche Öle sind die bessere Wahl.',
+ eiweiss:'Dein Eiweißbedarf liegt im normalen Bereich. Verteile Eiweiß gleichmäßig über den Tag.',
+ gewicht:'Varianten in FTO und MC4R erhöhen die Neigung zu Heißhunger. Regelmäßige Mahlzeiten helfen.',
+ plan:'Dein Ernährungsplan fasst zusammen, was du täglich essen kannst. Er ist auf dein Ergebnis abgestimmt.',
+ cyp2d6:'CYP2D6 baut viele Medikamente ab, zum Beispiel Schmerzmittel und Antidepressiva. Bei dir arbeitet es langsamer.',
+ cyp2c19:'CYP2C19 arbeitet bei dir schneller. Manche Magenschutzmittel wirken dadurch schwächer.',
+ slco1b1:'SLCO1B1 beeinflusst, wie Statine in die Leber gelangen. Dein Ergebnis kann das Risiko für Muskelbeschwerden erhöhen.',
+ uebersicht:'Alle Medikamente aus deinem Bericht im Überblick. Besprich Änderungen immer mit Ärztin oder Arzt.'};
+const pScale=p=>`<div class="pscale"><i></i><i></i><i></i><i></i><i></i><b style="left:${12+(p*37)%76}%"></b></div><div class="pscl"><span>niedrig</span><span>hoch</span></div>`;
 const BEDARF=[['Vitamin D3','2.000 IE pro Tag','Erhöhter Bedarf · VDR, GC'],['Omega-3 (EPA + DHA)','1 g pro Tag','Erhöhter Bedarf · FADS1'],['Folat (aktiv)','400 µg pro Tag','Normaler Bedarf · MTHFR'],['Vitamin B12','250 µg pro Tag','Leicht erhöht · FUT2'],['Magnesium','300 mg pro Tag','Normaler Bedarf'],['Vitamin C','200 mg pro Tag','Leicht erhöht · SLC23A1']];
 const FOOD=[['Empfohlen','g',['Lachs, Makrele, Hering','Leinöl und Walnüsse','Spinat, Brokkoli, Grünkohl','Linsen und Kichererbsen','Haferflocken und Vollkorn']],
  ['In Maßen','y',['Kaffee: höchstens 2 Tassen am Tag (langsamer Koffein-Abbau)','Rotes Fleisch: 1–2× pro Woche','Weißbrot und Zucker']],['Gut verträglich','b',['Milch und Milchprodukte','Glutenhaltiges Getreide']]];
@@ -1403,9 +1463,9 @@ const handBar=list=>{const H=HAND[rSel+':'+list];return `<div class="hand"><div>
 function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg ${side} blank"></div>`;
  if(r.img)return `<div class="pg ${side} img" onclick="rPg(event,${p})"><img src="${r.img.replace('{n}',String(p).padStart(r.pad||3,'0'))}" loading="lazy" alt="Seite ${p}">${hlAt(s,p)}</div>`;
  if(p===1)return `<div class="pg ${side} cover" onclick="rPg(event,1)"><div class="pe" style="color:var(--lime)">GEN(e)IUS</div><h3>${r.t}</h3><p>${esc(bCust(rB()).name)}</p><div class="pno">1</div>${hlAt(s,1)}</div>`;
- const sc=[...r.sec].reverse().find(x=>x[2]<=p)||r.sec[0],first=sc[2]===p;
- return `<div class="pg ${side}" onclick="rPg(event,${p})"><div class="pe">${sc[1]}</div>${first?`<h3>${sc[1]}</h3>${sc[3]?`<div class="res">Dein Ergebnis: ${sc[3]}</div>`:''}`:''}
- ${[...Array(first?7:12)].map((_,i)=>`<div class="ln" style="width:${58+((p*7+i*13)%40)}%"></div>`).join('')}${!first&&p%3===0?`<div class="res">Tipp für deinen Alltag</div>`:''}<div class="pno">${p}</div>${hlAt(s,p)}</div>`}
+ const sc=[...r.sec].reverse().find(x=>x[2]<=p)||r.sec[0],first=sc[2]===p,tx=DTXT[sc[0]]||'';
+ return `<div class="pg ${side}" onclick="rPg(event,${p})"><div class="pe">${sc[1]}</div>${first?`<h3>${sc[1]}</h3>${sc[3]?`<div class="res">Dein Ergebnis: ${sc[3]}</div>`:''}${tx?`<p class="ptx">${tx}</p>`:''}${sc[3]?pScale(p):''}`:`<h4 class="psub">${p%2?'Was das für deinen Alltag bedeutet':'So setzt du es um'}</h4>${tx?`<p class="ptx">${tx}</p>`:''}`}
+ ${[...Array(first?(tx?3:7):(tx?7:12))].map((_,i)=>`<div class="ln" style="width:${58+((p*7+i*13)%40)}%"></div>`).join('')}${!first&&p%3===0?`<div class="res">Tipp für deinen Alltag</div>`:''}<div class="pno">${p}</div>${hlAt(s,p)}</div>`}
 const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb"><button class="btn line sm" onclick="event.stopPropagation();rView('reports')">${ic('back')} Alle Berichte</button>${s.view==='report'?`<button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML-Version</button>`:`<button class="btn line sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button>`}</div></div>`;
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
@@ -1416,7 +1476,7 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
  else if(s.view==='report-html'&&bApi.reps[rSel])h=`${rHead(r,s)}${r.html?`<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${esc(x[1])}</button>`).join('')}</div>
   <div class="rframe"><iframe id="rhf" title="${esc(r.t)}"></iframe><div class="rfov"></div></div>`:'<div class="empty">Für diesen Bericht gibt es keine HTML-Version.</div>'}`;
  else if(s.view==='report-html')h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${x[1]}</button>`).join('')}</div>
-  <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
+  <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>${DTXT[x[0]]||`Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.`}</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
  else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${cBed().map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small class="clamp2">${esc(x[2])}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
  else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3 fgrid3">${cFood().map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
  else if(s.view==='meds'){const M=cMeds(),i=Math.min(s.spread||0,M.length-1),g=M[i],hi=s.highlight&&s.highlight.item;h=`<div class="kh"><b>${ic('pill')} Medikamente</b>${sees}</div><p class="mut">Aus dem Bericht Medikamente (PGx). Medikamente nie selbst absetzen oder ändern, immer mit Ärztin oder Arzt besprechen. Tippe auf einen Wirkstoff, um ihn für ${fn} zu markieren.</p>
@@ -1424,38 +1484,76 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
   <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
-function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();el.innerHTML=stageHtml(s);
+function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);el.innerHTML=s.view==='reports'?'':stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
  const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);
  const rr=rRep();if(s.view==='report-html'&&rr&&rr.html)bApi.htmlLoad(rr);
  if(s.view==='report-html'){const h=document.getElementById('rhtml'),t=s.htmlAnchor&&document.getElementById(s.htmlAnchor);if(h&&t)h.scrollTop=t.offsetTop-8}}
+const RMP={mic:true,cam:true}; // Einstellungen vor dem Start (Vorschau)
+const RM={s:null,dev:{cam:'',mic:'',spk:''},list:[],ac:null,raf:0,
+ async get(){this.stop(true);try{const s=await navigator.mediaDevices.getUserMedia({video:this.dev.cam?{deviceId:{exact:this.dev.cam}}:true,audio:this.dev.mic?{deviceId:{exact:this.dev.mic}}:true});
+  if(!/^#raum-/.test(location.hash)){s.getTracks().forEach(t=>t.stop());return null}
+  this.s=s;this.apply();this.list=await navigator.mediaDevices.enumerateDevices().catch(()=>[]);this.meter();rDevs();bApi.local=s;bApi.swap(s);bApi.vAttach();return s}
+  catch(e){const me=document.querySelector('#rme i');if(me)me.textContent='Kamera nicht freigegeben';toast('Kamera/Mikrofon nicht freigegeben. Du siehst und hörst den Kunden trotzdem.');rDevs();return null}},
+ apply(){const j=RJ[rSel]||RMP;if(this.s)this.s.getTracks().forEach(t=>t.enabled=t.kind==='audio'?j.mic:j.cam)},
+ meter(){cancelAnimationFrame(this.raf);try{const a=this.s&&this.s.getAudioTracks()[0];if(!a)return;this.ac=this.ac||new AudioContext();if(this.ac.state==='suspended')this.ac.resume();
+  const an=this.ac.createAnalyser();an.fftSize=256;this.ac.createMediaStreamSource(new MediaStream([a])).connect(an);const d=new Uint8Array(an.frequencyBinCount);
+  const loop=()=>{an.getByteTimeDomainData(d);let m=0;for(const v of d)m=Math.max(m,Math.abs(v-128));document.querySelectorAll('.rlvl b').forEach(b=>b.style.width=(a.enabled?Math.min(100,m*1.8):0)+'%');this.raf=requestAnimationFrame(loop)};loop()}catch(e){}},
+ stop(keep){cancelAnimationFrame(this.raf);if(this.s)this.s.getTracks().forEach(t=>t.stop());this.s=null;if(!keep)bApi.local=null},
+ async set(k,v){this.dev[k]=v;if(k==='spk'){const r=document.getElementById('rvr');if(r&&r.setSinkId)r.setSinkId(v).then(()=>toast('Lautsprecher gewechselt')).catch(()=>toast('Lautsprecher lässt sich in diesem Browser nicht wählen'));return}
+  if(await this.get())toast(k==='cam'?'Kamera gewechselt':'Mikrofon gewechselt')}};
+addEventListener('hashchange',()=>{if(!/^#raum-/.test(location.hash)&&RM.s&&!bApi.pc)RM.stop()});
+function rDevs(){const K={cam:'videoinput',mic:'audioinput',spk:'audiooutput'},N={cam:'Kamera',mic:'Mikrofon',spk:'Lautsprecher'};
+ document.querySelectorAll('select[data-dev]').forEach(sel=>{const k=sel.dataset.dev,l=RM.list.filter(d=>d.kind===K[k]&&d.deviceId);
+  sel.innerHTML=(l.length?l:[{deviceId:'',label:''}]).map((d,i)=>`<option value="${esc(d.deviceId)}" ${d.deviceId===RM.dev[k]?'selected':''}>${esc((d.label||'').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)/i,'')||N[k]+(l.length>1?' '+(i+1):' (Standard)'))}</option>`).join('')})}
+const rBar=inRoom=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div class="rbar">
+ <div class="rgrp"><button class="rbtn ${j.mic?'':'off'}" onclick="rTog(this,'mic')" title="Mikrofon an/aus" aria-label="Mikrofon an/aus">${ic('mic')}</button><span class="rlvl" title="Mikrofonpegel"><b></b></span><select data-dev="mic" onchange="RM.set('mic',this.value)" aria-label="Mikrofon wählen"><option>Mikrofon</option></select></div>
+ <div class="rgrp"><button class="rbtn ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera an/aus" aria-label="Kamera an/aus">${ic('video')}</button><select data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
+ <div class="rgrp"><span class="rbi" title="Lautsprecher">${ic('vol')}</span><select data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div>
+ ${inRoom?`<span class="rsp"></span><button class="rbtn wide ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht oder Liste im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Teilen'}</span></button>
+ <button class="rbtn ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren" aria-label="Zeiger">${ic('ptr')}</button>
+ <button class="rbtn" onclick="rFull()" title="Vollbild" aria-label="Vollbild">${ic('fullscr')}</button>
+ <div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button>`:''}</div>`};
+const shLbl=s=>{const r=rRep();return s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
+function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
+function rFull(){const v=document.getElementById('rvid');if(document.fullscreenElement)document.exitFullscreen();else if(v&&v.requestFullscreen)v.requestFullscreen()}
+function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste'],['meds','pill','Medikamente']];
+ return `${kHead('screen','Im Video teilen')}<p class="mut">Was du teilst, sieht ${fn} groß im Videobild.</p><div class="rplist">
+ ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi ${on?'on':''}"><div><b>${esc(r.t)}</b><small>${r.pages} Seiten</small></div><div class="rhb"><button class="btn sm ${on&&s.view==='report'?'lime':'line'}" onclick="rOpen('${r.id}')" title="Als Doppelseite teilen">${ic('book')}</button><button class="btn sm ${on&&s.view==='report-html'?'lime':'line'}" onclick="rHtml('${r.id}')" title="HTML-Version teilen">${ic('code')}</button></div></div>`}).join('')}
+ ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Wird geteilt':'Teilen'}</button></div>`).join('')}</div>`}
+function rShare(s){const sh=s.view!=='reports',v=document.getElementById('rvid');if(v)v.classList.toggle('share',sh);
+ const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Teilen'}
+ const l=document.getElementById('rsl');if(l)l.textContent=shLbl(s);const p=document.getElementById('rpick');if(p)p.innerHTML=rPick(s)}
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
  document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
-function rMount(){rStage();rPub();bApi.vAttach();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
-function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:true,cam:true};bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
-function rTog(el,k){const j=RJ[rSel];j[k]=!j[k];el.classList.toggle('off',!j[k]);bApi.tog(k,j[k]);if(k==='cam'){document.querySelector('#rme i').textContent=j.cam?'Du':'Kamera aus';document.getElementById('rme').classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
+function rMount(){rStage();rPub();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
+function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
+function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];el.classList.toggle('off',!j[k]);RM.apply();bApi.tog(k,j[k]);const me=document.getElementById('rme');if(k==='cam'&&me){me.querySelector('i').textContent=j.cam?'Du':'Kamera aus';me.classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
- b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
+ b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);if(document.fullscreenElement)document.exitFullscreen();RM.stop();alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
  const given=['bedarf','food'].filter(l=>(HAND[id+':'+l]||{}).st==='ok').map(l=>VLBL[l]).join(', ')||'nichts';bTab='termine';location.hash='beratung';
  setTimeout(()=>drawer(`<div class="eyebrow" style="color:var(--berry)">Beratung beendet · ${id}</div><h3 style="margin:6px 0">${esc(bCust(b).name)}</h3><dl class="kv"><dt>Dauer</dt><dd>${m} Min. (minutengenau)</dd><dt>Gebucht</dt><dd>${b.dur} Min. · ${bPrice(b)}</dd><dt>Nachverrechnung</dt><dd>${over?`${over} Min. = ${eur(extra)}`:'keine'}</dd><dt>Übergeben</dt><dd>${given}</dd><dt>Notiz</dt><dd>${esc(b.done.note)||'—'}</dd></dl><p class="mut">Abgerechnet wird über den Novogenia-Shop. Der Zugriff auf die Berichte ist jetzt wieder gesperrt.</p>`),80)}
 const lockCard=(t,x)=>`<div class="card lockc"><span class="lki">${ic('lock')}</span><div><b>${t}</b><p class="mut" style="margin:6px 0 0">${x}</p></div></div>`;
 P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div class="backlink"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a></div>`;
  if(!advOk(b))return back+lockCard('Kein Zugriff','Dieser Kunde ist dir nicht zugewiesen.');
  if(!bWin(b))return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:bWhen(b)})+lockCard(b.done?'Termin abgeschlossen':bS(b)<+BNOW?'Das Terminfenster ist vorbei':'Der Raum ist noch geschlossen',b.done||bS(b)<+BNOW?'Die Berichte des Kunden sind nur während eines gebuchten Termins sichtbar (bis 90 Minuten nach Ende).':`Der Beratungsraum öffnet am ${dLong(b.d)} um ${hm(b.t-10)} Uhr, 10 Minuten vor Beginn. Die Berichte des Kunden siehst du nur im Terminfenster.`);
- if(!RJ[b.id]){const src=b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
-  return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:`${bWhen(b)} · ${bPrice(b)}. ${esc(bFirst(b))} tritt über die GEN(e)IUS-App bei.`,chips:b.demo?'<span class="st y">Demo mit Beispieldaten</span>':'<span class="st g">Jetzt im Terminfenster</span>'})
-  +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">${b.demo?'Demo: So läuft eine Beratung ab. Es wird nichts gebucht, abgerechnet oder an Kunden gesendet.':b.live?'Beim Start fragt dein Browser nach Kamera und Mikrofon.':'Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.'}</p></div>
-  <div class="card">${kHead('shield','Einwilligung & Zugriff')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
-  <p class="mut" style="margin:12px 0">Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.</p><button class="btn lime" onclick="rJoin()">${ic('video')} Beratung starten</button></div></div>`}
- const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();setTimeout(rMount);
- return back+`<div class="rhd"><div><div class="eyebrow">Beratungsraum · ${b.id}</div><h2>${esc(c.name)}</h2><span>${bWhen(b)} · ${bPrice(b)}</span></div>${b.demo?'<span class="st y">Demo</span>':'<span class="st g">Live</span>'}</div>
- <div class="room ${rPtr?'ptrmode':''}" id="room">
- <div class="card rst"><div class="rtabs">${[['reports','report','Berichte'],['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittel'],['meds','pill','Medikamente']].map(t=>`<button class="rtab" data-v="${t[0]}" onclick="rView('${t[0]}')">${ic(t[1])} ${t[2]}</button>`).join('')}<button class="rtab ptr ${rPtr?'on':''}" onclick="rPtrT(this)" title="Stelle für den Kunden markieren">${ic('ptr')} Zeiger</button></div><div id="rstage" class="rstage"></div></div>
- <div class="card rvidc"><div class="rvid"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · GEN(e)IUS-App</span><span class="me" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RJ[b.id].cam?'Du':'Kamera aus'}</i></span></div>
-  <div class="rctl"><button class="rbtn ${RJ[b.id].mic?'':'off'}" onclick="rTog(this,'mic')" title="Mikrofon">${ic('mic')}</button><button class="rbtn ${RJ[b.id].cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera">${ic('video')}</button><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button></div>
-  <div class="rtimer"><div><div class="lbl">Dauer</div><div class="rtime" id="rtime">00:00</div></div><div style="text-align:right"><div class="lbl">Abgerechnet</div><div id="rbill" class="rbill"></div></div></div></div>
- <div class="rside"><div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
+ const fn=esc(bFirst(b)),badge=b.demo?'<span class="st y">Demo</span>':RJ[b.id]?'<span class="st g">Live</span>':'<span class="st g">Im Terminfenster</span>';
+ const top=`<div class="rtop"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a><b>${esc(c.name)}</b><span>${bWhen(b)} · ${bPrice(b)}</span>${badge}</div>`;
+ if(!RJ[b.id]){const src=b.demo?'Beispielkundin für die Demo':b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
+  setTimeout(()=>{rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get()});
+  return top+`<div class="room lobby"><div class="rmain"><div class="rvid" id="rvid"><div class="rtiles"><div class="rt me full ${RMP.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RMP.cam?'Kamera wird gestartet …':'Kamera aus'}</i><span class="nm">Vorschau: So sieht dich ${fn}</span></div></div></div>${rBar(false)}</div>
+  <div class="rside"><div class="card">${kHead('shield','Bereit für die Beratung')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.demo?'Demo, keine echte Einwilligung nötig':b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
+  <button class="btn lime rgo" onclick="rJoin()">${ic('video')} Beratung starten</button><p class="mut" style="margin:10px 0 0">${b.demo?'Demo: Es wird nichts gebucht, abgerechnet oder an Kunden gesendet.':'Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.'}</p></div></div></div>`}
+ const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),j=RJ[b.id],s=rS();setTimeout(rMount);
+ return top+`<div class="room ${rPtr?'ptrmode':''}" id="room"><div class="rmain">
+ <div class="rvid ${s.view!=='reports'?'share':''}" id="rvid">
+  <div class="rshare rst"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="btn sm line" onclick="rView('reports')">${ic('x')} Teilen beenden</button></div><div id="rstage" class="rstage"></div></div>
+  <div class="rtiles"><div class="rt rcust ${b.demo?'rdemo':''}"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · ${b.demo?'Demo-Kundin':'GEN(e)IUS-App'}</span></div>
+   <div class="rt me ${j.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div></div>
+ </div>${rBar(true)}</div>
+ <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>
+  <div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
   <div class="card">${kHead('shield','Zugriffsprotokoll')}<ul class="rlog" id="rlog">${logHtml()}</ul></div>
   <div class="card"><details class="rjson"><summary>Gemeinsamer Zustand (für die Entwicklung)</summary><pre id="rjson"></pre></details></div></div></div>`};
 
@@ -1481,7 +1579,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
    alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
   this.req('GET',`/api/advisor/customer/${id}`).then(x=>{this.cd[id]=x;rStage()}).catch(e=>toast('Kundendaten nicht verfügbar: '+e.message));
   this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${id}"`)}`).then(x=>{const r=x.items&&x.items[0];if(r){this.room[id]=r.id;rPub()}}).catch(()=>{});
-  navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(m=>{if(rSel!==id){m.getTracks().forEach(t=>t.stop());return}this.local=m;this.vAttach();if(this.pc)this.call()}).catch(()=>toast('Kamera/Mikrofon nicht freigegeben – du siehst und hörst den Kunden trotzdem')); // nicht blockieren: Signalisierung startet sofort
+  (RM.s?Promise.resolve(RM.s):RM.get()).then(m=>{if(!m||rSel!==id)return;this.local=m;this.vAttach();if(this.pc)this.call()}); // nicht blockieren: Signalisierung startet sofort
   const pb=await this.loadPb().catch(()=>null);
   if(pb){await pb.collection('events').unsubscribe('*').catch(()=>{});await pb.collection('events').subscribe('*',e=>{if(e.action==='create')this.onEv(e.record)},{filter:`booking="${id}"`}).catch(e=>console.warn('Realtime',e))}
   await this.ev('hello',{},id);
@@ -1491,7 +1589,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   if(d.type==='hello'||d.type==='ready'){alog('Kunde ist beigetreten');this.call()}
   else if(d.type==='signal')this.sig(x);
   else if(d.type==='handover-ack'){const h=this.hand[x.handoverId];if(h&&h[0]===rSel)rAck(h[1]);else if(x.list)rAck(x.list)}
-  else if(d.type==='bye'){const v=document.querySelector('.rvid');if(v)v.classList.remove('has');this.remote=null;alog('Kunde hat den Raum verlassen')}},
+  else if(d.type==='bye'){const v=document.querySelector('.rcust');if(v)v.classList.remove('has');this.remote=null;alog('Kunde hat den Raum verlassen')}},
  async call(){if(this.pc)this.pc.close();const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});this.qc=[];
   if(this.local)this.local.getTracks().forEach(t=>pc.addTrack(t,this.local));else{pc.addTransceiver('audio',{direction:'recvonly'});pc.addTransceiver('video',{direction:'recvonly'})}
   pc.ontrack=e=>{this.remote=e.streams[0]||new MediaStream([e.track]);this.vAttach()};
@@ -1500,10 +1598,11 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   const o=await pc.createOffer();await pc.setLocalDescription(o);this.ev('signal',{sdp:{type:'offer',sdp:o.sdp}})},
  async sig(x){const pc=this.pc;if(!pc)return;try{if(x.sdp&&x.sdp.type==='answer'){if(pc.signalingState!=='have-local-offer')return;await pc.setRemoteDescription(x.sdp);for(const c of this.qc)await pc.addIceCandidate(c);this.qc=[]}
   else if(x.candidate){if(pc.remoteDescription)await pc.addIceCandidate(x.candidate);else this.qc.push(x.candidate)}}catch(e){console.warn('Signal',e)}},
- vAttach(){const r=document.getElementById('rvr'),l=document.getElementById('rvl');if(l&&this.local&&l.srcObject!==this.local){l.srcObject=this.local;l.closest('.me').classList.add('has')}
-  if(r&&this.remote){if(r.srcObject!==this.remote)r.srcObject=this.remote;r.closest('.rvid').classList.add('has')}},
+ vAttach(){const r=document.getElementById('rvr'),l=document.getElementById('rvl');if(l&&this.local){if(l.srcObject!==this.local)l.srcObject=this.local;l.closest('.me').classList.add('has')}
+  if(r&&this.remote){if(r.srcObject!==this.remote)r.srcObject=this.remote;r.closest('.rcust').classList.add('has');if(RM.dev.spk&&r.setSinkId)r.setSinkId(RM.dev.spk).catch(()=>{})}},
+ swap(s){if(!this.pc)return;const ss=this.pc.getSenders();if(!ss.some(y=>y.track)){this.call();return}s.getTracks().forEach(t=>{const x=ss.find(y=>y.track&&y.track.kind===t.kind);if(x)x.replaceTrack(t)})},
  tog(k,on){if(this.local)this.local.getTracks().filter(t=>t.kind===(k==='mic'?'audio':'video')).forEach(t=>t.enabled=on)},
- hang(id){this.ev('bye',{},id);if(this.pc)this.pc.close();this.pc=null;if(this.local)this.local.getTracks().forEach(t=>t.stop());this.local=this.remote=null;if(this.pb)this.pb.collection('events').unsubscribe('*').catch(()=>{})},
+ hang(id){this.ev('bye',{},id);if(this.pc)this.pc.close();this.pc=null;RM.stop();if(this.local)this.local.getTracks().forEach(t=>t.stop());this.local=this.remote=null;if(this.pb)this.pb.collection('events').unsubscribe('*').catch(()=>{})},
  end(b){if(!this.on||!b.live)return;const id=b.id;this.hang(id);this.req('POST',`/api/booking/${id}/end`,{note:b.done.note}).then(x=>{if(x){if(x.billedMinutes!=null)b.done.min=x.billedMinutes;toast(`Am Server abgerechnet: ${x.billedMinutes??b.done.min} Min.${x.billedEur!=null?' · '+eur(x.billedEur):''}`)}}).catch(e=>toast('Beenden am Server fehlgeschlagen: '+e.message))},
  ref(r,a){const sc=r.sec.find(x=>'abschnitt-'+x[0]===a);return sc&&sc[5]||''},
  // HTML-Bericht direkt im iframe (Server erlaubt per frame-ancestors github.io, 127.0.0.1, localhost); Sprung über den Hash der App: #/seite/<ref>, ohne Neuladen.
