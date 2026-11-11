@@ -171,6 +171,7 @@ a{color:inherit;text-decoration:none}
 .rhtml section{padding:16px 0;border-bottom:1px solid var(--line)}.rhtml h4{margin:0 0 8px;font-size:18px;color:var(--plum)}.rhtml section.cur h4{color:var(--berry)}.rhtml p{font-size:14px;margin:10px 0 6px}
 .dose{color:var(--plum);text-align:right}
 .clamp2{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mrow{cursor:pointer;border-radius:12px;transition:background .15s}.mrow:hover{background:var(--wash)}.mrow.mon{background:var(--wash);box-shadow:inset 0 0 0 2px var(--lime)}
+.boffer{margin:0 0 18px}.boffer .toggle{border:0;padding:2px 0}.boffer.on{box-shadow:inset 0 0 0 2px var(--lime)}.boff.off{opacity:.4;filter:grayscale(1);pointer-events:none;user-select:none}
 .fgrid3{max-height:520px;overflow-y:auto;scrollbar-width:none}.fgrid3::-webkit-scrollbar{display:none}.fgrp li .st{font-size:10.5px;padding:1px 7px;margin-left:4px}.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
 .medpg{background:var(--wash);border-radius:16px;padding:14px 16px;margin-top:10px}.medpg h4{margin:0 0 4px;font-size:17px;color:var(--plum)}
 .hand{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9E6;border-radius:14px;padding:12px 14px;margin-top:14px}.hand small{display:block;color:var(--soft);font-size:12px}
@@ -1236,7 +1237,11 @@ const dWd=iso=>new Date(iso+'T00:00').toLocaleDateString('de-AT',{weekday:'short
 const dLong=iso=>new Date(iso+'T00:00').toLocaleDateString('de-AT',{weekday:'long',day:'numeric',month:'long'});
 const ADV={rate:120,dur:30,buf:0,langs:'Deutsch, Englisch',intro:'Wir gehen deine Ergebnisse gemeinsam Schritt für Schritt durch und besprechen, was du im Alltag umsetzen kannst.',firstFree:true,
  assigned:[[0,'Eigener Kunde'],[1,'Eigener Kunde'],[2,'Von Novogenia zugewiesen'],[4,'Eigener Kunde']]};
-const advOk=b=>b.live||ADV.assigned.some(a=>a[0]===b.ci);
+ADV.offer=(()=>{try{return localStorage.getItem('np-beratung-offer')==='1'}catch(e){return false}})();
+function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
+function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food']});
+ const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});location.hash='raum-DEMO'}
+const advOk=b=>b.demo||b.live||ADV.assigned.some(a=>a[0]===b.ci);
 let SLOTS=[['2026-10-26',540,720],['2026-10-27',540,720],['2026-10-27',840,1080],['2026-10-28',540,720],['2026-10-29',540,720],['2026-10-29',840,1080],['2026-10-30',540,780],
  ['2026-11-02',540,720],['2026-11-03',840,1020],['2026-11-04',540,720],['2026-11-05',840,1020]].map(a=>({d:a[0],a:a[1],b:a[2]}));
 let BOOKINGS=[
@@ -1312,7 +1317,7 @@ const advCard=()=>`<div class="eyebrow" style="color:var(--berry)">Vorschau in d
 function advPrev(){const e=document.getElementById('advprev');if(e)e.innerHTML=advCard();bApi.advSave()}
 const durSel=(fn)=>`<select onchange="ADV.dur=+this.value;${fn}">${[15,30,45,60].map(v=>`<option value="${v}" ${ADV.dur===v?'selected':''}>${v} Min.${v===30?' (Vorschlag)':''}</option>`).join('')}</select>`;
 P.beratung=()=>{if(!bApi.tried)bLive();
- const up=BOOKINGS.filter(b=>!b.done&&!b.cancel&&bE(b)>+BNOW-54e5).sort((a,b)=>bS(a)-bS(b)),past=BOOKINGS.filter(b=>b.done).sort((a,b)=>bS(b)-bS(a)),live=up.find(bWin),nx=up[0];
+ const up=BOOKINGS.filter(b=>!b.demo&&!b.done&&!b.cancel&&bE(b)>+BNOW-54e5).sort((a,b)=>bS(a)-bS(b)),past=BOOKINGS.filter(b=>!b.demo&&b.done).sort((a,b)=>bS(b)-bS(a)),live=up.find(bWin),nx=up[0];
  const T={termine:['cal','Gebuchte Termine'],zeiten:['clock','Freie Zeiten'],profil:['user','Profil & Preis']},w=wkDays(bWk);
  const B={
  termine:`${sec('Kommende Termine',up.length)}<p class="sub">Bei jeder Buchung bekommen du und dein Kunde eine E-Mail mit Kalendereinladung (.ics) und eine Benachrichtigung. Den Beratungsraum betrittst du ab 10 Minuten vor Beginn.</p>
@@ -1336,9 +1341,11 @@ P.beratung=()=>{if(!bApi.tried)bLive();
    <div class="klines">${ADV.assigned.map(([i,src])=>`<div class="kline"><div><b>${esc(CUSTOMERS[i].name)}</b><small>${src}</small></div><a class="btn line sm" href="#kunde-${i}">Kundenseite</a></div>`).join('')}</div></div></div></div>`};
  return hero({eye:'Online-Beratung',title:'Online-Beratung',text:'Berate deine Kundinnen und Kunden per Video und geht ihre Berichte gemeinsam durch. Sie buchen deine freien Termine direkt in der GEN(e)IUS-App.',
   chips:`${live?'<span class="st g">Termin jetzt im Terminfenster</span>':''}<span class="st">${up.length} gebuchte Termine</span><span class="st">${eur(ADV.rate)} pro Stunde</span>${bApi.on?'<span class="st b">Live-Backend verbunden</span>':''}`,
-  acts:`${live?`<a class="btn lime" href="#raum-${live.id}">${ic('video')} Beratungsraum betreten</a>`:''}<button class="btn ${live?'ghost':'lime'}" onclick="bTab='zeiten';render(true)">${ic('clock')} Freie Zeiten eintragen</button><button class="btn ghost" onclick="bTab='profil';render(true)">${ic('user')} Profil & Preis</button>`})
+  acts:`<button class="btn lime" onclick="bTest()">${ic('video')} Plattform testen</button>`})
+ +`<div class="card boffer ${ADV.offer?'on':''}"><div class="toggle"><div><b>${ADV.offer?'Ich biete Online-Beratung an':'Ich biete keine Online-Beratung an'}</b><div style="color:var(--soft);font-size:13px">${ADV.offer?'Deine freien Termine sind in der GEN(e)IUS-App buchbar.':'Schalte ein, um freie Zeiten, Termine und dein Profil zu verwalten. Mit „Plattform testen“ probierst du die Beratung vorher als Demo aus.'}</div></div><button class="sw ${ADV.offer?'on':''}" onclick="bOffer()" role="switch" aria-checked="${ADV.offer}" aria-label="Online-Beratung anbieten"></button></div></div>
+ <div class="boff ${ADV.offer?'':'off'}" ${ADV.offer?'':'aria-disabled="true" inert'}>`
  +`<div class="grid g4">${stat('c','cal','Nächster Termin',nx?fmtDM(nx.d):'—',nx?`<div class="sdate">${hm(nx.t)} Uhr · ${esc(bFirst(nx))}</div>`:'')}${stat('','users','Gebuchte Termine',up.length)}${stat('','clock','Freie Termine',freeUnits(wkDays(0).concat(wkDays(1))),'<div class="sdate">diese und nächste Woche</div>')}${stat('o','wallet','Stundensatz',eur(ADV.rate),`<div class="sdate">${ADV.dur} Min. = ${eur(ADV.rate*ADV.dur/60)}</div>`)}</div>
- <div class="swipe" style="margin-top:18px">${Object.entries(T).map(([k,v])=>`<button class="tile ${bTab===k?'on':''}" onclick="bTab='${k}';render(true)"><span class="bubble">${ic(v[0])}</span><b>${v[1]}</b></button>`).join('')}</div>`+B[bTab]};
+ <div class="swipe" style="margin-top:18px">${Object.entries(T).map(([k,v])=>`<button class="tile ${bTab===k?'on':''}" onclick="bTab='${k}';render(true)"><span class="bubble">${ic(v[0])}</span><b>${v[1]}</b></button>`).join('')}</div>`+B[bTab]+'</div>'};
 
 /* ---------- Beratungsraum ---------- */
 const REPORTS=[
@@ -1364,7 +1371,7 @@ const RSS={},RJ={},ALOG={},RNOTE={},HAND={};let RTI=null,rPtr=false;
 const BC=(()=>{try{return new BroadcastChannel('novopilot-beratung')}catch(e){return null}})(); // Demo-Kanal im selben Browser
 if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list)};
 const rB=()=>BOOKINGS.find(b=>b.id===rSel);
-const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:bApi.on?rSel:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
+const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:bApi.on&&rB()&&rB().live?rSel:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
 const rRep=()=>(bApi.reps[rSel]||REPORTS).find(x=>x.id===rS().reportId);
 const tNow=()=>new Date().toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 const logHtml=()=>(ALOG[rSel]||[]).map(l=>`<li><small>${l.t}</small>${esc(l.x)}</li>`).join('')||'<li class="mut">Noch keine Zugriffe.</li>';
@@ -1389,7 +1396,7 @@ function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur
   h.querySelectorAll('section').forEach(x=>x.classList.toggle('cur',x===cur));const hl=document.querySelector('#rstage .rhl');if(hl)hl.remove();alog(`${rRep().t} (HTML): ${cur.querySelector('h4').textContent}`)}}
 function rHand(list){HAND[rSel+':'+list]={st:'sent'};const d=bApi.cd[rSel],payload=list==='bedarf'?(d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>({name:x.name,dose:x.dose,reason:x.reason})):BEDARF.map(x=>({name:x[0],dose:x[1],reason:x[2]}))):(d&&d.food&&d.food.length?d.food:FOOD.map(g=>({group:g[0],items:g[2]})));
  if(BC)BC.postMessage({type:'handover',sessionId:rS().sessionId,list,payload});alog(`Übergabe gesendet: ${VLBL[list]}`);rStage();
- if(bApi.on)bApi.handover(list,payload);else setTimeout(()=>rAck(list),1500)} // Demo: Kunde bestätigt nach 1,5 s
+ if(bApi.on&&rB().live)bApi.handover(list,payload);else setTimeout(()=>rAck(list),1500)} // Demo: Kunde bestätigt nach 1,5 s
 function rAck(list){const k=rSel+':'+list;if(!HAND[k]||HAND[k].st==='ok')return;HAND[k]={st:'ok',t:tNow().slice(0,5)};alog(`${bFirst(rB())} hat ${VLBL[list]} empfangen`);rStage()}
 const handBar=list=>{const H=HAND[rSel+':'+list];return `<div class="hand"><div><b>${VLBL[list]} übergeben</b><small>Danach ist die Liste in der GEN(e)IUS-App von ${esc(bFirst(rB()))} gespeichert.</small></div>
  ${H&&H.st==='ok'?`<span class="okt">übergeben ✓ · ${H.t} Uhr</span>`:H?'<span class="st y">Wird übergeben …</span>':`<button class="btn lime sm" onclick="event.stopPropagation();rHand('${list}')">${ic('send')} An ${esc(bFirst(rB()))} übergeben</button>`}</div>`};
@@ -1437,12 +1444,12 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
  if(!advOk(b))return back+lockCard('Kein Zugriff','Dieser Kunde ist dir nicht zugewiesen.');
  if(!bWin(b))return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:bWhen(b)})+lockCard(b.done?'Termin abgeschlossen':bS(b)<+BNOW?'Das Terminfenster ist vorbei':'Der Raum ist noch geschlossen',b.done||bS(b)<+BNOW?'Die Berichte des Kunden sind nur während eines gebuchten Termins sichtbar (bis 90 Minuten nach Ende).':`Der Beratungsraum öffnet am ${dLong(b.d)} um ${hm(b.t-10)} Uhr, 10 Minuten vor Beginn. Die Berichte des Kunden siehst du nur im Terminfenster.`);
  if(!RJ[b.id]){const src=b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
-  return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:`${bWhen(b)} · ${bPrice(b)}. ${esc(bFirst(b))} tritt über die GEN(e)IUS-App bei.`,chips:'<span class="st g">Jetzt im Terminfenster</span>'})
-  +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">${b.live?'Beim Start fragt dein Browser nach Kamera und Mikrofon.':'Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.'}</p></div>
+  return back+hero({eye:'Beratungsraum · '+b.id,title:esc(c.name),text:`${bWhen(b)} · ${bPrice(b)}. ${esc(bFirst(b))} tritt über die GEN(e)IUS-App bei.`,chips:b.demo?'<span class="st y">Demo mit Beispieldaten</span>':'<span class="st g">Jetzt im Terminfenster</span>'})
+  +`<div class="grid g2"><div class="card">${kHead('video','Technik-Check')}<ul class="klist">${[['Kamera','HD-Kamera erkannt'],['Mikrofon','Pegel in Ordnung'],['Lautsprecher','Testton abgespielt'],['Verbindung','Gut · 42 ms']].map(x=>`<li class="ok">${ic('check')}<div><b>${x[0]}</b><small>${x[1]}</small></div></li>`).join('')}</ul><p class="mut" style="margin-top:12px">${b.demo?'Demo: So läuft eine Beratung ab. Es wird nichts gebucht, abgerechnet oder an Kunden gesendet.':b.live?'Beim Start fragt dein Browser nach Kamera und Mikrofon.':'Demo: Im echten Portal fragt der Browser hier nach Kamera und Mikrofon.'}</p></div>
   <div class="card">${kHead('shield','Einwilligung & Zugriff')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
   <p class="mut" style="margin:12px 0">Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.</p><button class="btn lime" onclick="rJoin()">${ic('video')} Beratung starten</button></div></div>`}
  const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();setTimeout(rMount);
- return back+`<div class="rhd"><div><div class="eyebrow">Beratungsraum · ${b.id}</div><h2>${esc(c.name)}</h2><span>${bWhen(b)} · ${bPrice(b)}</span></div><span class="st g">Live</span></div>
+ return back+`<div class="rhd"><div><div class="eyebrow">Beratungsraum · ${b.id}</div><h2>${esc(c.name)}</h2><span>${bWhen(b)} · ${bPrice(b)}</span></div>${b.demo?'<span class="st y">Demo</span>':'<span class="st g">Live</span>'}</div>
  <div class="room ${rPtr?'ptrmode':''}" id="room">
  <div class="card rst"><div class="rtabs">${[['reports','report','Berichte'],['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittel'],['meds','pill','Medikamente']].map(t=>`<button class="rtab" data-v="${t[0]}" onclick="rView('${t[0]}')">${ic(t[1])} ${t[2]}</button>`).join('')}<button class="rtab ptr ${rPtr?'on':''}" onclick="rPtrT(this)" title="Stelle für den Kunden markieren">${ic('ptr')} Zeiger</button></div><div id="rstage" class="rstage"></div></div>
  <div class="card rvidc"><div class="rvid"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · GEN(e)IUS-App</span><span class="me" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RJ[b.id].cam?'Du':'Kamera aus'}</i></span></div>
@@ -1563,7 +1570,7 @@ addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
 
 function render(keepFocus){let id=location.hash.slice(1)||'home';if(id.startsWith('partner-')){pSel=id.slice(8);id='partner'}if(id.startsWith('kunde-')){kSel=+id.slice(6);id='kunde'}if(id.startsWith('raum-')){rSel=id.slice(5);id='raum'}const page=P[id]?id:'home';renderRail(page==='partner'?'network':page==='kunde'?'customers':page==='raum'?'beratung':page);
   const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
-  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Mein Bedarf/Lebensmittel/Medikamente noch Beispieldaten)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Berichte und Kundendaten live)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
   if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
   if(!keepFocus)window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{closeDrawer();render()});render();
