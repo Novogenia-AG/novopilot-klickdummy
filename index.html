@@ -164,8 +164,8 @@ a{color:inherit;text-decoration:none}
 .pg .ln,.rhtml .ln{height:.55em;background:#E4E8F0;border-radius:4px;margin:.6em 0}.rhtml .ln{height:8px}
 .pg .pno{position:absolute;bottom:4%;left:0;right:0;text-align:center;font-size:.85em;color:var(--soft)}
 .pg.cover{background:linear-gradient(160deg,#00225E,#1D468C);color:#fff;display:flex;flex-direction:column;justify-content:center}.pg.cover h3{color:#fff;font-size:2.6em}.pg.cover .pno{color:rgba(255,255,255,.6)}
-.hl{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid var(--lime);background:rgba(198,214,63,.28);box-shadow:0 0 0 6px rgba(198,214,63,.3);pointer-events:none;animation:hlp 1.4s infinite;z-index:5}
-@keyframes hlp{50%{box-shadow:0 0 0 14px rgba(198,214,63,0)}}@media (prefers-reduced-motion:reduce){.hl{animation:none}}
+.rhl{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:3px solid var(--lime);background:rgba(198,214,63,.28);box-shadow:0 0 0 6px rgba(198,214,63,.3);pointer-events:none;animation:hlp 1.4s infinite;z-index:5}
+@keyframes hlp{50%{box-shadow:0 0 0 14px rgba(198,214,63,0)}}@media (prefers-reduced-motion:reduce){.rhl{animation:none}}
 .pgnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 0}.pgnav b{color:var(--plum);font-size:13.5px;text-align:center}.pgnav .btn[disabled],.rst .btn[disabled]{opacity:.4;pointer-events:none}
 .rhtml{position:relative;height:460px;overflow-y:auto;scrollbar-width:none;border:1px solid var(--line);border-radius:16px;padding:4px 20px;margin-top:10px}.rhtml::-webkit-scrollbar{display:none}
 .rhtml section{padding:16px 0;border-bottom:1px solid var(--line)}.rhtml h4{margin:0 0 8px;font-size:18px;color:var(--plum)}.rhtml section.cur h4{color:var(--berry)}.rhtml p{font-size:14px;margin:10px 0 6px}
@@ -1372,8 +1372,8 @@ function alog(x){(ALOG[rSel]=ALOG[rSel]||[]).unshift({t:tNow(),x});const e=docum
 function rPub(){const s=rS();if(BC)BC.postMessage({type:'state',state:s});bApi.state(s);const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1)}
 function rSend(p,lg){const s=rS(),was=s.view+'|'+s.reportId;Object.assign(s,{highlight:null},p,{by:'advisor',at:Date.now()});rPub();if(lg)alog(lg);
  const r=rRep();if(s.view==='report-html'&&r&&r.html&&was===s.view+'|'+s.reportId&&document.getElementById('rhf')){rHl();return}rStage()}
-function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;const o=rin.querySelector(':scope > .hl');if(o)o.remove();rin.insertAdjacentHTML('beforeend',hlAt(rS(),null))}
-const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="hl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
+function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;const o=rin.querySelector(':scope > .rhl');if(o)o.remove();rin.insertAdjacentHTML('beforeend',hlAt(rS(),null))}
+const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="rhl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
 function rPg(e,p){if(!rPtr)return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
 function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
 function rOpen(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
@@ -1386,7 +1386,7 @@ function rMedItem(n){const s=rS(),on=s.highlight&&s.highlight.item===n;rSend(on?
 function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.html){Object.assign(rS(),{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));alog(`${r.t} (HTML): ${sc[1]}`);bApi.htmlGo(r,a);return}rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
 function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur=null;for(const x of h.querySelectorAll('section'))if(x.offsetTop-h.scrollTop<=40)cur=x;const s=rS();
  if(cur&&cur.id!==s.htmlAnchor){Object.assign(s,{htmlAnchor:cur.id,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===cur.id));
-  h.querySelectorAll('section').forEach(x=>x.classList.toggle('cur',x===cur));const hl=document.querySelector('#rstage .hl');if(hl)hl.remove();alog(`${rRep().t} (HTML): ${cur.querySelector('h4').textContent}`)}}
+  h.querySelectorAll('section').forEach(x=>x.classList.toggle('cur',x===cur));const hl=document.querySelector('#rstage .rhl');if(hl)hl.remove();alog(`${rRep().t} (HTML): ${cur.querySelector('h4').textContent}`)}}
 function rHand(list){HAND[rSel+':'+list]={st:'sent'};const d=bApi.cd[rSel],payload=list==='bedarf'?(d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>({name:x.name,dose:x.dose,reason:x.reason})):BEDARF.map(x=>({name:x[0],dose:x[1],reason:x[2]}))):(d&&d.food&&d.food.length?d.food:FOOD.map(g=>({group:g[0],items:g[2]})));
  if(BC)BC.postMessage({type:'handover',sessionId:rS().sessionId,list,payload});alog(`Übergabe gesendet: ${VLBL[list]}`);rStage();
  if(bApi.on)bApi.handover(list,payload);else setTimeout(()=>rAck(list),1500)} // Demo: Kunde bestätigt nach 1,5 s
