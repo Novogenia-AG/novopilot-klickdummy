@@ -287,6 +287,10 @@ a{color:inherit;text-decoration:none}
 @media (max-width:640px){.rtech{grid-template-columns:minmax(0,1fr)}}
 .rtech .rclock{padding:0 2px}.rtech .rclock b{color:#fff}.rtech .rclock small{color:rgba(255,255,255,.55)}
 .rtech .rviewp{background:rgba(255,255,255,.05);color:#fff;padding:10px;border-radius:16px}.rtech .rvpl{color:rgba(255,255,255,.45);margin:2px 0 4px}.rtech .rvpos button{background:rgba(255,255,255,.08);color:#fff}.rtech .rvpos button.on{background:var(--lime);color:var(--lime-ink)}.rtech .rvseg{background:rgba(255,255,255,.08)}.rtech .rvseg button{color:#fff}.rtech .rvseg button.on{background:rgba(255,255,255,.2);box-shadow:none}
+.rlas{position:absolute;inset:0;z-index:3;display:none;cursor:none;overflow:hidden}.ptrmode .rvid.m-share .rlas{display:block}.rlas.pause{pointer-events:none}
+.rlasd{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#ff2a2a 30% 62%,rgba(255,42,42,0) 72%);box-shadow:0 0 12px 5px rgba(255,30,30,.55),0 0 26px 10px rgba(255,30,30,.25);opacity:0;pointer-events:none;transition:opacity .15s}.rlasd.on{opacity:1}
+.rslas{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);color:#fff;flex:none}.rslas:hover{background:rgba(255,255,255,.3)}.rslas.on{background:#ff2a2a;box-shadow:0 0 10px 2px rgba(255,42,42,.6)}.rslas .ic{width:14px;height:14px}
+.rctl[data-las].on{background:#ff2a2a;color:#fff;box-shadow:0 0 12px 1px rgba(255,42,42,.5)}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -599,6 +603,7 @@ const I={
  layout:'<rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>',filetx:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',fsexit:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',edit:'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',micoff:'<line x1="2" x2="22" y1="2" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" x2="12" y1="19" y2="22"/>',camoff:'<path d="M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><path d="m2 2 20 20"/>',screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
  cal:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+ laser:'<path d="M14.5 9.5 20 4"/><path d="m18.5 2.5 3 3"/><path d="M12 12 9.5 14.5" stroke-dasharray="1.6 1.9"/><circle cx="6" cy="18" r="2.2" fill="currentColor"/><path d="M2 18h1.2M6 22v-1.2M3.3 15.3l.8.8M3.3 20.7l.8-.8M8.7 20.7l-.8-.8"/>',
  ptr:'<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
  apple:'<path d="M12 6.528V3a1 1 0 0 1 1-1h0"/><path d="M18.237 21A15 15 0 0 0 22 11a6 6 0 0 0-10-4.472A6 6 0 0 0 2 11a15.1 15.1 0 0 0 3.763 10 3 3 0 0 0 3.648.648 5.5 5.5 0 0 1 5.178 0A3 3 0 0 0 18.237 21"/>',
  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
@@ -1499,9 +1504,24 @@ function rPub(){const s=rS();if(BC)BC.postMessage({type:'state',state:s});bApi.s
 function rSend(p,lg){const s=rS(),was=s.view+'|'+s.reportId;Object.assign(s,{highlight:null},p,{by:'advisor',at:Date.now()});rPub();if(lg)alog(lg);
  const r=rRep();if(s.view==='report-html'&&r&&r.html&&was===s.view+'|'+s.reportId&&document.getElementById('rhf')){rHl();return}rStage()}
 function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;const o=rin.querySelector(':scope > .rhl');if(o)o.remove();rin.insertAdjacentHTML('beforeend',hlAt(rS(),null))}
-const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="rhl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
-function rPg(e,p){if(!rPtr)return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
-function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);const sp=el.querySelector('span');if(sp)sp.textContent=rPtr?'Pointer an':'Laserpointer';document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
+const hlAt=(s,p)=>s.highlight&&!s.highlight.laser&&s.highlight.page===p?`<div class="rhl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
+function rPg(e,p){return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
+function rPtrT(){if(!rPtr&&rS().view==='reports'){toast('Teile zuerst einen Bericht oder das Kundenkonto, dann zeigt der Laserpointer darauf');return}
+ rPtr=!rPtr;rLasUI();const s=rS();if(!rPtr&&s.highlight){s.highlight=null;s.at=Date.now();rPub();rHl()}
+ if(rPtr)rMain('share')
+ toast(rPtr?'Laserpointer an: Der Kunde sieht den roten Punkt dort, wo deine Maus ist':'Laserpointer aus')}
+function rLasUI(){const r=document.getElementById('room');if(r)r.classList.toggle('ptrmode',rPtr);
+ document.querySelectorAll('[data-las]').forEach(b=>{b.classList.toggle('on',rPtr);const sp=b.querySelector('span');if(sp)sp.textContent=rPtr?'Laser an':'Laserpointer';b.title=rPtr?'Laserpointer ausschalten':'Laserpointer: Kunde sieht, wohin du zeigst'})}
+let RLT=0;
+function rLas(e){if(!rPtr)return;const o=e.currentTarget,r=o.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+ const d=o.querySelector('.rlasd');if(d){d.style.left=x*100+'%';d.style.top=y*100+'%';d.classList.add('on')}
+ const s=rS();s.highlight={page:null,x:+x.toFixed(3),y:+y.toFixed(3),laser:true};s.by='advisor';s.at=Date.now();
+ const n=Date.now();if(n-RLT>90){RLT=n;rPub()}else{clearTimeout(rLas.t);rLas.t=setTimeout(()=>{RLT=Date.now();rPub()},95)}}
+function rLasClick(e){e.stopPropagation();const o=e.currentTarget;o.style.pointerEvents='none';const t=document.elementFromPoint(e.clientX,e.clientY);o.style.pointerEvents='';
+ if(t&&t.tagName!=='IFRAME'&&o.parentNode.contains(t)){t.click();return}
+ rLasOut(e);o.classList.add('pause');toast('Laser kurz pausiert: Klicke jetzt im Bericht');const back=()=>{clearTimeout(rLasClick.t);window.removeEventListener('blur',onB);setTimeout(()=>o.classList.remove('pause'),700)},onB=()=>back();
+ window.addEventListener('blur',onB);clearTimeout(rLasClick.t);rLasClick.t=setTimeout(back,4000)}
+function rLasOut(e){const d=e.currentTarget.querySelector('.rlasd');if(d)d.classList.remove('on');const s=rS();if(s.highlight&&s.highlight.laser){clearTimeout(rLas.t);s.highlight=null;s.at=Date.now();rPub()}}
 const rIsOn=(v,id)=>{const s=rS();return s.view===v&&(id==null||s.reportId===id)};
 function rStop(){rView('reports')}
 function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
@@ -1530,7 +1550,7 @@ function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg 
 const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb"><button class="btn line sm" onclick="event.stopPropagation();rView('reports')">${ic('back')} Alle Berichte</button>${s.view==='report'?`<button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML-Version</button>`:`<button class="btn line sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button>`}</div></div>`;
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
- const frm=(u,t,z)=>`<div class="rin rif${z?' rzoom':''}"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe><div class="rfov" onclick="rPg(event,null)"></div>${hlAt(s,null)}</div>`;
+ const frm=(u,t,z)=>`<div class="rin rif${z?' rzoom':''}"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe>${hlAt(s,null)}</div>`;
  if(s.view==='account')return frm(ACCT_URL,'GEN(e)IUS-App von '+bFirst(rB()),1);
  if(r&&r.src&&/^report/.test(s.view))return frm(rSrc(r,s.view),r.t);
  if(s.view==='report-pdf')return r&&r.pdf?frm(r.pdf,r.t):'<div class="empty">Für diesen Bericht gibt es kein PDF.</div>';
@@ -1549,7 +1569,7 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
   <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
-function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);const r0=rRep(),want=s.view==='account'?ACCT_URL:r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
+function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();if(s.view==='reports'&&rPtr){rPtr=false;rLasUI()}rShare(s);const r0=rRep(),want=s.view==='account'?ACCT_URL:r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
  if(want&&cf&&cf.getAttribute('src')===want){rHl();const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);return}
  el.innerHTML=s.view==='reports'?'':stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
@@ -1627,7 +1647,7 @@ const rBar=(inRoom,extra)=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';retur
   <div class="rtr"><span class="rtgi" title="Lautsprecher">${ic('vol')}</span><select class="rfld" data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div></div>
  <div class="rtg"><div class="rtgt">Kamera</div><div class="rtr"><button class="rtgl ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="${j.cam?'Kamera an (klicken: aus)':'Kamera aus (klicken: an)'}" aria-label="Kamera an/aus" aria-pressed="${j.cam}">${ic(j.cam?'video':'camoff')}</button><select class="rfld" data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
   <div class="rtr2"><select class="rfld" onchange="rLook(this.value)" aria-label="Bild-Look" title="Farb-Look deines Kamerabilds (sieht auch dein Gegenüber)">${RLOOKS.map(l=>`<option value="${l[0]}" ${l[0]===RLOOK?'selected':''}>Look: ${l[1]}</option>`).join('')}</select><select class="rfld" data-bg onchange="rBg(this.value)" aria-label="Hintergrund" title="Hintergrund hinter dir (sieht auch dein Gegenüber)">${RBGS.map(b=>`<option value="${b[0]}" ${b[0]===FX.bg?'selected':''}>${b[1]}</option>`).join('')}</select></div><input type="file" id="rbgf" accept="image/*" hidden onchange="rBgFile(this)"></div>
- ${inRoom?`<div class="rtg"><div class="rtgt">Raum</div><div class="rtr2"><button class="rctl ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht, Liste oder Kundenkonto im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Bildschirm teilen'}</span></button><button class="rctl ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren">${ic('ptr')}<span>${rPtr?'Pointer an':'Laserpointer'}</span></button></div>
+ ${inRoom?`<div class="rtg"><div class="rtgt">Raum</div><div class="rtr2"><button class="rctl ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht, Liste oder Kundenkonto im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Bildschirm teilen'}</span></button><button class="rctl ${rPtr?'on':''}" data-las onclick="rPtrT()" title="Laserpointer: Kunde sieht, wohin du zeigst">${ic('laser')}<span>${rPtr?'Laser an':'Laserpointer'}</span></button></div>
   <div class="rtr"><div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rctl end" onclick="rEnd()">${ic('x')}<span>Beenden</span></button></div></div>`:''}${extra||''}</div>`};
 const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (GEN(e)IUS-App)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
 const ACC={},RLAY={main:'auto',me:'br'};
@@ -1716,7 +1736,7 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
  const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),j=RJ[b.id],s=rS();setTimeout(rMount);
  return top+`<div class="room ${rPtr?'ptrmode':''}" id="room"><div class="rmain">
  <div class="${rLayC()}" id="rvid">
-  <div class="rsh rst" onclick="rMain('share')"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="rsx" onclick="event.stopPropagation();rView('reports')" title="Teilen beenden" aria-label="Teilen beenden">${ic('x')}</button></div><div id="rstage" class="rstage"></div></div>
+  <div class="rsh rst" onclick="rMain('share')"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="rslas ${rPtr?'on':''}" data-las onclick="event.stopPropagation();rPtrT()" title="Laserpointer: Kunde sieht, wohin du zeigst" aria-label="Laserpointer">${ic('laser')}</button><button class="rsx" onclick="event.stopPropagation();rView('reports')" title="Teilen beenden" aria-label="Teilen beenden">${ic('x')}</button></div><div id="rstage" class="rstage"></div><div class="rlas" onmousemove="rLas(event)" onmouseleave="rLasOut(event)" onclick="rLasClick(event)"><span class="rlasd"></span></div></div>
   <div class="rt rcust ${b.demo?'rdemo':''}" onclick="rMain('cust')"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · ${b.demo?'Demo-Kundin':'GEN(e)IUS-App'}</span></div>
   <div class="rt me ${j.cam?'':'off'}" id="rme" onclick="rMain('me')"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div>
   <div id="racc"></div><div id="rqov"></div>
@@ -1737,7 +1757,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
  slotSave(s){if(!this.on)return;this.req('POST','/api/collections/slots/records',{start:this.iso(s.d,s.a),end:this.iso(s.d,s.b)}).then(x=>s.rid=x.id).catch(e=>toast('Freie Zeit nicht gespeichert: '+e.message))},
  slotDel(s){if(this.on&&s.rid)this.req('DELETE','/api/collections/slots/records/'+s.rid).catch(e=>toast('Löschen fehlgeschlagen: '+e.message))},
  advSave(){if(!this.on||!this.advRec)return;clearTimeout(this.ta);this.ta=setTimeout(()=>this.req('PATCH','/api/collections/advisors/records/'+this.advRec,{rateEur:ADV.rate,slotMin:ADV.dur,langs:ADV.langs.split(',').map(x=>x.trim()).filter(Boolean),bio:ADV.intro}).catch(()=>{}),600)},
- state(s){if(!this.on||!this.room[rSel])return;const id=this.room[rSel];clearTimeout(this.t);this.t=setTimeout(()=>this.req('PATCH','/api/collections/rooms/records/'+id,{state:s}).catch(()=>{}),120)},
+ state(s){if(!this.on||!this.room[rSel])return;const id=this.room[rSel];if(this.t)return;this.t=setTimeout(()=>{this.t=0;this.req('PATCH','/api/collections/rooms/records/'+id,{state:s}).catch(()=>{})},120)},
  ev(type,data,bk){return this.req('POST','/api/collections/events/records',{booking:bk||rSel,type,data:data||{}}).catch(()=>null)},
  handover(list,payload){const bk=rSel;this.ev('handover',{list,payload},bk).then(x=>{if(x)this.hand[x.id]=[bk,list];else toast('Übergabe fehlgeschlagen')})},
  async loadPb(){if(this.pb)return this.pb;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
