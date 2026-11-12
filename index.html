@@ -171,7 +171,9 @@ a{color:inherit;text-decoration:none}
 .rhtml section{padding:16px 0;border-bottom:1px solid var(--line)}.rhtml h4{margin:0 0 8px;font-size:18px;color:var(--plum)}.rhtml section.cur h4{color:var(--berry)}.rhtml p{font-size:14px;margin:10px 0 6px}
 .dose{color:var(--plum);text-align:right}
 .clamp2{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mrow{cursor:pointer;border-radius:12px;transition:background .15s}.mrow:hover{background:var(--wash)}.mrow.mon{background:var(--wash);box-shadow:inset 0 0 0 2px var(--lime)}
-.boffer{margin:0 0 18px}.boffer .toggle{border:0;padding:2px 0}.boffer.on{box-shadow:inset 0 0 0 2px var(--lime)}.boff.off{opacity:.4;filter:grayscale(1);pointer-events:none;user-select:none}
+.boffer{display:flex;align-items:center;gap:16px;padding:20px 22px;margin:0 0 20px;cursor:pointer;border:2px solid var(--lime)}.boffer:not(.on){animation:bpulse 2.2s ease-in-out infinite}@keyframes bpulse{50%{box-shadow:0 0 0 7px rgba(198,214,63,.35)}}.boffer.on{background:#F3F8E1}.boffer:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.bofi{width:54px;height:54px;border-radius:16px;background:var(--plum);color:var(--lime);display:grid;place-items:center;flex:none}.bofi .ic{width:28px;height:28px}.boft{flex:1;min-width:0}.boft b{display:block;font-size:21px;line-height:1.2;color:var(--plum)}.boft small{display:block;font-size:13.5px;color:var(--soft);margin-top:4px}.bofst{font-size:13px;padding:5px 12px}.boffer .sw{transform:scale(1.45);margin:0 12px 0 8px}
+@media (max-width:560px){.boffer{flex-wrap:wrap}.boft{flex-basis:calc(100% - 70px)}.bofst{margin-left:70px}.boffer .sw{margin-left:auto}}@media (prefers-reduced-motion:reduce){.boffer{animation:none!important}}.boff.off{opacity:.4;filter:grayscale(1);pointer-events:none;user-select:none}
 .fgrid3{max-height:520px;overflow-y:auto;scrollbar-width:none}.fgrid3::-webkit-scrollbar{display:none}.fgrp li .st{font-size:10.5px;padding:1px 7px;margin-left:4px}.fgrp{background:var(--wash);border-radius:14px;padding:12px 14px}.fgrp ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
 .medpg{background:var(--wash);border-radius:16px;padding:14px 16px;margin-top:10px}.medpg h4{margin:0 0 4px;font-size:17px;color:var(--plum)}
 .hand{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9E6;border-radius:14px;padding:12px 14px;margin-top:14px}.hand small{display:block;color:var(--soft);font-size:12px}
@@ -204,24 +206,35 @@ a{color:inherit;text-decoration:none}
 .bigcta b{font-size:26px;line-height:1.1}.bigcta small{font-size:13.5px;line-height:1.4;opacity:.85}.bigcta .bgo{display:inline-flex;align-items:center;gap:4px;font-weight:800;font-size:14px;margin-top:4px}
 @media (max-width:860px){.hero.hside{grid-template-columns:1fr;gap:18px}.bigcta{width:100%}}
 .rtop{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 14px;color:rgba(255,255,255,.75);font-size:13px}.rtop b{color:#fff;font-size:18px}
-.room .rvid{aspect-ratio:16/9;display:block;border-radius:20px;background:#0a1c3d}
-.rtiles{position:absolute;inset:0}
-.rt{position:absolute;overflow:hidden;display:grid;place-items:center;color:#fff}
-.rt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-.rcust{inset:0;background:radial-gradient(circle at 50% 40%,#2a4f8f,#0a1c3d)}.rcust.has video{display:block}.rcust.has .av{display:none}
+.room .rvid{aspect-ratio:16/9;display:block;position:relative;border-radius:20px;background:#0a1c3d;overflow:hidden;color:#fff}
+.room .rvid>.rsh,.room .rvid>.rt{position:absolute;overflow:hidden;transition:width .25s,top .25s,bottom .25s,left .25s,right .25s}
+.room .rvid>.rt{display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#2a4f8f,#0a1c3d)}
+.room .rvid .rt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.room .rvid .rcust.has video{display:block}.room .rvid .rcust.has .av{display:none}
+.room .rvid .me.has video{display:block;transform:scaleX(-1)}.room .rvid .me.has i{display:none}.room .rvid .me.has.off video{display:none}.room .rvid .me.has.off i{display:block}.room .rvid .me i{font-style:normal;font-weight:800}
 .room .rcust .av{width:128px;height:128px;font-size:44px}.rcust.rdemo .av{animation:rtalk 2.4s ease-in-out infinite}
 @keyframes rtalk{0%,100%{box-shadow:0 0 0 0 rgba(198,214,63,0)}50%{box-shadow:0 0 0 14px rgba(198,214,63,.35)}}
-.room .rvid .me{right:14px;top:14px;width:22%;aspect-ratio:16/9;border-radius:12px;background:#33415c;border:2px solid rgba(255,255,255,.45)}.room .rvid .me .nm{display:none}
-.room .rvid .me.full{inset:0;width:auto;aspect-ratio:auto;border:0;border-radius:0;background:radial-gradient(circle at 50% 40%,#2a4f8f,#0a1c3d);font-size:16px}.room .rvid .me.full .nm{display:block}
-.rshare{display:none}
-.rvid.share{aspect-ratio:auto;display:grid;place-items:stretch;align-items:start;grid-template-columns:minmax(0,1fr) 200px;gap:10px;padding:10px}
-.rvid.share .rshare{display:flex;flex-direction:column;min-width:0;background:#fff;border-radius:14px;overflow:hidden;color:var(--ink)}
-.rsbar{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;background:#EEF4D6;color:var(--plum);font-size:13px}.rsbar>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room .rvid>.rsh{display:none;flex-direction:column;background:#fff;color:var(--ink)}.room .rvid.sh>.rsh{display:flex}
+.room .rvid.m-share>.rsh,.room .rvid.m-cust>.rcust,.room .rvid.m-me>.me{inset:0;width:auto;height:auto;aspect-ratio:auto;border:0;border-radius:0;z-index:1;box-shadow:none;cursor:default}
+.room .rvid.m-share>.rcust,.room .rvid.m-me>.rcust,.room .rvid:not(.m-me)>.me,.room .rvid.sh:not(.m-share)>.rsh{width:21%;height:auto;aspect-ratio:16/9;z-index:3;border-radius:12px;border:2px solid rgba(255,255,255,.6);box-shadow:0 10px 24px -8px rgba(0,0,0,.6);cursor:pointer}
+.room .rvid:not(.m-me)>.me{right:12px;left:auto}.room .rvid.me-tr:not(.m-me)>.me{top:12px;bottom:auto}.room .rvid.me-br:not(.m-me)>.me{bottom:12px;top:auto}.room .rvid.me-off:not(.m-me)>.me{display:none}
+.room .rvid.m-share>.rcust,.room .rvid.m-me>.rcust{right:12px;top:12px;bottom:auto;left:auto}.room .rvid.m-share.me-tr>.rcust{top:auto;bottom:12px}
+.room .rvid.sh:not(.m-share)>.rsh{left:12px;bottom:12px;top:auto;right:auto;width:30%}.room .rvid.sh:not(.m-share)>.rsh *{pointer-events:none}
+.room .rvid:not(.m-cust)>.rcust .av{width:42px;height:42px;font-size:15px}.room .rvid:not(.m-me)>.me i{font-size:11px}
+.room .rvid>.rt .nm{z-index:2}.room .rvid:not(.m-me)>.me .nm{display:none}
+.room .rvid:not(.m-share) .rsbar{display:none}
+.rsbar{display:flex;align-items:center;gap:10px;padding:7px 10px 7px 14px;background:#EEF4D6;color:var(--plum);font-size:13px;flex:none}.rsbar>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rsdot{width:10px;height:10px;border-radius:50%;background:#e23b3b;flex:none;animation:rtalk 1.6s infinite}
-.rvid.share .rstage{padding:12px 14px;min-height:440px;max-height:calc(100vh - 230px);overflow-y:auto;scrollbar-width:none}.rvid.share .rstage::-webkit-scrollbar{display:none}
-.rvid.share .rtiles{position:static;display:flex;flex-direction:column;gap:10px}
-.rvid.share .rt{position:relative;inset:auto;top:auto;right:auto;width:100%;aspect-ratio:16/9;border-radius:12px;border:0}.rvid.share .rcust .av{width:56px;height:56px;font-size:20px}.rvid.share .me .nm{display:block}
-.rvid:fullscreen{border-radius:0;aspect-ratio:auto}.rvid.share:fullscreen .rstage{max-height:none;flex:1}
+.room .rvid .rstage{position:relative;flex:1;min-height:0;overflow-y:auto;padding:12px 14px;scrollbar-width:none}.room .rvid .rstage::-webkit-scrollbar{display:none}
+.rstage .rif{position:absolute;inset:0;background:#fff}.rif iframe{position:relative;width:100%;height:100%;border:0;display:block;z-index:1;background:transparent}.rload{position:absolute;inset:0;display:grid;place-items:center;color:var(--soft);font-weight:700}
+.rvid:fullscreen{border-radius:0;aspect-ratio:auto}
+#racc .racc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;width:min(400px,88%);background:#fff;color:var(--ink);border-radius:20px;padding:20px 22px;box-shadow:0 24px 60px -16px rgba(0,0,0,.7);border:3px solid var(--lime)}
+.racc .eyebrow{color:var(--berry)}.racc b{display:block;font-size:19px;color:var(--plum);margin:8px 0 6px;line-height:1.25}.racc p{margin:0 0 14px;color:var(--soft);font-size:13.5px}.racc .acts{display:flex;gap:8px;justify-content:flex-end}.racc small{display:block;margin-top:10px;font-size:11.5px;color:var(--soft)}
+.rwait{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--wash);font-weight:700;color:var(--plum);margin-top:8px}.rspin{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--plum);animation:rspin 1s linear infinite;flex:none}@keyframes rspin{to{transform:rotate(360deg)}}
+.rno{color:var(--bad);font-weight:700;margin:6px 0}
+.rpr{flex-direction:column;align-items:stretch}.rpt{display:flex;align-items:center;gap:10px}.rpc{width:40px;height:52px;border-radius:6px;object-fit:cover;flex:none;background:var(--plum);color:var(--lime);display:grid;place-items:center}.rfmt{display:flex;gap:6px;flex-wrap:wrap}.rfmt .btn{flex:1;justify-content:center}
+.rlayw{position:relative}.rlaym{display:none;position:absolute;bottom:calc(100% + 10px);left:0;z-index:20;width:300px;background:#fff;color:var(--plum);border-radius:16px;padding:12px 14px;box-shadow:0 20px 50px -12px rgba(0,0,0,.45);border:1px solid var(--line)}.rlaym.open{display:block}
+.rlaym>b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);margin:4px 0 6px}.rseg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.rseg button{padding:8px 10px;border-radius:10px;background:var(--wash);font-weight:700;font-size:13px;color:var(--plum);text-align:left}.rseg button.on{background:var(--lime);color:var(--lime-ink)}.rlaym small{font-size:11.5px;color:var(--soft)}
 .rbar{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin-top:12px;padding:10px 12px;background:#fff;border-radius:18px;color:var(--plum)}
 .rgrp{display:flex;align-items:center;gap:6px;background:var(--wash);border-radius:999px;padding:3px 10px 3px 3px;min-width:0}
 .rgrp .rbtn{width:38px;height:38px}.rgrp .rbtn:not(.off){background:#fff}
@@ -237,8 +250,8 @@ a{color:inherit;text-decoration:none}
 .pg .ptx{font-size:1.05em;line-height:1.45;margin:.5em 0;color:#334}.pg .psub{font-size:1.25em;color:var(--plum);margin:.2em 0 .4em}
 .pscale{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:.9em 0 .2em}.pscale i{height:.8em;border-radius:3px;background:linear-gradient(90deg,#BFD9F2,#1D468C)}.pscale i:nth-child(n){opacity:.35}.pscale i:nth-child(1){opacity:.25}.pscale i:nth-child(5){opacity:.6}
 .pscale b{position:absolute;top:-.35em;width:1.5em;height:1.5em;margin-left:-.75em;border-radius:50%;background:var(--lime);border:2px solid var(--plum)}.pscl{display:flex;justify-content:space-between;font-size:.8em;color:var(--soft)}
-@media (max-width:980px){.rvid.share{grid-template-columns:1fr}.rvid.share .rtiles{flex-direction:row;order:-1}.rvid.share .rt{width:50%}.rsp{display:none}.rgrp select{max-width:110px}}
-@media (max-width:560px){.room .rvid:not(.share){aspect-ratio:3/4}.room .rvid .me{width:34%}.rgrp{flex:1 1 100%}.rgrp select{max-width:none;flex:1}.rclock{margin-left:auto}}
+@media (max-width:980px){.rsp{display:none}.rgrp select{max-width:110px}}
+@media (max-width:560px){.room .rvid:not(.m-me)>.me,.room .rvid.m-share>.rcust,.room .rvid.m-me>.rcust{width:30%}.rlaym{left:auto;right:-60px}.rgrp{flex:1 1 100%}.rgrp select{max-width:none;flex:1}.rclock{margin-left:auto}}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -548,7 +561,7 @@ body.touring .rail{z-index:89}
 /* ===================== Icons ===================== */
 /* Icons: Lucide (lucide.dev, ISC-Lizenz) */
 const I={
- screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+ layout:'<rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>',filetx:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
  cal:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
  ptr:'<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
@@ -1280,7 +1293,7 @@ const ADV={rate:120,dur:30,buf:0,langs:'Deutsch, Englisch',intro:'Wir gehen dein
  assigned:[[0,'Eigener Kunde'],[1,'Eigener Kunde'],[2,'Von Novogenia zugewiesen'],[4,'Eigener Kunde']]};
 ADV.offer=(()=>{try{return localStorage.getItem('np-beratung-offer')==='1'}catch(e){return false}})();
 function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
-function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food']});
+function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food'];delete ACC[k]});RLAY.main='auto';RLAY.me='br';
  const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});location.hash='raum-DEMO'}
 const advOk=b=>b.demo||b.live||ADV.assigned.some(a=>a[0]===b.ci);
 let SLOTS=[['2026-10-26',540,720],['2026-10-27',540,720],['2026-10-27',840,1080],['2026-10-28',540,720],['2026-10-29',540,720],['2026-10-29',840,1080],['2026-10-30',540,780],
@@ -1383,16 +1396,17 @@ P.beratung=()=>{if(!bApi.tried)bLive();
  return hero({eye:'Online-Beratung',title:'Online-Beratung',text:'Berate deine Kundinnen und Kunden per Video und geht ihre Berichte gemeinsam durch. Sie buchen deine freien Termine direkt in der GEN(e)IUS-App.',
   chips:`${live?'<span class="st g">Termin jetzt im Terminfenster</span>':''}<span class="st">${up.length} gebuchte Termine</span><span class="st">${eur(ADV.rate)} pro Stunde</span>${bApi.on?'<span class="st b">Live-Backend verbunden</span>':''}`,
   side:`<button class="bigcta" onclick="bTest()"><span class="bci">${ic('video')}</span><b>Plattform testen</b><small>Probiere eine Beratung als Demo aus: Video, Berichte teilen, Zeiger und Übergabe, mit einer Beispielkundin.</small><span class="bgo">Demo starten ${ic('chev')}</span></button>`})
- +`<div class="card boffer ${ADV.offer?'on':''}"><div class="toggle"><div><b>${ADV.offer?'Ich biete Online-Beratung an':'Ich biete keine Online-Beratung an'}</b><div style="color:var(--soft);font-size:13px">${ADV.offer?'Deine freien Termine sind in der GEN(e)IUS-App buchbar.':'Schalte ein, um freie Zeiten, Termine und dein Profil zu verwalten. Mit „Plattform testen“ probierst du die Beratung vorher als Demo aus.'}</div></div><button class="sw ${ADV.offer?'on':''}" onclick="bOffer()" role="switch" aria-checked="${ADV.offer}" aria-label="Online-Beratung anbieten"></button></div></div>
+ +`<div class="card boffer ${ADV.offer?'on':''}" onclick="bOffer()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();bOffer()}" role="switch" aria-checked="${ADV.offer}" tabindex="0"><span class="bofi">${ic('video')}</span><div class="boft"><b>${ADV.offer?'Ich biete Online-Beratung an':'Ich biete keine Online-Beratung an'}</b><small>${ADV.offer?'Deine freien Termine sind in der GEN(e)IUS-App buchbar. Tippe hier, um die Online-Beratung zu beenden.':'Tippe hier, um die Online-Beratung einzuschalten. Dann verwaltest du freie Zeiten, Termine und dein Profil.'}</small></div><span class="st ${ADV.offer?'g':'y'} bofst">${ADV.offer?'Aktiv':'Nicht aktiv'}</span><span class="sw ${ADV.offer?'on':''}" aria-hidden="true"></span></div>`
+ +`
  <div class="boff ${ADV.offer?'':'off'}" ${ADV.offer?'':'aria-disabled="true" inert'}>`
  +`<div class="grid g4">${stat('c','cal','Nächster Termin',nx?fmtDM(nx.d):'—',nx?`<div class="sdate">${hm(nx.t)} Uhr · ${esc(bFirst(nx))}</div>`:'')}${stat('','users','Gebuchte Termine',up.length)}${stat('','clock','Freie Termine',freeUnits(wkDays(0).concat(wkDays(1))),'<div class="sdate">diese und nächste Woche</div>')}${stat('o','wallet','Stundensatz',eur(ADV.rate),`<div class="sdate">${ADV.dur} Min. = ${eur(ADV.rate*ADV.dur/60)}</div>`)}</div>
  <div class="swipe" style="margin-top:18px">${Object.entries(T).map(([k,v])=>`<button class="tile ${bTab===k?'on':''}" onclick="bTab='${k}';render(true)"><span class="bubble">${ic(v[0])}</span><b>${v[1]}</b></button>`).join('')}</div>`+B[bTab]+'</div>'};
 
 /* ---------- Beratungsraum ---------- */
-const REPORTS=[
- {id:'lifestyle',t:'Lifestyle-Analyse',pages:24,sec:[['einleitung','Einleitung',2,''],['vitamin-d','Vitamin D',4,'Erhöhter Bedarf'],['omega-3','Omega-3-Fettsäuren',6,'Erhöhter Bedarf'],['folat','Folat',8,'Normaler Bedarf'],['koffein','Koffein',10,'Langsamer Abbau'],['laktose','Laktose',12,'Gute Verträglichkeit'],['sport','Sport & Regeneration',14,'Ausdauertyp'],['schlaf','Schlaf',18,'Frühaufsteher'],['zusammenfassung','Zusammenfassung',22,'']]},
- {id:'ernaehrung',t:'Ernährung & Stoffwechsel',pages:16,sec:[['einleitung','Einleitung',2,''],['kohlenhydrate','Kohlenhydrate',4,'Gute Verwertung'],['fette','Fette',6,'Empfindlich'],['eiweiss','Eiweiß',8,'Normaler Bedarf'],['gewicht','Gewicht & Sättigung',10,'Erhöhte Neigung'],['plan','Dein Ernährungsplan',12,'']]},
- {id:'pgx',t:'Medikamente (PGx)',pages:12,sec:[['einleitung','Einleitung',2,''],['cyp2d6','CYP2D6',4,'Langsamer Abbau'],['cyp2c19','CYP2C19',6,'Schneller Abbau'],['slco1b1','SLCO1B1',8,'Erhöhtes Risiko'],['uebersicht','Medikamentenübersicht',10,'']]}];
+const DREP='https://geneius-app.daniel.internal.novogenia.com/berichte/'; // Demo-Berichte wie in der GEN(e)IUS-App unter „Analysen“
+const REPORTS=[{id:'nutrition',t:'Nutrition-Analyse',sub:'Nutrition · Detox · Burnout · Bio Age',src:DREP+'tester/nutrition',cov:DREP+'cover.webp',pages:0,sec:[['start','Nutrition-Analyse',1,'','']]},
+ {id:'shape',t:'Shape-Analyse',sub:'Deine Genanalyse zur Gewichtsregulation',src:DREP+'tester/shape',cov:DREP+'shape-cover.webp',pages:0,sec:[['start','Shape-Analyse',1,'','']]}];
+const rSrc=(r,v)=>r.src+(v==='report'?'-buch.html':v==='report-pdf'?'.pdf':'-handy.html');
 const DTXT={einleitung:'Dein Bericht zeigt, wie deine Gene Ernährung, Bewegung und Alltag beeinflussen. Jede Seite erklärt ein Thema und was du konkret tun kannst.',
  'vitamin-d':'Varianten in VDR und GC beeinflussen, wie gut Vitamin D transportiert und genutzt wird. Lass deinen Spiegel prüfen und plane Zeit im Tageslicht ein.',
  'omega-3':'FADS1 bestimmt, wie gut dein Körper pflanzliche Omega-3-Fettsäuren umwandelt. Fettreicher Fisch zweimal pro Woche oder Algenöl hilft.',
@@ -1429,7 +1443,7 @@ const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.ma
 const VLBL={reports:'Berichtsliste',bedarf:'Mein Bedarf',food:'Lebensmittelliste',meds:'Medikamente'};
 const RSS={},RJ={},ALOG={},RNOTE={},HAND={};let RTI=null,rPtr=false;
 const BC=(()=>{try{return new BroadcastChannel('novopilot-beratung')}catch(e){return null}})(); // Demo-Kanal im selben Browser
-if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list)};
+if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list);if(m.type==='access-grant'&&m.sessionId===rS().sessionId)rAccAns(m.granted!==false)};
 const rB=()=>BOOKINGS.find(b=>b.id===rSel);
 const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:bApi.on&&rB()&&rB().live?rSel:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
 const rRep=()=>(bApi.reps[rSel]||REPORTS).find(x=>x.id===rS().reportId);
@@ -1469,6 +1483,9 @@ function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg 
 const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb"><button class="btn line sm" onclick="event.stopPropagation();rView('reports')">${ic('back')} Alle Berichte</button>${s.view==='report'?`<button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML-Version</button>`:`<button class="btn line sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button>`}</div></div>`;
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
+ const frm=(u,t)=>`<div class="rin rif"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe><div class="rfov" onclick="rPg(event,null)"></div>${hlAt(s,null)}</div>`;
+ if(r&&r.src&&/^report/.test(s.view))return frm(rSrc(r,s.view),r.t);
+ if(s.view==='report-pdf')return r&&r.pdf?frm(r.pdf,r.t):'<div class="empty">Für diesen Bericht gibt es kein PDF.</div>';
  if(s.view==='reports')h=`<div class="kh"><b>${ic('report')} Berichte von ${fn}</b>${sees}</div><div class="klines">${reps.map(r=>`<div class="kline"><div><b>${r.t}</b><small>${r.pages} Seiten · ${r.sec.length} Abschnitte</small></div><div class="rhb"><button class="btn lime sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button><button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML</button></div></div>`).join('')}</div>`;
  else if(s.view==='report'){const L=s.spread,mx=r.pages-r.pages%2,cur=[...r.sec].reverse().find(x=>x[2]<=Math.max(Math.min(L+1,r.pages),1));
   h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${cur===x?'on':''}" onclick="event.stopPropagation();rTurn(${x[2]-x[2]%2})">${x[1]}</button>`).join('')}</div>
@@ -1484,7 +1501,9 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
   <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
-function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);el.innerHTML=s.view==='reports'?'':stageHtml(s);
+function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);const r0=rRep(),want=r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
+ if(want&&cf&&cf.getAttribute('src')===want){rHl();const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);return}
+ el.innerHTML=s.view==='reports'?'':stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
  const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);
  const rr=rRep();if(s.view==='report-html'&&rr&&rr.html)bApi.htmlLoad(rr);
@@ -1511,23 +1530,45 @@ const rBar=inRoom=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div 
  <div class="rgrp"><button class="rbtn ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera an/aus" aria-label="Kamera an/aus">${ic('video')}</button><select data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
  <div class="rgrp"><span class="rbi" title="Lautsprecher">${ic('vol')}</span><select data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div>
  ${inRoom?`<span class="rsp"></span><button class="rbtn wide ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht oder Liste im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Teilen'}</span></button>
+ <div class="rlayw"><button class="rbtn wide" onclick="rLayT(event)" title="Was im großen Bild zu sehen ist">${ic('layout')}<span>Layout</span></button><div class="rlaym" id="rlaym"><b>Großes Bild</b><div class="rseg">${[['auto','Automatisch'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div><b>Mein Video</b><div class="rseg">${[['tr','Oben rechts'],['br','Unten rechts'],['full','Groß'],['off','Aus']].map(([v,t])=>`<button data-lay="me:${v}" onclick="rSetLay('me','${v}')">${t}</button>`).join('')}</div><small>Tipp: Klick auf ein kleines Bild macht es groß.</small></div></div>
  <button class="rbtn ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren" aria-label="Zeiger">${ic('ptr')}</button>
  <button class="rbtn" onclick="rFull()" title="Vollbild" aria-label="Vollbild">${ic('fullscr')}</button>
  <div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button>`:''}</div>`};
-const shLbl=s=>{const r=rRep();return s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
+const shLbl=s=>{const r=rRep();return s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
+const ACC={},RLAY={main:'auto',me:'br'};
+const accOk=()=>ACC[rSel]==='ok';
+function rAsk(){const b=rB();ACC[rSel]='pending';alog(`Zugriff auf die Berichte bei ${bFirst(b)} angefragt`);
+ if(bApi.on&&b.live)bApi.ev('access-request',{scope:'reports'});else if(BC)BC.postMessage({type:'access-request',sessionId:rS().sessionId});
+ rShare(rS());rAccUI();toast(`Anfrage gesendet: ${bFirst(b)} sieht sie jetzt in der GEN(e)IUS-App`)}
+function rAccAns(ok){if(ACC[rSel]!=='pending')return;const f=bFirst(rB());ACC[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf die Berichte freigegeben`:`${f} hat den Zugriff abgelehnt`);toast(ok?'Zugriff freigegeben: Du kannst jetzt Berichte teilen':`${f} hat den Zugriff abgelehnt`);rAccUI();rShare(rS())}
+function rAccUI(){const e=document.getElementById('racc');if(!e)return;const b=rB(),p=ACC[rSel]==='pending'&&!(bApi.on&&b.live);
+ e.innerHTML=p?`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer auf deine Berichte zugreifen?</b><p>Nur während dieses Termins. Jeder Zugriff wird protokolliert.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false)">Nein</button><button class="btn lime sm" onclick="rAccAns(true)">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`:''}
+const rLayC=()=>{const sh=rS().view!=='reports';let m=RLAY.main==='auto'?(sh?'share':'cust'):RLAY.main;if(m==='share'&&!sh)m='cust';return `rvid m-${m} me-${RLAY.me}${sh?' sh':''}`};
+function rLay(){const v=document.getElementById('rvid');if(v)v.className=rLayC();const ms=RLAY.main==='me'?'full':RLAY.me;
+ document.querySelectorAll('[data-lay]').forEach(x=>{const[k,val]=x.dataset.lay.split(':');x.classList.toggle('on',k==='main'?RLAY.main===val:ms===val)})}
+function rSetLay(k,v){if(k==='main')RLAY.main=v;else if(v==='full')RLAY.main='me';else{RLAY.me=v;if(RLAY.main==='me')RLAY.main='auto'}rLay()}
+function rMain(x){const v=document.getElementById('rvid');if(!v||v.classList.contains('m-'+x))return;RLAY.main=x;rLay()}
+function rLayT(e){e.stopPropagation();const m=document.getElementById('rlaym');if(m)m.classList.toggle('open')}
+document.addEventListener('click',e=>{const m=document.getElementById('rlaym');if(m&&m.classList.contains('open')&&!e.target.closest('.rlayw'))m.classList.remove('open')});
+function rPdf(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
 function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
 function rFull(){const v=document.getElementById('rvid');if(document.fullscreenElement)document.exitFullscreen();else if(v&&v.requestFullscreen)v.requestFullscreen()}
 function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste'],['meds','pill','Medikamente']];
- return `${kHead('screen','Im Video teilen')}<p class="mut">Was du teilst, sieht ${fn} groß im Videobild.</p><div class="rplist">
- ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi ${on?'on':''}"><div><b>${esc(r.t)}</b><small>${r.pages} Seiten</small></div><div class="rhb"><button class="btn sm ${on&&s.view==='report'?'lime':'line'}" onclick="rOpen('${r.id}')" title="Als Doppelseite teilen">${ic('book')}</button><button class="btn sm ${on&&s.view==='report-html'?'lime':'line'}" onclick="rHtml('${r.id}')" title="HTML-Version teilen">${ic('code')}</button></div></div>`}).join('')}
+ if(!accOk()){const st=ACC[rSel];return `${kHead('lock','Berichte von '+fn)}<p class="mut">Bevor du Berichte und Listen teilen kannst, muss ${fn} den Zugriff in der GEN(e)IUS-App freigeben. Die Freigabe gilt nur für diesen Termin.</p>
+  ${st==='pending'?`<div class="rwait"><span class="rspin"></span>Warte auf die Freigabe von ${fn} …</div>`:`${st==='no'?`<p class="rno">${fn} hat den Zugriff abgelehnt.</p>`:''}<button class="btn lime rgo" onclick="rAsk()">${ic('lock')} ${st==='no'?'Erneut anfragen':'Zugriff vom Kunden anfordern'}</button>`}`}
+ const F=r=>[['report','book','Doppelseite',r.src||r.img||!r.html],['report-pdf','filetx','PDF',r.src||r.pdf],['report-html','code','HTML',r.src||r.html]].filter(x=>x[3]);
+ const go={report:'rOpen','report-pdf':'rPdf','report-html':'rHtml'};
+ return `${kHead('screen','Im Video teilen')}<p class="mut">Freigegeben von ${fn}. Was du teilst, sieht ${fn} im Videobild.</p><div class="rplist">
+ ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi rpr ${on?'on':''}"><div class="rpt">${r.cov?`<img class="rpc" src="${r.cov}" alt="" loading="lazy">`:`<span class="rpc">${ic('report')}</span>`}<div><b>${esc(r.t)}</b><small>${esc(r.sub||(r.pages?r.pages+' Seiten':''))}</small></div></div>
+  <div class="rfmt">${F(r).map(([v,i,t])=>`<button class="btn sm ${on&&s.view===v?'lime':'line'}" onclick="${go[v]}('${r.id}')">${ic(i)} ${t}</button>`).join('')}</div></div>`}).join('')}
  ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Wird geteilt':'Teilen'}</button></div>`).join('')}</div>`}
-function rShare(s){const sh=s.view!=='reports',v=document.getElementById('rvid');if(v)v.classList.toggle('share',sh);
+function rShare(s){const sh=s.view!=='reports';rLay();
  const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Teilen'}
  const l=document.getElementById('rsl');if(l)l.textContent=shLbl(s);const p=document.getElementById('rpick');if(p)p.innerHTML=rPick(s)}
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
  document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
-function rMount(){rStage();rPub();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
+function rMount(){rStage();rPub();rAccUI();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
 function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
 function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];el.classList.toggle('off',!j[k]);RM.apply();bApi.tog(k,j[k]);const me=document.getElementById('rme');if(k==='cam'&&me){me.querySelector('i').textContent=j.cam?'Du':'Kamera aus';me.classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
@@ -1542,15 +1583,16 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
  const top=`<div class="rtop"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a><b>${esc(c.name)}</b><span>${bWhen(b)} · ${bPrice(b)}</span>${badge}</div>`;
  if(!RJ[b.id]){const src=b.demo?'Beispielkundin für die Demo':b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
   setTimeout(()=>{rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get()});
-  return top+`<div class="room lobby"><div class="rmain"><div class="rvid" id="rvid"><div class="rtiles"><div class="rt me full ${RMP.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RMP.cam?'Kamera wird gestartet …':'Kamera aus'}</i><span class="nm">Vorschau: So sieht dich ${fn}</span></div></div></div>${rBar(false)}</div>
-  <div class="rside"><div class="card">${kHead('shield','Bereit für die Beratung')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.demo?'Demo, keine echte Einwilligung nötig':b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Freigabe der Berichte</b><small>nur für diesen Termin, bis ${hm(b.t+b.dur+90)} Uhr</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
+  return top+`<div class="room lobby"><div class="rmain"><div class="rvid m-me me-br" id="rlob"><div class="rt me ${RMP.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RMP.cam?'Kamera wird gestartet …':'Kamera aus'}</i><span class="nm">Vorschau: So sieht dich ${fn}</span></div></div>${rBar(false)}</div>
+  <div class="rside"><div class="card">${kHead('shield','Bereit für die Beratung')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.demo?'Demo, keine echte Einwilligung nötig':b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Zugriff auf die Berichte</b><small>fragst du im Raum bei ${fn} an, gilt nur für diesen Termin</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
   <button class="btn lime rgo" onclick="rJoin()">${ic('video')} Beratung starten</button><p class="mut" style="margin:10px 0 0">${b.demo?'Demo: Es wird nichts gebucht, abgerechnet oder an Kunden gesendet.':'Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.'}</p></div></div></div>`}
  const ini=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),j=RJ[b.id],s=rS();setTimeout(rMount);
  return top+`<div class="room ${rPtr?'ptrmode':''}" id="room"><div class="rmain">
- <div class="rvid ${s.view!=='reports'?'share':''}" id="rvid">
-  <div class="rshare rst"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="btn sm line" onclick="rView('reports')">${ic('x')} Teilen beenden</button></div><div id="rstage" class="rstage"></div></div>
-  <div class="rtiles"><div class="rt rcust ${b.demo?'rdemo':''}"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · ${b.demo?'Demo-Kundin':'GEN(e)IUS-App'}</span></div>
-   <div class="rt me ${j.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div></div>
+ <div class="${rLayC()}" id="rvid">
+  <div class="rsh rst" onclick="rMain('share')"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="btn sm line" onclick="event.stopPropagation();rView('reports')">${ic('x')} Teilen beenden</button></div><div id="rstage" class="rstage"></div></div>
+  <div class="rt rcust ${b.demo?'rdemo':''}" onclick="rMain('cust')"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · ${b.demo?'Demo-Kundin':'GEN(e)IUS-App'}</span></div>
+  <div class="rt me ${j.cam?'':'off'}" id="rme" onclick="rMain('me')"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div>
+  <div id="racc"></div>
  </div>${rBar(true)}</div>
  <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>
   <div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
@@ -1574,7 +1616,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   this.pb=new PocketBase(BAPI);this.pb.authStore.save(this.tok,this.rec);return this.pb},
  async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
   this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
-  this.req('GET',`/api/advisor/reports/${id}`).then(x=>{this.reps[id]=(x.items||[]).map(r=>({id:r.id||r.ref,t:r.title,pages:r.pages||1,img:r.img,pad:r.pad||3,html:r.htmlUrl,
+  this.req('GET',`/api/advisor/reports/${id}`).then(x=>{this.reps[id]=(x.items||[]).map(r=>({id:r.id||r.ref,t:r.title,pages:r.pages||1,img:r.img,pad:r.pad||3,html:r.htmlUrl,pdf:r.pdfUrl||'',
    sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,''),z.title,z.page||1,'',z.target||'',z.ref||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
    alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
   this.req('GET',`/api/advisor/customer/${id}`).then(x=>{this.cd[id]=x;rStage()}).catch(e=>toast('Kundendaten nicht verfügbar: '+e.message));
@@ -1589,6 +1631,8 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   if(d.type==='hello'||d.type==='ready'){alog('Kunde ist beigetreten');this.call()}
   else if(d.type==='signal')this.sig(x);
   else if(d.type==='handover-ack'){const h=this.hand[x.handoverId];if(h&&h[0]===rSel)rAck(h[1]);else if(x.list)rAck(x.list)}
+  else if(d.type==='access-grant')rAccAns(x.granted!==false);
+  else if(d.type==='access-deny')rAccAns(false);
   else if(d.type==='bye'){const v=document.querySelector('.rcust');if(v)v.classList.remove('has');this.remote=null;alog('Kunde hat den Raum verlassen')}},
  async call(){if(this.pc)this.pc.close();const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});this.qc=[];
   if(this.local)this.local.getTracks().forEach(t=>pc.addTrack(t,this.local));else{pc.addTransceiver('audio',{direction:'recvonly'});pc.addTransceiver('video',{direction:'recvonly'})}
