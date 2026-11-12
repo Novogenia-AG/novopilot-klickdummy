@@ -275,6 +275,18 @@ a{color:inherit;text-decoration:none}
 #rqov .rqcard{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;width:min(560px,70%);background:#fff;color:var(--ink);border-radius:16px;padding:12px 16px;border:3px solid var(--lime);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
 .rqcard .eyebrow{color:var(--berry)}.rqcard b{display:block;font-size:17px;line-height:1.3;color:var(--plum);margin:4px 0 8px}.rqcb{display:flex;gap:6px;justify-content:flex-end}
 .rzoom iframe{width:166.667%;height:166.667%;transform:scale(.6);transform-origin:0 0}
+.rtech{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px;padding:10px;border-radius:24px;color:#fff;background:linear-gradient(165deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 44px -22px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3)}
+.rtg{display:flex;flex-direction:column;gap:6px;min-width:0;border-radius:16px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);padding:10px}
+.rtgt{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:0 2px}
+.rtr{display:flex;gap:6px;align-items:center;min-width:0}.rtr2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rfld{height:36px;width:100%;min-width:0;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);padding:0 10px;font:inherit;font-size:12.5px;color:#fff;text-overflow:ellipsis;cursor:pointer}.rfld:hover{background:rgba(255,255,255,.12)}.rfld option{color:#111}
+.rtgl{width:36px;height:36px;flex:none;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff}.rtgl:hover{background:rgba(255,255,255,.2)}.rtgl.off{background:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.25)}.rtgl .ic{width:18px;height:18px}
+.rtgi{width:36px;height:36px;flex:none;display:grid;place-items:center;color:rgba(255,255,255,.6)}.rtgi .ic{width:17px;height:17px}
+.rmeter{display:flex;align-items:center;gap:8px;padding:2px}.rmeter .rlvl{flex:1;width:auto;height:6px;border-radius:99px;background:rgba(255,255,255,.12)}.rmeter .rlvl b{background:var(--lime);border-radius:99px;transition:width 75ms}.rmeter .rlvl.off b{background:rgba(255,255,255,.3)}.rmeter span{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);flex:none}
+.rctl{display:flex;height:36px;min-width:0;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:0 12px;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.1);color:#fff}.rctl:hover{background:rgba(255,255,255,.16)}.rctl .ic{width:16px;height:16px;flex:none}.rctl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rctl.on{background:var(--lime);color:var(--lime-ink)}.rctl.end{background:#E8000D;margin-left:auto}.rctl.end:hover{filter:brightness(1.1)}
+@media (max-width:640px){.rtech{grid-template-columns:minmax(0,1fr)}}
+.rtech .rclock{padding:0 2px}.rtech .rclock b{color:#fff}.rtech .rclock small{color:rgba(255,255,255,.55)}
+.rtech .rviewp{background:rgba(255,255,255,.05);color:#fff;padding:10px;border-radius:16px}.rtech .rvpl{color:rgba(255,255,255,.45);margin:2px 0 4px}.rtech .rvpos button{background:rgba(255,255,255,.08);color:#fff}.rtech .rvpos button.on{background:var(--lime);color:var(--lime-ink)}.rtech .rvseg{background:rgba(255,255,255,.08)}.rtech .rvseg button{color:#fff}.rtech .rvseg button.on{background:rgba(255,255,255,.2);box-shadow:none}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -584,7 +596,7 @@ body.touring .rail{z-index:89}
 /* ===================== Icons ===================== */
 /* Icons: Lucide (lucide.dev, ISC-Lizenz) */
 const I={
- layout:'<rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>',filetx:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',fsexit:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',edit:'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+ layout:'<rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>',filetx:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',fsexit:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',edit:'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',micoff:'<line x1="2" x2="22" y1="2" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" x2="12" y1="19" y2="22"/>',camoff:'<path d="M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><path d="m2 2 20 20"/>',screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
  cal:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
  ptr:'<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
@@ -1489,7 +1501,7 @@ function rSend(p,lg){const s=rS(),was=s.view+'|'+s.reportId;Object.assign(s,{hig
 function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;const o=rin.querySelector(':scope > .rhl');if(o)o.remove();rin.insertAdjacentHTML('beforeend',hlAt(rS(),null))}
 const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="rhl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
 function rPg(e,p){if(!rPtr)return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
-function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
+function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);const sp=el.querySelector('span');if(sp)sp.textContent=rPtr?'Pointer an':'Laserpointer';document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
 const rIsOn=(v,id)=>{const s=rS();return s.view===v&&(id==null||s.reportId===id)};
 function rStop(){rView('reports')}
 function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
@@ -1545,30 +1557,45 @@ function rStage(){const el=document.getElementById('rstage');if(!el)return;const
  const rr=rRep();if(s.view==='report-html'&&rr&&rr.html)bApi.htmlLoad(rr);
  if(s.view==='report-html'){const h=document.getElementById('rhtml'),t=s.htmlAnchor&&document.getElementById(s.htmlAnchor);if(h&&t)h.scrollTop=t.offsetTop-8}}
 const RMP={mic:true,cam:true}; // Einstellungen vor dem Start (Vorschau)
-const RM={s:null,dev:{cam:'',mic:'',spk:''},list:[],ac:null,raf:0,
- async get(){this.stop(true);try{const s=await navigator.mediaDevices.getUserMedia({video:this.dev.cam?{deviceId:{exact:this.dev.cam}}:true,audio:this.dev.mic?{deviceId:{exact:this.dev.mic}}:true});
+const RM={s:null,dev:(()=>{try{return{cam:localStorage.getItem('np-dev-cam')||'',mic:localStorage.getItem('np-dev-mic')||'',spk:localStorage.getItem('np-dev-spk')||''}}catch(e){return{cam:'',mic:'',spk:''}}})(),list:[],ac:null,raf:0,
+ async get(retry){this.stop(true);try{const s=await navigator.mediaDevices.getUserMedia({video:this.dev.cam?{deviceId:{exact:this.dev.cam}}:true,audio:this.dev.mic?{deviceId:{exact:this.dev.mic}}:true});
   if(!/^#raum-/.test(location.hash)){s.getTracks().forEach(t=>t.stop());return null}
-  this.s=s;this.apply();this.list=await navigator.mediaDevices.enumerateDevices().catch(()=>[]);this.meter();rDevs();bApi.local=s;bApi.swap(s);bApi.vAttach();return s}
-  catch(e){const me=document.querySelector('#rme i');if(me)me.textContent='Kamera nicht freigegeben';toast('Kamera/Mikrofon nicht freigegeben. Du siehst und hörst den Kunden trotzdem.');rDevs();return null}},
+  this.s=s;this.apply();this.list=await navigator.mediaDevices.enumerateDevices().catch(()=>[]);this.meter();rDevs();rLookApply();bApi.local=s;bApi.swap(s);bApi.vAttach();return s}
+  catch(e){if(!retry&&(e.name==='OverconstrainedError'||e.name==='NotFoundError')&&(this.dev.cam||this.dev.mic)){this.dev.cam=this.dev.mic='';return this.get(1)}
+   const me=document.querySelector('#rme i');if(me)me.textContent='Kamera nicht verfügbar';toast(devErr(e));rDevs();return null}},
  apply(){const j=RJ[rSel]||RMP;if(this.s)this.s.getTracks().forEach(t=>t.enabled=t.kind==='audio'?j.mic:j.cam)},
  meter(){cancelAnimationFrame(this.raf);try{const a=this.s&&this.s.getAudioTracks()[0];if(!a)return;this.ac=this.ac||new AudioContext();if(this.ac.state==='suspended')this.ac.resume();
-  const an=this.ac.createAnalyser();an.fftSize=256;this.ac.createMediaStreamSource(new MediaStream([a])).connect(an);const d=new Uint8Array(an.frequencyBinCount);
-  const loop=()=>{an.getByteTimeDomainData(d);let m=0;for(const v of d)m=Math.max(m,Math.abs(v-128));document.querySelectorAll('.rlvl b').forEach(b=>b.style.width=(a.enabled?Math.min(100,m*1.8):0)+'%');this.raf=requestAnimationFrame(loop)};loop()}catch(e){}},
+  const an=this.ac.createAnalyser();an.fftSize=512;this.ac.createMediaStreamSource(new MediaStream([a])).connect(an);const buf=new Float32Array(an.fftSize);let lvl=0;
+  const loop=()=>{an.getFloatTimeDomainData(buf);let sum=0;for(const x of buf)sum+=x*x;const db=20*Math.log10(Math.sqrt(sum/buf.length)+1e-8);lvl=a.enabled?Math.max(Math.min(1,(db+60)/50),lvl*.85):0;
+   document.querySelectorAll('.rlvl b').forEach(b=>b.style.width=Math.round(lvl*100)+'%');this.raf=requestAnimationFrame(loop)};loop()}catch(e){}},
  stop(keep){cancelAnimationFrame(this.raf);if(this.s)this.s.getTracks().forEach(t=>t.stop());this.s=null;if(!keep)bApi.local=null},
- async set(k,v){this.dev[k]=v;if(k==='spk'){const r=document.getElementById('rvr');if(r&&r.setSinkId)r.setSinkId(v).then(()=>toast('Lautsprecher gewechselt')).catch(()=>toast('Lautsprecher lässt sich in diesem Browser nicht wählen'));return}
+ async set(k,v){this.dev[k]=v;try{localStorage.setItem('np-dev-'+k,v)}catch(e){}if(k==='spk'){const r=document.getElementById('rvr');if(r&&r.setSinkId)r.setSinkId(v).then(()=>toast('Lautsprecher gewechselt')).catch(()=>toast('Lautsprecher lässt sich in diesem Browser nicht wählen'));return}
   if(await this.get())toast(k==='cam'?'Kamera gewechselt':'Mikrofon gewechselt')}};
 addEventListener('hashchange',()=>{if(!/^#raum-/.test(location.hash)&&RM.s&&!bApi.pc)RM.stop()});
-function rDevs(){const K={cam:'videoinput',mic:'audioinput',spk:'audiooutput'},N={cam:'Kamera',mic:'Mikrofon',spk:'Lautsprecher'};
- document.querySelectorAll('select[data-dev]').forEach(sel=>{const k=sel.dataset.dev,l=RM.list.filter(d=>d.kind===K[k]&&d.deviceId);
-  sel.innerHTML=(l.length?l:[{deviceId:'',label:''}]).map((d,i)=>`<option value="${esc(d.deviceId)}" ${d.deviceId===RM.dev[k]?'selected':''}>${esc((d.label||'').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)/i,'')||N[k]+(l.length>1?' '+(i+1):' (Standard)'))}</option>`).join('')})}
-const rBar=inRoom=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div class="rbar">
- <div class="rgrp"><button class="rbtn ${j.mic?'':'off'}" onclick="rTog(this,'mic')" title="Mikrofon an/aus" aria-label="Mikrofon an/aus">${ic('mic')}</button><span class="rlvl" title="Mikrofonpegel"><b></b></span><select data-dev="mic" onchange="RM.set('mic',this.value)" aria-label="Mikrofon wählen"><option>Mikrofon</option></select></div>
- <div class="rgrp"><button class="rbtn ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera an/aus" aria-label="Kamera an/aus">${ic('video')}</button><select data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
- <div class="rgrp"><span class="rbi" title="Lautsprecher">${ic('vol')}</span><select data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div>
- ${inRoom?`<span class="rsp"></span><button class="rbtn wide ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht oder Liste im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Teilen'}</span></button>
- <button class="rbtn ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren" aria-label="Zeiger">${ic('ptr')}</button>
- <button class="rbtn" onclick="rFull()" title="Vollbild" aria-label="Vollbild">${ic('fullscr')}</button>
- <div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button>`:''}</div>`};
+function devErr(e){const n=(e&&e.name)||'',m=(e&&e.message)||'';
+ if(n==='NotAllowedError'||/permission denied/i.test(m))return 'Kamera und Mikrofon sind für diese Seite im Browser gesperrt. Links neben der Adresse auf das Schieberegler-Symbol klicken, bei Kamera und Mikrofon „Zulassen“ wählen und die Seite neu laden. Steht dort schon „Zulassen“: in Windows unter Einstellungen → Datenschutz → Kamera/Mikrofon den Zugriff für Desktop-Apps erlauben.';
+ if(n==='NotFoundError')return 'Keine Kamera oder kein Mikrofon gefunden.';
+ if(n==='NotReadableError')return 'Kamera oder Mikrofon wird gerade von einem anderen Programm benutzt (z. B. Teams oder Zoom).';
+ return m||'Kamera/Mikrofon nicht verfügbar'}
+function rDevs(){const K={cam:'videoinput',mic:'audioinput',spk:'audiooutput'},N={cam:'Kamera',mic:'Mikrofon',spk:'Lautsprecher'},T={cam:'video',mic:'audio'};
+ const nm=d=>(d.label||'').replace(/^(Standard|Default) - /,'').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)$/i,'');
+ document.querySelectorAll('select[data-dev]').forEach(sel=>{const k=sel.dataset.dev,all=RM.list.filter(d=>d.kind===K[k]&&d.deviceId&&d.deviceId!=='communications'),def=all.find(d=>d.deviceId==='default'),l=all.filter(d=>d.deviceId!=='default');
+  let cur=RM.dev[k];if(!cur&&T[k]&&RM.s){const t=RM.s.getTracks().find(x=>x.kind===T[k]);cur=t&&t.getSettings().deviceId||''}
+  if(!cur||cur==='default'||!l.some(d=>d.deviceId===cur))cur=((def&&l.find(d=>d.groupId===def.groupId))||l[0]||{}).deviceId||'';
+  sel.innerHTML=l.length?l.map(d=>`<option value="${esc(d.deviceId)}" ${d.deviceId===cur?'selected':''}>${esc(nm(d)||N[k])}</option>`).join(''):`<option value="">${N[k]} (Standard)</option>`;
+  sel.title=N[k]+': '+(sel.selectedOptions[0]?sel.selectedOptions[0].textContent:'')})}
+const RLOOKS=[['natur','natürlich','none'],['warm','Warm','saturate(1.12) sepia(.12) brightness(1.04) contrast(1.03)'],['hell','Heller','brightness(1.13) contrast(1.04) saturate(1.05)'],['weich','Weich','brightness(1.06) contrast(.94) saturate(1.06) blur(.35px)'],['frisch','Frisch','contrast(1.12) saturate(1.18) brightness(1.02)'],['sw','Schwarz-Weiß','grayscale(1) contrast(1.08)']];
+let RLOOK=(()=>{try{return localStorage.getItem('np-look')||'natur'}catch(e){return 'natur'}})();
+function rLook(v){RLOOK=v;try{localStorage.setItem('np-look',v)}catch(e){}rLookApply()}
+function rLookApply(){const v=document.getElementById('rvl');if(v)v.style.filter=(RLOOKS.find(l=>l[0]===RLOOK)||RLOOKS[0])[2]}
+const rBar=(inRoom,extra)=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div class="rtech">
+ <div class="rtg"><div class="rtgt">Mikrofon</div><div class="rtr"><button class="rtgl ${j.mic?'':'off'}" onclick="rTog(this,'mic')" title="${j.mic?'Mikro an (klicken: aus)':'Mikro aus (klicken: an)'}" aria-label="Mikrofon an/aus" aria-pressed="${j.mic}">${ic(j.mic?'mic':'micoff')}</button><select class="rfld" data-dev="mic" onchange="RM.set('mic',this.value)" aria-label="Mikrofon wählen"><option>Mikrofon</option></select></div>
+  <div class="rmeter" title="Pegel deines Mikrofons: zeigt, ob Ton ankommt"><div class="rlvl ${j.mic?'':'off'}"><b></b></div><span id="rlvt">${j.mic?'Pegel':'Mikro aus'}</span></div>
+  <div class="rtr"><span class="rtgi" title="Lautsprecher">${ic('vol')}</span><select class="rfld" data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div></div>
+ <div class="rtg"><div class="rtgt">Kamera</div><div class="rtr"><button class="rtgl ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="${j.cam?'Kamera an (klicken: aus)':'Kamera aus (klicken: an)'}" aria-label="Kamera an/aus" aria-pressed="${j.cam}">${ic(j.cam?'video':'camoff')}</button><select class="rfld" data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
+  <select class="rfld" onchange="rLook(this.value)" aria-label="Bild-Look" title="Farb-Look deines Kamerabilds">${RLOOKS.map(l=>`<option value="${l[0]}" ${l[0]===RLOOK?'selected':''}>Look: ${l[1]}</option>`).join('')}</select></div>
+ ${inRoom?`<div class="rtg"><div class="rtgt">Raum</div><div class="rtr2"><button class="rctl ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht, Liste oder Kundenkonto im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Bildschirm teilen'}</span></button><button class="rctl ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren">${ic('ptr')}<span>${rPtr?'Pointer an':'Laserpointer'}</span></button></div>
+  <div class="rtr"><div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rctl end" onclick="rEnd()">${ic('x')}<span>Beenden</span></button></div></div>`:''}${extra||''}</div>`};
 const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (GEN(e)IUS-App)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
 const ACC={},RLAY={main:'auto',me:'br'};
 const accOk=()=>ACC[rSel]==='ok';
@@ -1583,7 +1610,7 @@ function rLay(){const v=document.getElementById('rvid');if(v)v.className=rLayC()
  document.querySelectorAll('[data-lay]').forEach(x=>{const[k,val]=x.dataset.lay.split(':');x.classList.toggle('on',k==='main'?RLAY.main===val:ms===val)})}
 function rSetLay(k,v){if(k==='main')RLAY.main=v;else if(v==='full')RLAY.main='me';else{RLAY.me=v;if(RLAY.main==='me')RLAY.main='auto'}rLay()}
 function rMain(x){const v=document.getElementById('rvid');if(!v||v.classList.contains('m-'+x))return;RLAY.main=x;rLay()}
-const rViewP=()=>`<div class="rviewp"><div class="rvph"><b>${ic('layout')} Ansicht</b><small>was ${esc(bFirst(rB()))} groß sieht</small></div>
+const rViewP=()=>`<div class="rtg rviewp"><div class="rtgt">Ansicht</div>
  <div class="rvpl">Mein Video</div><div class="rvpos">${[['tr','Oben rechts'],['br','Unten rechts'],['full','Groß'],['off','Aus']].map(([v,t])=>`<button data-lay="me:${v}" onclick="rSetLay('me','${v}')" title="Mein Video: ${t}"><span class="rvmini p-${v}"><i></i></span><small>${t}</small></button>`).join('')}</div>
  <div class="rvpl">Großes Bild</div><div class="rvseg">${[['auto','Auto'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div></div>`;
 function rLayT(e){e.stopPropagation();const m=document.getElementById('rlaym');if(m)m.classList.toggle('open')}
@@ -1604,12 +1631,12 @@ function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['
  <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Du navigierst in der GEN(e)IUS-App von ${fn}, ${fn} sieht mit: Rezeptur, Bedarf, Abo und mehr.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Teilen beenden':'Übernehmen'}</button></div>
  ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Teilen beenden':'Teilen'}</button></div>`).join('')}</div>`}
 function rShare(s){const sh=s.view!=='reports';rLay();
- const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Teilen'}
+ const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Bildschirm teilen'}
  const l=document.getElementById('rsl');if(l)l.textContent=shLbl(s);const p=document.getElementById('rpick');if(p)p.innerHTML=rPick(s)}
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
  document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
-function rMount(){rStage();rPub();rAccUI();rChR();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
+function rMount(){rStage();rPub();rAccUI();rChR();rLookApply();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
 const CHAT={};let RCHF='all';
 const rCh=()=>CHAT[rSel]||(CHAT[rSel]={m:[],show:null});
 const rLiveB=()=>{const b=rB();return bApi.on&&b&&b.live};
@@ -1642,7 +1669,10 @@ const rChCard=()=>`<div class="card rchat">${kHead('chat','Chat & Fragen')}<span
 function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};
  if(!(bApi.on&&b.live)){const id=b.id,f=bFirst(b),say=(ms,e)=>setTimeout(()=>{if(RJ[id]&&rSel===id)rChApply('chat',Object.assign({name:f,at:new Date().toISOString()},e),'customer')},ms);
   say(6000,{cid:'d1',text:'Hallo! Danke, dass du dir Zeit nimmst 🙂',q:false});say(16000,{cid:'d2',text:'Soll ich Vitamin D im Winter höher dosieren?',q:true})}bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
-function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];el.classList.toggle('off',!j[k]);RM.apply();bApi.tog(k,j[k]);const me=document.getElementById('rme');if(k==='cam'&&me){me.querySelector('i').textContent=j.cam?'Du':'Kamera aus';me.classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
+function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];const on=j[k];el.classList.toggle('off',!on);el.setAttribute('aria-pressed',on);el.innerHTML=ic(k==='mic'?(on?'mic':'micoff'):(on?'video':'camoff'));
+ el.title=k==='mic'?(on?'Mikro an (klicken: aus)':'Mikro aus (klicken: an)'):(on?'Kamera an (klicken: aus)':'Kamera aus (klicken: an)');RM.apply();bApi.tog(k,on);
+ if(k==='mic'){const t=document.getElementById('rlvt');if(t)t.textContent=on?'Pegel':'Mikro aus';document.querySelectorAll('.rlvl').forEach(x=>x.classList.toggle('off',!on))}
+ const me=document.getElementById('rme');if(k==='cam'&&me){me.querySelector('i').textContent=on?'Du':'Kamera aus';me.classList.toggle('off',!on)}}
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
  b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);if(document.fullscreenElement)document.exitFullscreen();RM.stop();alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
  const given=['bedarf','food'].filter(l=>(HAND[id+':'+l]||{}).st==='ok').map(l=>VLBL[l]).join(', ')||'nichts';bTab='termine';location.hash='beratung';
@@ -1654,7 +1684,7 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
  const fn=esc(bFirst(b)),badge=b.demo?'<span class="st y">Demo</span>':RJ[b.id]?'<span class="st g">Live</span>':'<span class="st g">Im Terminfenster</span>';
  const top=`<div class="rtop"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a><b>${esc(c.name)}</b><span>${bWhen(b)} · ${bPrice(b)}</span>${badge}</div>`;
  if(!RJ[b.id]){const src=b.demo?'Beispielkundin für die Demo':b.live?'Von Novogenia zugewiesen':(ADV.assigned.find(a=>a[0]===b.ci)||[0,'Zugewiesen'])[1];
-  setTimeout(()=>{rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get()});
+  setTimeout(()=>{rDevs();rLookApply();if(RM.s){RM.meter();bApi.vAttach()}else RM.get()});
   return top+`<div class="room lobby"><div class="rmain"><div class="rvid m-me me-br" id="rlob"><div class="rt me ${RMP.cam?'':'off'}" id="rme"><video id="rvl" autoplay muted playsinline></video><i>${RMP.cam?'Kamera wird gestartet …':'Kamera aus'}</i><span class="nm">Vorschau: So sieht dich ${fn}</span></div></div>${rBar(false)}</div>
   <div class="rside"><div class="card">${kHead('shield','Bereit für die Beratung')}<ul class="klist"><li class="ok">${ic('check')}<div><b>Einwilligung zur Videoberatung</b><small>${b.demo?'Demo, keine echte Einwilligung nötig':b.live&&!b.consent?'noch nicht erteilt – der Kunde bestätigt sie beim Beitreten':'erteilt in der GEN(e)IUS-App · '+(b.consent||fmtDM(b.d)+b.d.slice(0,4)+', '+hm(b.t-8)+' Uhr')}</small></div></li><li class="ok">${ic('check')}<div><b>Zugriff auf die Berichte</b><small>fragst du im Raum bei ${fn} an, gilt nur für diesen Termin</small></div></li><li class="ok">${ic('check')}<div><b>Kunde ist dir zugewiesen</b><small>${src}</small></div></li></ul>
   <button class="btn lime rgo" onclick="rJoin()">${ic('video')} Beratung starten</button><p class="mut" style="margin:10px 0 0">${b.demo?'Demo: Es wird nichts gebucht, abgerechnet oder an Kunden gesendet.':'Jeder Zugriff auf die Berichte wird mit Uhrzeit protokolliert.'}</p></div></div></div>`}
@@ -1666,7 +1696,7 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
   <div class="rt me ${j.cam?'':'off'}" id="rme" onclick="rMain('me')"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div>
   <div id="racc"></div><div id="rqov"></div>
   <button class="rfsb" id="rfsb" onclick="event.stopPropagation();rFull()" title="Vollbild" aria-label="Vollbild">${ic(document.fullscreenElement?'fsexit':'fullscr')}</button>
- </div><div class="rbelow">${rBar(true)}${rViewP()}</div></div>
+ </div>${rBar(true,rViewP())}</div>
  <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>${rChCard()}
   <div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
   <div class="card">${kHead('shield','Zugriffsprotokoll')}<ul class="rlog" id="rlog">${logHtml()}</ul></div>
