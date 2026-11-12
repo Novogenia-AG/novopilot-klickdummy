@@ -262,6 +262,7 @@ a{color:inherit;text-decoration:none}
 .rvmini.p-tr i{top:3px;right:3px}.rvmini.p-br i{bottom:3px;right:3px}.rvmini.p-full i{inset:0;width:auto;border:0;border-radius:0}.rvmini.p-off i{display:none}.rvmini.p-off::after{content:'';position:absolute;left:50%;top:50%;width:70%;height:2px;background:#fff;transform:translate(-50%,-50%) rotate(-20deg);opacity:.7}
 .rvseg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--wash);border-radius:10px;padding:3px}.rvseg button{padding:6px 2px;border-radius:8px;font-size:11.5px;font-weight:700;color:var(--plum)}.rvseg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 @media (max-width:1180px){.rbelow{grid-template-columns:1fr}}
+.racct{background:#EEF4D6}.racct small{display:block;font-size:12px;color:var(--soft);margin-top:2px;line-height:1.35}.racct>div{min-width:0}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -1424,6 +1425,7 @@ P.beratung=()=>{if(!bApi.tried)bLive();
 const DREP='https://geneius-app.daniel.internal.novogenia.com/berichte/'; // Demo-Berichte wie in der GEN(e)IUS-App unter „Analysen“
 const REPORTS=[{id:'nutrition',t:'Nutrition-Analyse',sub:'Nutrition · Detox · Burnout · Bio Age',src:DREP+'tester/nutrition',cov:DREP+'cover.webp',pages:0,sec:[['start','Nutrition-Analyse',1,'','']]},
  {id:'shape',t:'Shape-Analyse',sub:'Deine Genanalyse zur Gewichtsregulation',src:DREP+'tester/shape',cov:DREP+'shape-cover.webp',pages:0,sec:[['start','Shape-Analyse',1,'','']]}];
+const ACCT_URL='https://geneius-app.daniel.internal.novogenia.com/'; // Demo: GEN(e)IUS-App, wie sie jetzt ist
 const rSrc=(r,v)=>r.src+(v==='report'?'-buch.html':v==='report-pdf'?'.pdf':'-handy.html');
 const DTXT={einleitung:'Dein Bericht zeigt, wie deine Gene Ernährung, Bewegung und Alltag beeinflussen. Jede Seite erklärt ein Thema und was du konkret tun kannst.',
  'vitamin-d':'Varianten in VDR und GC beeinflussen, wie gut Vitamin D transportiert und genutzt wird. Lass deinen Spiegel prüfen und plane Zeit im Tageslicht ein.',
@@ -1502,6 +1504,7 @@ const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
  const frm=(u,t)=>`<div class="rin rif"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe><div class="rfov" onclick="rPg(event,null)"></div>${hlAt(s,null)}</div>`;
+ if(s.view==='account')return frm(ACCT_URL,'GEN(e)IUS-App von '+bFirst(rB()));
  if(r&&r.src&&/^report/.test(s.view))return frm(rSrc(r,s.view),r.t);
  if(s.view==='report-pdf')return r&&r.pdf?frm(r.pdf,r.t):'<div class="empty">Für diesen Bericht gibt es kein PDF.</div>';
  if(s.view==='reports')h=`<div class="kh"><b>${ic('report')} Berichte von ${fn}</b>${sees}</div><div class="klines">${reps.map(r=>`<div class="kline"><div><b>${r.t}</b><small>${r.pages} Seiten · ${r.sec.length} Abschnitte</small></div><div class="rhb"><button class="btn lime sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button><button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML</button></div></div>`).join('')}</div>`;
@@ -1519,7 +1522,7 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
   <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
-function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);const r0=rRep(),want=r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
+function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();rShare(s);const r0=rRep(),want=s.view==='account'?ACCT_URL:r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
  if(want&&cf&&cf.getAttribute('src')===want){rHl();const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);return}
  el.innerHTML=s.view==='reports'?'':stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
@@ -1551,7 +1554,7 @@ const rBar=inRoom=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div 
  <button class="rbtn ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren" aria-label="Zeiger">${ic('ptr')}</button>
  <button class="rbtn" onclick="rFull()" title="Vollbild" aria-label="Vollbild">${ic('fullscr')}</button>
  <div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button>`:''}</div>`};
-const shLbl=s=>{const r=rRep();return s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
+const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (GEN(e)IUS-App)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
 const ACC={},RLAY={main:'auto',me:'br'};
 const accOk=()=>ACC[rSel]==='ok';
 function rAsk(){const b=rB();ACC[rSel]='pending';alog(`Zugriff auf die Berichte bei ${bFirst(b)} angefragt`);
@@ -1570,6 +1573,7 @@ const rViewP=()=>`<div class="rviewp"><div class="rvph"><b>${ic('layout')} Ansic
  <div class="rvpl">Großes Bild</div><div class="rvseg">${[['auto','Auto'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div></div>`;
 function rLayT(e){e.stopPropagation();const m=document.getElementById('rlaym');if(m)m.classList.toggle('open')}
 document.addEventListener('click',e=>{const m=document.getElementById('rlaym');if(m&&m.classList.contains('open')&&!e.target.closest('.rlayw'))m.classList.remove('open')});
+function rAcct(){rSend({view:'account',reportId:null,spread:0,htmlAnchor:null},`Kundenkonto übernommen: GEN(e)IUS-App von ${bFirst(rB())}${rB().live?'':' (Demo-Konto)'}`)}
 function rPdf(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
 function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
 document.addEventListener('fullscreenchange',()=>{const b=document.getElementById('rfsb');if(!b)return;const f=!!document.fullscreenElement;b.innerHTML=ic(f?'fsexit':'fullscr');b.title=f?'Vollbild beenden':'Vollbild';b.setAttribute('aria-label',b.title)});
@@ -1582,6 +1586,7 @@ function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['
  return `${kHead('screen','Im Video teilen')}<p class="mut">Freigegeben von ${fn}. Was du teilst, sieht ${fn} im Videobild.</p><div class="rplist">
  ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi rpr ${on?'on':''}"><div class="rpt">${r.cov?`<img class="rpc" src="${r.cov}" alt="" loading="lazy">`:`<span class="rpc">${ic('report')}</span>`}<div><b>${esc(r.t)}</b><small>${esc(r.sub||(r.pages?r.pages+' Seiten':''))}</small></div></div>
   <div class="rfmt">${F(r).map(([v,i,t])=>`<button class="btn sm ${on&&s.view===v?'lime':'line'}" onclick="${go[v]}('${r.id}')">${ic(i)} ${t}</button>`).join('')}</div></div>`}).join('')}
+ <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Du navigierst in der GEN(e)IUS-App von ${fn}, ${fn} sieht mit: Rezeptur, Bedarf, Abo und mehr.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Wird geteilt':'Übernehmen'}</button></div>
  ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Wird geteilt':'Teilen'}</button></div>`).join('')}</div>`}
 function rShare(s){const sh=s.view!=='reports';rLay();
  const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Teilen'}
