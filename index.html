@@ -274,6 +274,7 @@ a{color:inherit;text-decoration:none}
 .rchw{margin-top:8px}.rchw textarea{width:100%;resize:none;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;font-size:13.5px}.rchs{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}.rchql{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--plum);cursor:pointer}
 #rqov .rqcard{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;width:min(560px,70%);background:#fff;color:var(--ink);border-radius:16px;padding:12px 16px;border:3px solid var(--lime);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
 .rqcard .eyebrow{color:var(--berry)}.rqcard b{display:block;font-size:17px;line-height:1.3;color:var(--plum);margin:4px 0 8px}.rqcb{display:flex;gap:6px;justify-content:flex-end}
+.rzoom iframe{width:166.667%;height:166.667%;transform:scale(.6);transform-origin:0 0}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -1489,11 +1490,13 @@ function rHl(){const rin=document.querySelector('#rstage .rin');if(!rin)return;c
 const hlAt=(s,p)=>s.highlight&&s.highlight.page===p?`<div class="rhl" style="left:${s.highlight.x*100}%;top:${s.highlight.y*100}%"></div>`:'';
 function rPg(e,p){if(!rPtr)return;e.stopPropagation();const r=e.currentTarget.getBoundingClientRect();rSend({highlight:{page:p,x:+((e.clientX-r.left)/r.width).toFixed(3),y:+((e.clientY-r.top)/r.height).toFixed(3)}})}
 function rPtrT(el){rPtr=!rPtr;el.classList.toggle('on',rPtr);document.getElementById('room').classList.toggle('ptrmode',rPtr);if(!rPtr&&rS().highlight)rSend({});toast(rPtr?'Zeiger an: Tippe auf eine Stelle, der Kunde sieht sie markiert':'Zeiger aus')}
-function rOpen(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
-function rHtml(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-html',reportId:id,spread:0,htmlAnchor:'abschnitt-'+r.sec[0][0]},`Bericht geöffnet: ${r.t} (HTML-Version)`)}
+const rIsOn=(v,id)=>{const s=rS();return s.view===v&&(id==null||s.reportId===id)};
+function rStop(){rView('reports')}
+function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
+function rHtml(id){if(rIsOn('report-html',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-html',reportId:id,spread:0,htmlAnchor:'abschnitt-'+r.sec[0][0]},`Bericht geöffnet: ${r.t} (HTML-Version)`)}
 const spLbl=(r,n)=>n===0?'Titelseite':n+1>r.pages?'Seite '+n:`Seite ${n}–${n+1}`;
 function rTurn(n){const r=rRep();n=Math.max(0,Math.min(r.pages-r.pages%2,n));rSend({spread:n},`${r.t}: ${spLbl(r,n)}`)}
-function rView(v){rSend({view:v,reportId:v==='meds'?'pgx':null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
+function rView(v){if(v!=='reports'&&rIsOn(v)){v='reports'}rSend({view:v,reportId:v==='meds'?'pgx':null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
 function rMed(i){rSend({spread:i},`Medikamente: ${cMeds()[i].group}`)}
 function rMedItem(n){const s=rS(),on=s.highlight&&s.highlight.item===n;rSend(on?{}:{highlight:{page:null,item:n}},on?null:`Medikamente: ${n} markiert`)}
 function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.html){Object.assign(rS(),{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));alog(`${r.t} (HTML): ${sc[1]}`);bApi.htmlGo(r,a);return}rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
@@ -1515,8 +1518,8 @@ function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg 
 const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb"><button class="btn line sm" onclick="event.stopPropagation();rView('reports')">${ic('back')} Alle Berichte</button>${s.view==='report'?`<button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML-Version</button>`:`<button class="btn line sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button>`}</div></div>`;
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
 function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
- const frm=(u,t)=>`<div class="rin rif"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe><div class="rfov" onclick="rPg(event,null)"></div>${hlAt(s,null)}</div>`;
- if(s.view==='account')return frm(ACCT_URL,'GEN(e)IUS-App von '+bFirst(rB()));
+ const frm=(u,t,z)=>`<div class="rin rif${z?' rzoom':''}"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe><div class="rfov" onclick="rPg(event,null)"></div>${hlAt(s,null)}</div>`;
+ if(s.view==='account')return frm(ACCT_URL,'GEN(e)IUS-App von '+bFirst(rB()),1);
  if(r&&r.src&&/^report/.test(s.view))return frm(rSrc(r,s.view),r.t);
  if(s.view==='report-pdf')return r&&r.pdf?frm(r.pdf,r.t):'<div class="empty">Für diesen Bericht gibt es kein PDF.</div>';
  if(s.view==='reports')h=`<div class="kh"><b>${ic('report')} Berichte von ${fn}</b>${sees}</div><div class="klines">${reps.map(r=>`<div class="kline"><div><b>${r.t}</b><small>${r.pages} Seiten · ${r.sec.length} Abschnitte</small></div><div class="rhb"><button class="btn lime sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button><button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML</button></div></div>`).join('')}</div>`;
@@ -1585,8 +1588,8 @@ const rViewP=()=>`<div class="rviewp"><div class="rvph"><b>${ic('layout')} Ansic
  <div class="rvpl">Großes Bild</div><div class="rvseg">${[['auto','Auto'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div></div>`;
 function rLayT(e){e.stopPropagation();const m=document.getElementById('rlaym');if(m)m.classList.toggle('open')}
 document.addEventListener('click',e=>{const m=document.getElementById('rlaym');if(m&&m.classList.contains('open')&&!e.target.closest('.rlayw'))m.classList.remove('open')});
-function rAcct(){rSend({view:'account',reportId:null,spread:0,htmlAnchor:null},`Kundenkonto übernommen: GEN(e)IUS-App von ${bFirst(rB())}${rB().live?'':' (Demo-Konto)'}`)}
-function rPdf(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
+function rAcct(){if(rIsOn('account')){rStop();return}rSend({view:'account',reportId:null,spread:0,htmlAnchor:null},`Kundenkonto übernommen: GEN(e)IUS-App von ${bFirst(rB())}${rB().live?'':' (Demo-Konto)'}`)}
+function rPdf(id){if(rIsOn('report-pdf',id)){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
 function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
 document.addEventListener('fullscreenchange',()=>{const b=document.getElementById('rfsb');if(!b)return;const f=!!document.fullscreenElement;b.innerHTML=ic(f?'fsexit':'fullscr');b.title=f?'Vollbild beenden':'Vollbild';b.setAttribute('aria-label',b.title)});
 function rFull(){const v=document.getElementById('rvid');if(document.fullscreenElement)document.exitFullscreen();else if(v&&v.requestFullscreen)v.requestFullscreen()}
@@ -1597,9 +1600,9 @@ function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['
  const go={report:'rOpen','report-pdf':'rPdf','report-html':'rHtml'};
  return `${kHead('screen','Im Video teilen')}<p class="mut">Freigegeben von ${fn}. Was du teilst, sieht ${fn} im Videobild.</p><div class="rplist">
  ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi rpr ${on?'on':''}"><div class="rpt">${r.cov?`<img class="rpc" src="${r.cov}" alt="" loading="lazy">`:`<span class="rpc">${ic('report')}</span>`}<div><b>${esc(r.t)}</b><small>${esc(r.sub||(r.pages?r.pages+' Seiten':''))}</small></div></div>
-  <div class="rfmt">${F(r).map(([v,i,t])=>`<button class="btn sm ${on&&s.view===v?'lime':'line'}" onclick="${go[v]}('${r.id}')">${ic(i)} ${t}</button>`).join('')}</div></div>`}).join('')}
- <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Du navigierst in der GEN(e)IUS-App von ${fn}, ${fn} sieht mit: Rezeptur, Bedarf, Abo und mehr.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Wird geteilt':'Übernehmen'}</button></div>
- ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Wird geteilt':'Teilen'}</button></div>`).join('')}</div>`}
+  <div class="rfmt">${F(r).map(([v,i,t])=>`<button class="btn sm ${on&&s.view===v?'lime':'line'}" onclick="${go[v]}('${r.id}')" title="${on&&s.view===v?'Nochmal klicken: Teilen beenden':'Im Video teilen'}">${ic(i)} ${t}</button>`).join('')}</div></div>`}).join('')}
+ <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Du navigierst in der GEN(e)IUS-App von ${fn}, ${fn} sieht mit: Rezeptur, Bedarf, Abo und mehr.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Teilen beenden':'Übernehmen'}</button></div>
+ ${L.map(([v,i,t])=>`<div class="rpi ${s.view===v?'on':''}"><div><b>${ic(i)} ${t}</b></div><button class="btn sm ${s.view===v?'lime':'line'}" onclick="rView('${v}')">${s.view===v?'Teilen beenden':'Teilen'}</button></div>`).join('')}</div>`}
 function rShare(s){const sh=s.view!=='reports';rLay();
  const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Teilen'}
  const l=document.getElementById('rsl');if(l)l.textContent=shLbl(s);const p=document.getElementById('rpick');if(p)p.innerHTML=rPick(s)}
