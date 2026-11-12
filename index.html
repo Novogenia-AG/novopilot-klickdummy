@@ -1301,7 +1301,7 @@ function advRate(){drawer(`<div class="eyebrow" style="color:var(--berry)">Onlin
  ${ADV.firstFree?'<p class="mut">Die Erstberatung eines Kunden bleibt kostenlos (einstellbar unter „Profil & Preis“).</p>':''}
  <div style="display:flex;gap:8px"><button class="btn lime" onclick="advRateSave()">${ic('check')} Speichern</button><button class="btn line" onclick="closeDrawer()">Abbrechen</button></div>`);ADV._r=ADV.rate;setTimeout(()=>{const i=document.getElementById('rateIn');if(i){i.focus();i.select()}},50)}
 function advRateSave(){const v=ADV._r;if(!(v>=0)){toast('Bitte einen gültigen Betrag eingeben');return}ADV.rate=Math.round(v*100)/100;bApi.advSave();closeDrawer();toast(`Stundensatz gespeichert: ${eur(ADV.rate)} pro Stunde`);render(true)}
-function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
+function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}if(bApi.on&&bApi.advRec)bApi.req('PATCH','/api/collections/advisors/records/'+bApi.advRec,{consultOff:!ADV.offer}).catch(e=>toast('Schalter nicht gespeichert: '+e.message));toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
 function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food'];delete ACC[k]});RLAY.main='auto';RLAY.me='br';
  const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});location.hash='raum-DEMO'}
 const advOk=b=>b.demo||b.live||ADV.assigned.some(a=>a[0]===b.ci);
@@ -1671,7 +1671,7 @@ async function bLive(){bApi.tried=true;try{const ctl=new AbortController();setTi
  const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
  const f=encodeURIComponent(`advisor="${bApi.adv}"`);
  const ad=await bApi.req('GET',`/api/collections/advisors/records?filter=${encodeURIComponent(`ref="${bApi.adv}"`)}`).then(x=>x.items[0]).catch(()=>null);
- if(ad){bApi.advRec=ad.id;bApi.advName=ad.name;Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro})}
+ if(ad){bApi.advRec=ad.id;bApi.advName=ad.name;if(typeof ad.consultOff==='boolean')ADV.offer=!ad.consultOff;Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro})}
  const sl=await bApi.req('GET',`/api/collections/slots/records?perPage=500&filter=${f}`),bk=await bApi.req('GET',`/api/collections/bookings/records?perPage=500&sort=start&filter=${f}`);
  const loc=x=>{const d=new Date(x.replace(' ','T'));return[dIso(d),d.getHours()*60+d.getMinutes()]};
  SLOTS=sl.items.map(s=>{const[d,a]=loc(s.start),b=loc(s.end)[1];return{d,a,b,rid:s.id,booked:!!s.booked}});
