@@ -254,6 +254,14 @@ a{color:inherit;text-decoration:none}
 @media (max-width:980px){.rsp{display:none}.rgrp select{max-width:110px}}
 @media (max-width:560px){.room .rvid:not(.m-me)>.me,.room .rvid.m-share>.rcust,.room .rvid.m-me>.rcust{width:30%}.rlaym{left:auto;right:-60px}.rgrp{flex:1 1 100%}.rgrp select{max-width:none;flex:1}.rclock{margin-left:auto}}
 .rateed{cursor:pointer;border-radius:22px}.rateed .card{height:100%;transition:box-shadow .15s}.rateed:hover .card,.rateed:focus-visible .card{box-shadow:0 0 0 3px var(--lime)}.rateed:focus-visible{outline:none}.rateln{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:12px;font-weight:800;color:var(--plum);text-decoration:underline;text-underline-offset:2px}.rateln .ic{width:13px;height:13px}.ratechip{cursor:pointer;font:inherit}.ratechip:hover{background:var(--lime);color:var(--lime-ink)}
+.rbelow{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:stretch;margin-top:12px}.rbelow .rbar{margin-top:0;align-content:center}
+.rviewp{background:#fff;border-radius:18px;padding:10px 12px;color:var(--plum)}.rvph{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.rvph b{display:flex;align-items:center;gap:6px;font-size:14px}.rvph b .ic{width:16px;height:16px}.rvph small{font-size:11px;color:var(--soft)}
+.rvpl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);margin:8px 0 5px}
+.rvpos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.rvpos button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;border-radius:10px;background:var(--wash);color:var(--plum)}.rvpos button small{font-size:10.5px;font-weight:700;line-height:1.1;text-align:center}
+.rvpos button.on{background:var(--lime);color:var(--lime-ink)}.rvmini{position:relative;width:46px;aspect-ratio:16/9;border-radius:5px;background:#1D468C;overflow:hidden}.rvmini i{position:absolute;width:40%;aspect-ratio:16/9;border-radius:2px;background:var(--lime);border:1.5px solid #fff}
+.rvmini.p-tr i{top:3px;right:3px}.rvmini.p-br i{bottom:3px;right:3px}.rvmini.p-full i{inset:0;width:auto;border:0;border-radius:0}.rvmini.p-off i{display:none}.rvmini.p-off::after{content:'';position:absolute;left:50%;top:50%;width:70%;height:2px;background:#fff;transform:translate(-50%,-50%) rotate(-20deg);opacity:.7}
+.rvseg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--wash);border-radius:10px;padding:3px}.rvseg button{padding:6px 2px;border-radius:8px;font-size:11.5px;font-weight:700;color:var(--plum)}.rvseg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+@media (max-width:1180px){.rbelow{grid-template-columns:1fr}}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -1540,7 +1548,6 @@ const rBar=inRoom=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div 
  <div class="rgrp"><button class="rbtn ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="Kamera an/aus" aria-label="Kamera an/aus">${ic('video')}</button><select data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
  <div class="rgrp"><span class="rbi" title="Lautsprecher">${ic('vol')}</span><select data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div>
  ${inRoom?`<span class="rsp"></span><button class="rbtn wide ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht oder Liste im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Teilen'}</span></button>
- <div class="rlayw"><button class="rbtn wide" onclick="rLayT(event)" title="Was im großen Bild zu sehen ist">${ic('layout')}<span>Layout</span></button><div class="rlaym" id="rlaym"><b>Großes Bild</b><div class="rseg">${[['auto','Automatisch'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div><b>Mein Video</b><div class="rseg">${[['tr','Oben rechts'],['br','Unten rechts'],['full','Groß'],['off','Aus']].map(([v,t])=>`<button data-lay="me:${v}" onclick="rSetLay('me','${v}')">${t}</button>`).join('')}</div><small>Tipp: Klick auf ein kleines Bild macht es groß.</small></div></div>
  <button class="rbtn ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren" aria-label="Zeiger">${ic('ptr')}</button>
  <button class="rbtn" onclick="rFull()" title="Vollbild" aria-label="Vollbild">${ic('fullscr')}</button>
  <div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rbtn end" onclick="rEnd()">${ic('x')} Beenden</button>`:''}</div>`};
@@ -1558,6 +1565,9 @@ function rLay(){const v=document.getElementById('rvid');if(v)v.className=rLayC()
  document.querySelectorAll('[data-lay]').forEach(x=>{const[k,val]=x.dataset.lay.split(':');x.classList.toggle('on',k==='main'?RLAY.main===val:ms===val)})}
 function rSetLay(k,v){if(k==='main')RLAY.main=v;else if(v==='full')RLAY.main='me';else{RLAY.me=v;if(RLAY.main==='me')RLAY.main='auto'}rLay()}
 function rMain(x){const v=document.getElementById('rvid');if(!v||v.classList.contains('m-'+x))return;RLAY.main=x;rLay()}
+const rViewP=()=>`<div class="rviewp"><div class="rvph"><b>${ic('layout')} Ansicht</b><small>was ${esc(bFirst(rB()))} groß sieht</small></div>
+ <div class="rvpl">Mein Video</div><div class="rvpos">${[['tr','Oben rechts'],['br','Unten rechts'],['full','Groß'],['off','Aus']].map(([v,t])=>`<button data-lay="me:${v}" onclick="rSetLay('me','${v}')" title="Mein Video: ${t}"><span class="rvmini p-${v}"><i></i></span><small>${t}</small></button>`).join('')}</div>
+ <div class="rvpl">Großes Bild</div><div class="rvseg">${[['auto','Auto'],['share','Bildschirm'],['cust','Kunde'],['me','Ich']].map(([v,t])=>`<button data-lay="main:${v}" onclick="rSetLay('main','${v}')">${t}</button>`).join('')}</div></div>`;
 function rLayT(e){e.stopPropagation();const m=document.getElementById('rlaym');if(m)m.classList.toggle('open')}
 document.addEventListener('click',e=>{const m=document.getElementById('rlaym');if(m&&m.classList.contains('open')&&!e.target.closest('.rlayw'))m.classList.remove('open')});
 function rPdf(id){const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
@@ -1605,7 +1615,7 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
   <div class="rt me ${j.cam?'':'off'}" id="rme" onclick="rMain('me')"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div>
   <div id="racc"></div>
   <button class="rfsb" id="rfsb" onclick="event.stopPropagation();rFull()" title="Vollbild" aria-label="Vollbild">${ic(document.fullscreenElement?'fsexit':'fullscr')}</button>
- </div>${rBar(true)}</div>
+ </div><div class="rbelow">${rBar(true)}${rViewP()}</div></div>
  <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>
   <div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
   <div class="card">${kHead('shield','Zugriffsprotokoll')}<ul class="rlog" id="rlog">${logHtml()}</ul></div>
