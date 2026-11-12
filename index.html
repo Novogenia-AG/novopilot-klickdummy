@@ -263,6 +263,17 @@ a{color:inherit;text-decoration:none}
 .rvseg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--wash);border-radius:10px;padding:3px}.rvseg button{padding:6px 2px;border-radius:8px;font-size:11.5px;font-weight:700;color:var(--plum)}.rvseg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 @media (max-width:1180px){.rbelow{grid-template-columns:1fr}}
 .racct{background:#EEF4D6}.racct small{display:block;font-size:12px;color:var(--soft);margin-top:2px;line-height:1.35}.racct>div{min-width:0}
+.rchat{position:relative}.rchc{position:absolute;top:16px;right:16px;font-size:11.5px;font-weight:800;color:var(--berry)}
+.rchf{display:flex;gap:4px;background:var(--wash);border-radius:10px;padding:3px;margin:6px 0 8px}.rchf button{flex:1;padding:6px;border-radius:8px;font-size:12px;font-weight:700;color:var(--plum)}.rchf button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.rchl{max-height:300px;min-height:90px;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:8px;padding:2px}.rchl::-webkit-scrollbar{display:none}
+.rmsg{background:var(--wash);border-radius:12px 12px 12px 4px;padding:8px 10px;max-width:92%}.rmsg.me{align-self:flex-end;background:#EAF0FA;border-radius:12px 12px 4px 12px}
+.rmsg.q{border:2px solid var(--lime);background:#F7FBE8}.rmsg.q.done{border-color:var(--line);background:var(--wash);opacity:.7}.rmsg.shown{box-shadow:0 0 0 3px rgba(198,214,63,.45)}
+.rmh{display:flex;align-items:center;gap:6px;font-size:12px}.rmh small{margin-left:auto;color:var(--soft);font-size:11px}.rqtag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--lime);color:var(--lime-ink);border-radius:6px;padding:1px 6px}
+.rmt{font-size:13.5px;line-height:1.4;margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere}.rqa{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}.rqok{font-size:12px;font-weight:700;color:#3d7a12;margin-top:4px}
+.rchempty{font-size:12.5px;color:var(--soft);text-align:center;padding:18px 6px}
+.rchw{margin-top:8px}.rchw textarea{width:100%;resize:none;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;font-size:13.5px}.rchs{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}.rchql{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--plum);cursor:pointer}
+#rqov .rqcard{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;width:min(560px,70%);background:#fff;color:var(--ink);border-radius:16px;padding:12px 16px;border:3px solid var(--lime);box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
+.rqcard .eyebrow{color:var(--berry)}.rqcard b{display:block;font-size:17px;line-height:1.3;color:var(--plum);margin:4px 0 8px}.rqcb{display:flex;gap:6px;justify-content:flex-end}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -1312,7 +1323,7 @@ function advRate(){drawer(`<div class="eyebrow" style="color:var(--berry)">Onlin
  <div style="display:flex;gap:8px"><button class="btn lime" onclick="advRateSave()">${ic('check')} Speichern</button><button class="btn line" onclick="closeDrawer()">Abbrechen</button></div>`);ADV._r=ADV.rate;setTimeout(()=>{const i=document.getElementById('rateIn');if(i){i.focus();i.select()}},50)}
 function advRateSave(){const v=ADV._r;if(!(v>=0)){toast('Bitte einen gültigen Betrag eingeben');return}ADV.rate=Math.round(v*100)/100;bApi.advSave();closeDrawer();toast(`Stundensatz gespeichert: ${eur(ADV.rate)} pro Stunde`);render(true)}
 function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}if(bApi.on&&bApi.advRec)bApi.req('PATCH','/api/collections/advisors/records/'+bApi.advRec,{consultOff:!ADV.offer}).catch(e=>toast('Schalter nicht gespeichert: '+e.message));toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
-function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food'];delete ACC[k]});RLAY.main='auto';RLAY.me='br';
+function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food'];delete ACC[k];delete CHAT[k]});RLAY.main='auto';RLAY.me='br';
  const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});location.hash='raum-DEMO'}
 const advOk=b=>b.demo||b.live||ADV.assigned.some(a=>a[0]===b.ci);
 let SLOTS=[['2026-10-26',540,720],['2026-10-27',540,720],['2026-10-27',840,1080],['2026-10-28',540,720],['2026-10-29',540,720],['2026-10-29',840,1080],['2026-10-30',540,780],
@@ -1594,8 +1605,39 @@ function rShare(s){const sh=s.view!=='reports';rLay();
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
  document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
-function rMount(){rStage();rPub();rAccUI();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
-function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
+function rMount(){rStage();rPub();rAccUI();rChR();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
+const CHAT={};let RCHF='all';
+const rCh=()=>CHAT[rSel]||(CHAT[rSel]={m:[],show:null});
+const rLiveB=()=>{const b=rB();return bApi.on&&b&&b.live};
+function rChAdd(e,from){const c=rCh();if(!e||!e.cid||c.m.some(x=>x.cid===e.cid))return;c.m.push({cid:e.cid,text:String(e.text||''),q:!!e.q,name:e.name||(from==='advisor'?'Du':bFirst(rB())),at:e.at||new Date().toISOString(),from:from||'customer',done:false});rChR()}
+function rChApply(type,x,from){x=x||{};const c=rCh();if(type==='chat')rChAdd(x,from);
+ else if(type==='q-show'){c.show=x.cid||null;rChR()}
+ else if(type==='q-done'){const m=c.m.find(y=>y.cid===x.cid);if(m)m.done=true;if(c.show===x.cid)c.show=null;rChR()}}
+function rChSend(){const t=document.getElementById('rchin'),q=document.getElementById('rchq');if(!t)return;const text=t.value.trim();if(!text)return;
+ const e={cid:'a-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),text,q:!!(q&&q.checked),name:bApi.advName||'Dein Betreuer',at:new Date().toISOString()};
+ rChAdd(e,'advisor');t.value='';if(q)q.checked=false;if(rLiveB())bApi.ev('chat',e);if(e.q)alog('Frage gestellt: '+text)}
+function rQShow(cid){rCh().show=cid;rChR();if(rLiveB())bApi.ev('q-show',{cid});const m=rCh().m.find(x=>x.cid===cid);if(m)alog('Frage eingeblendet: '+m.text)}
+function rQDone(cid){rChApply('q-done',{cid});if(rLiveB())bApi.ev('q-done',{cid})}
+function rChKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();rChSend()}}
+function rChIn(el){const q=document.getElementById('rchq');if(q&&/\?\s*$/.test(el.value))q.checked=true}
+const rChTime=a=>{const d=new Date(a);return isNaN(d)?'':d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'})};
+function rChR(){const c=rCh(),l=document.getElementById('rchl');const open=c.m.filter(m=>m.q&&!m.done).length;
+ const cnt=document.getElementById('rchc');if(cnt)cnt.textContent=open?open+' offen':'';
+ document.querySelectorAll('[data-chf]').forEach(b=>b.classList.toggle('on',b.dataset.chf===RCHF));
+ if(l){const list=c.m.filter(m=>RCHF==='all'||m.q);
+  l.innerHTML=list.map(m=>`<div class="rmsg ${m.from==='advisor'?'me':''} ${m.q?'q':''} ${m.done?'done':''} ${c.show===m.cid?'shown':''}"><div class="rmh"><b>${esc(m.from==='advisor'?'Du':m.name)}</b>${m.q?'<span class="rqtag">Frage</span>':''}<small>${rChTime(m.at)}</small></div><div class="rmt">${esc(m.text)}</div>
+   ${m.q?(m.done?'<div class="rqok">abgeschlossen ✓</div>':`<div class="rqa"><button class="btn sm ${c.show===m.cid?'lime':'line'}" onclick="rQShow(${c.show===m.cid?'null':`'${m.cid}'`})">${c.show===m.cid?'Ausblenden':'Einblenden'}</button><button class="btn sm line" onclick="rQDone('${m.cid}')">${ic('check')} Abschließen</button></div>`):''}</div>`).join('')||`<div class="rchempty">${RCHF==='q'?'Noch keine Fragen.':'Noch keine Nachrichten. Fragen von '+esc(bFirst(rB()))+' erscheinen hier.'}</div>`;
+  l.scrollTop=l.scrollHeight}
+ const o=document.getElementById('rqov');if(o){const m=c.show&&c.m.find(x=>x.cid===c.show);
+  o.innerHTML=m?`<div class="rqcard"><div class="eyebrow">Frage von ${esc(m.from==='advisor'?'deinem Betreuer':m.name)}</div><b>${esc(m.text)}</b><div class="rqcb"><button class="btn sm line" onclick="rQShow(null)">Ausblenden</button><button class="btn sm lime" onclick="rQDone('${m.cid}')">${ic('check')} Abschließen</button></div></div>`:''}}
+const rChCard=()=>`<div class="card rchat">${kHead('chat','Chat & Fragen')}<span class="rchc" id="rchc"></span>
+ <div class="rchf"><button data-chf="all" onclick="RCHF='all';rChR()">Alle</button><button data-chf="q" onclick="RCHF='q';rChR()">Nur Fragen</button></div>
+ <div class="rchl" id="rchl"></div>
+ <div class="rchw"><textarea id="rchin" rows="2" placeholder="Nachricht an ${esc(bFirst(rB()))} …" onkeydown="rChKey(event)" oninput="rChIn(this)"></textarea>
+ <div class="rchs"><label class="rchql"><input type="checkbox" id="rchq"> Als Frage stellen</label><button class="btn lime sm" onclick="rChSend()">${ic('send')} Senden</button></div></div></div>`;
+function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};
+ if(!(bApi.on&&b.live)){const id=b.id,f=bFirst(b),say=(ms,e)=>setTimeout(()=>{if(RJ[id]&&rSel===id)rChApply('chat',Object.assign({name:f,at:new Date().toISOString()},e),'customer')},ms);
+  say(6000,{cid:'d1',text:'Hallo! Danke, dass du dir Zeit nimmst 🙂',q:false});say(16000,{cid:'d2',text:'Soll ich Vitamin D im Winter höher dosieren?',q:true})}bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
 function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];el.classList.toggle('off',!j[k]);RM.apply();bApi.tog(k,j[k]);const me=document.getElementById('rme');if(k==='cam'&&me){me.querySelector('i').textContent=j.cam?'Du':'Kamera aus';me.classList.toggle('off',!j.cam)}toast(k==='mic'?(j.mic?'Mikrofon an':'Mikrofon stumm'):(j.cam?'Kamera an':'Kamera aus'))}
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
  b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);if(document.fullscreenElement)document.exitFullscreen();RM.stop();alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
@@ -1618,10 +1660,10 @@ P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div c
   <div class="rsh rst" onclick="rMain('share')"><div class="rsbar"><span class="rsdot"></span><span>Du teilst: <b id="rsl">${esc(shLbl(s))}</b></span><button class="rsx" onclick="event.stopPropagation();rView('reports')" title="Teilen beenden" aria-label="Teilen beenden">${ic('x')}</button></div><div id="rstage" class="rstage"></div></div>
   <div class="rt rcust ${b.demo?'rdemo':''}" onclick="rMain('cust')"><video id="rvr" autoplay playsinline></video><span class="av">${ini}</span><span class="nm">${esc(c.name)} · ${b.demo?'Demo-Kundin':'GEN(e)IUS-App'}</span></div>
   <div class="rt me ${j.cam?'':'off'}" id="rme" onclick="rMain('me')"><video id="rvl" autoplay muted playsinline></video><i>${j.cam?'Du':'Kamera aus'}</i><span class="nm">Du</span></div>
-  <div id="racc"></div>
+  <div id="racc"></div><div id="rqov"></div>
   <button class="rfsb" id="rfsb" onclick="event.stopPropagation();rFull()" title="Vollbild" aria-label="Vollbild">${ic(document.fullscreenElement?'fsexit':'fullscr')}</button>
  </div><div class="rbelow">${rBar(true)}${rViewP()}</div></div>
- <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>
+ <div class="rside"><div class="card rpick" id="rpick">${rPick(s)}</div>${rChCard()}
   <div class="card">${kHead('sign','Notiz')}<p class="mut">Nur für dich sichtbar, nicht für den Kunden.</p><div class="field" style="margin:0"><textarea placeholder="z. B. Vitamin D in 3 Monaten nachmessen" oninput="RNOTE[rSel]=this.value">${esc(RNOTE[b.id]||'')}</textarea></div></div>
   <div class="card">${kHead('shield','Zugriffsprotokoll')}<ul class="rlog" id="rlog">${logHtml()}</ul></div>
   <div class="card"><details class="rjson"><summary>Gemeinsamer Zustand (für die Entwicklung)</summary><pre id="rjson"></pre></details></div></div></div>`};
@@ -1651,10 +1693,12 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   (RM.s?Promise.resolve(RM.s):RM.get()).then(m=>{if(!m||rSel!==id)return;this.local=m;this.vAttach();if(this.pc)this.call()}); // nicht blockieren: Signalisierung startet sofort
   const pb=await this.loadPb().catch(()=>null);
   if(pb){await pb.collection('events').unsubscribe('*').catch(()=>{});await pb.collection('events').subscribe('*',e=>{if(e.action==='create')this.onEv(e.record)},{filter:`booking="${id}"`}).catch(e=>console.warn('Realtime',e))}
+  this.req('GET',`/api/collections/events/records?perPage=500&sort=created&filter=${encodeURIComponent(`booking="${id}" && (type="chat" || type="q-show" || type="q-done")`)}`).then(x=>{if(rSel===id)(x.items||[]).forEach(e=>rChApply(e.type,e.data,e.from))}).catch(()=>{});
   await this.ev('hello',{},id);
   const since=new Date(Date.now()-6e5).toISOString().replace('T',' ');
   this.req('GET',`/api/collections/events/records?perPage=1&sort=-created&filter=${encodeURIComponent(`booking="${id}" && type="hello" && from!="advisor" && created>="${since}"`)}`).then(x=>{if(x.items&&x.items.length)this.call()}).catch(()=>{})},
- onEv(d){if(!d||d.from==='advisor'||d.booking!==rSel)return;const t=d.created?Date.parse(d.created.replace(' ','T')):Date.now();if(t<this.joinAt-3000)return;const x=d.data||{};
+ onEv(d){if(d&&d.booking===rSel&&/^(chat|q-show|q-done)$/.test(d.type)){if(d.from!=='advisor'){rChApply(d.type,d.data,d.from);if(d.type==='chat')toast((d.data&&d.data.q?'Neue Frage von ':'Nachricht von ')+bFirst(rB()))}return}
+  if(!d||d.from==='advisor'||d.booking!==rSel)return;const t=d.created?Date.parse(d.created.replace(' ','T')):Date.now();if(t<this.joinAt-3000)return;const x=d.data||{};
   if(d.type==='hello'||d.type==='ready'){alog('Kunde ist beigetreten');this.call()}
   else if(d.type==='signal')this.sig(x);
   else if(d.type==='handover-ack'){const h=this.hand[x.handoverId];if(h&&h[0]===rSel)rAck(h[1]);else if(x.list)rAck(x.list)}
