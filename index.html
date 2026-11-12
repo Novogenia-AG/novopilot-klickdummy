@@ -1324,7 +1324,8 @@ function advRate(){drawer(`<div class="eyebrow" style="color:var(--berry)">Onlin
 function advRateSave(){const v=ADV._r;if(!(v>=0)){toast('Bitte einen gültigen Betrag eingeben');return}ADV.rate=Math.round(v*100)/100;bApi.advSave();closeDrawer();toast(`Stundensatz gespeichert: ${eur(ADV.rate)} pro Stunde`);render(true)}
 function bOffer(){ADV.offer=!ADV.offer;try{localStorage.setItem('np-beratung-offer',ADV.offer?'1':'0')}catch(e){}if(bApi.on&&bApi.advRec)bApi.req('PATCH','/api/collections/advisors/records/'+bApi.advRec,{consultOff:!ADV.offer}).catch(e=>toast('Schalter nicht gespeichert: '+e.message));toast(ADV.offer?'Online-Beratung aktiviert: Kunden können deine freien Termine buchen':'Online-Beratung deaktiviert');render(true)}
 function bTest(){BOOKINGS=BOOKINGS.filter(b=>!b.demo);['DEMO'].forEach(k=>{delete RJ[k];delete RSS[k];delete ALOG[k];delete RNOTE[k];delete HAND[k+':bedarf'];delete HAND[k+':food'];delete ACC[k];delete CHAT[k]});RLAY.main='auto';RLAY.me='br';
- const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});location.hash='raum-DEMO'}
+ const n=new Date(+BNOW);BOOKINGS.push({id:'DEMO',demo:true,cust:{name:'Anna Beispiel'},d:dIso(n),t:n.getHours()*60+n.getMinutes(),dur:30,price:0,free:true});
+ rSel='DEMO';rJoin();location.hash='raum-DEMO'} // Demo startet direkt in der Videokonferenz, ohne Vorschau
 const advOk=b=>b.demo||b.live||ADV.assigned.some(a=>a[0]===b.ci);
 let SLOTS=[['2026-10-26',540,720],['2026-10-27',540,720],['2026-10-27',840,1080],['2026-10-28',540,720],['2026-10-29',540,720],['2026-10-29',840,1080],['2026-10-30',540,780],
  ['2026-11-02',540,720],['2026-11-03',840,1020],['2026-11-04',540,720],['2026-11-05',840,1020]].map(a=>({d:a[0],a:a[1],b:a[2]}));
