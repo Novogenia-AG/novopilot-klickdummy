@@ -1560,15 +1560,15 @@ const RMP={mic:true,cam:true}; // Einstellungen vor dem Start (Vorschau)
 const RM={s:null,dev:(()=>{try{return{cam:localStorage.getItem('np-dev-cam')||'',mic:localStorage.getItem('np-dev-mic')||'',spk:localStorage.getItem('np-dev-spk')||''}}catch(e){return{cam:'',mic:'',spk:''}}})(),list:[],ac:null,raf:0,
  async get(retry){this.stop(true);try{const s=await navigator.mediaDevices.getUserMedia({video:this.dev.cam?{deviceId:{exact:this.dev.cam}}:true,audio:this.dev.mic?{deviceId:{exact:this.dev.mic}}:true});
   if(!/^#raum-/.test(location.hash)){s.getTracks().forEach(t=>t.stop());return null}
-  this.s=s;this.apply();this.list=await navigator.mediaDevices.enumerateDevices().catch(()=>[]);this.meter();rDevs();rLookApply();bApi.local=s;bApi.swap(s);bApi.vAttach();return s}
+  this.raw=s;this.s=s;this.list=await navigator.mediaDevices.enumerateDevices().catch(()=>[]);this.meter();rDevs();await fxApply();return this.s}
   catch(e){if(!retry&&(e.name==='OverconstrainedError'||e.name==='NotFoundError')&&(this.dev.cam||this.dev.mic)){this.dev.cam=this.dev.mic='';return this.get(1)}
    const me=document.querySelector('#rme i');if(me)me.textContent='Kamera nicht verfügbar';toast(devErr(e));rDevs();return null}},
- apply(){const j=RJ[rSel]||RMP;if(this.s)this.s.getTracks().forEach(t=>t.enabled=t.kind==='audio'?j.mic:j.cam)},
+ apply(){const j=RJ[rSel]||RMP;const ts=[...(this.raw?this.raw.getTracks():[]),...(FX.track?[FX.track]:[])];ts.forEach(t=>t.enabled=t.kind==='audio'?j.mic:j.cam)},
  meter(){cancelAnimationFrame(this.raf);try{const a=this.s&&this.s.getAudioTracks()[0];if(!a)return;this.ac=this.ac||new AudioContext();if(this.ac.state==='suspended')this.ac.resume();
   const an=this.ac.createAnalyser();an.fftSize=512;this.ac.createMediaStreamSource(new MediaStream([a])).connect(an);const buf=new Float32Array(an.fftSize);let lvl=0;
   const loop=()=>{an.getFloatTimeDomainData(buf);let sum=0;for(const x of buf)sum+=x*x;const db=20*Math.log10(Math.sqrt(sum/buf.length)+1e-8);lvl=a.enabled?Math.max(Math.min(1,(db+60)/50),lvl*.85):0;
    document.querySelectorAll('.rlvl b').forEach(b=>b.style.width=Math.round(lvl*100)+'%');this.raf=requestAnimationFrame(loop)};loop()}catch(e){}},
- stop(keep){cancelAnimationFrame(this.raf);if(this.s)this.s.getTracks().forEach(t=>t.stop());this.s=null;if(!keep)bApi.local=null},
+ stop(keep){cancelAnimationFrame(this.raf);fxStop();if(this.raw)this.raw.getTracks().forEach(t=>t.stop());this.raw=null;this.s=null;if(!keep)bApi.local=null},
  async set(k,v){this.dev[k]=v;try{localStorage.setItem('np-dev-'+k,v)}catch(e){}if(k==='spk'){const r=document.getElementById('rvr');if(r&&r.setSinkId)r.setSinkId(v).then(()=>toast('Lautsprecher gewechselt')).catch(()=>toast('Lautsprecher lässt sich in diesem Browser nicht wählen'));return}
   if(await this.get())toast(k==='cam'?'Kamera gewechselt':'Mikrofon gewechselt')}};
 addEventListener('hashchange',()=>{if(!/^#raum-/.test(location.hash)&&RM.s&&!bApi.pc)RM.stop()});
@@ -1586,14 +1586,47 @@ function rDevs(){const K={cam:'videoinput',mic:'audioinput',spk:'audiooutput'},N
   sel.title=N[k]+': '+(sel.selectedOptions[0]?sel.selectedOptions[0].textContent:'')})}
 const RLOOKS=[['natur','natürlich','none'],['warm','Warm','saturate(1.12) sepia(.12) brightness(1.04) contrast(1.03)'],['hell','Heller','brightness(1.13) contrast(1.04) saturate(1.05)'],['weich','Weich','brightness(1.06) contrast(.94) saturate(1.06) blur(.35px)'],['frisch','Frisch','contrast(1.12) saturate(1.18) brightness(1.02)'],['sw','Schwarz-Weiß','grayscale(1) contrast(1.08)']];
 let RLOOK=(()=>{try{return localStorage.getItem('np-look')||'natur'}catch(e){return 'natur'}})();
-function rLook(v){RLOOK=v;try{localStorage.setItem('np-look',v)}catch(e){}rLookApply()}
-function rLookApply(){const v=document.getElementById('rvl');if(v)v.style.filter=(RLOOKS.find(l=>l[0]===RLOOK)||RLOOKS[0])[2]}
+function rLook(v){RLOOK=v;try{localStorage.setItem('np-look',v)}catch(e){}fxApply()}
+function rLookApply(){const v=document.getElementById('rvl');if(v)v.style.filter='none'} // Look steckt jetzt im gesendeten Bild
+const MPU='https://geneius-live.daniel.internal.novogenia.com/mediapipe/'; // dieselben Dateien wie im Webinar-Studio
+const RBGS=[['aus','Hintergrund: keiner'],['blur-l','Leicht unscharf',6],['blur-s','Stark unscharf',16],['plum','NovoPilot dunkel'],['hell','NovoPilot hell'],['eigen','Eigenes Bild …']];
+const FX={bg:(()=>{try{const v=localStorage.getItem('np-bg')||'aus';return v==='eigen'?'aus':v}catch(e){return 'aus'}})(),segP:null,seg:null,v:null,out:null,person:null,mask:null,img:null,custom:'',timer:0,track:null,last:0,gen:0};
+function fxSegLoad(){if(!FX.segP){FX.segP=(async()=>{const vision=await import(MPU+'vision_bundle.mjs');const files=await vision.FilesetResolver.forVisionTasks(MPU+'wasm');
+  return vision.ImageSegmenter.createFromOptions(files,{baseOptions:{modelAssetPath:MPU+'selfie_segmenter.tflite',delegate:'CPU'},runningMode:'VIDEO',outputCategoryMask:false,outputConfidenceMasks:true})})();FX.segP.catch(()=>FX.segP=null)}return FX.segP}
+function fxGrad(kind){const c=document.createElement('canvas');c.width=1280;c.height=720;const g=c.getContext('2d');const blob=(x,y,r,a,b)=>{const rg=g.createRadialGradient(x,y,0,x,y,r);rg.addColorStop(0,a);rg.addColorStop(1,b);g.fillStyle=rg;g.fillRect(0,0,1280,720)};
+ if(kind==='plum'){const lg=g.createLinearGradient(0,0,0,720);lg.addColorStop(0,'#00225E');lg.addColorStop(.55,'#00153A');lg.addColorStop(1,'#000A1E');g.fillStyle=lg;g.fillRect(0,0,1280,720);blob(220,60,700,'rgba(29,70,140,.55)','rgba(29,70,140,0)');blob(1180,90,420,'rgba(198,214,63,.18)','rgba(198,214,63,0)')}
+ else{const lg=g.createLinearGradient(0,0,1280,720);lg.addColorStop(0,'#FFFFFF');lg.addColorStop(1,'#E8EEF8');g.fillStyle=lg;g.fillRect(0,0,1280,720);blob(1100,120,520,'rgba(198,214,63,.35)','rgba(198,214,63,0)');blob(120,680,560,'rgba(29,70,140,.18)','rgba(29,70,140,0)')}
+ g.font="800 34px Montserrat, sans-serif";g.textAlign='right';g.fillStyle=kind==='plum'?'rgba(255,255,255,.55)':'rgba(0,34,94,.55)';g.fillText('NOVO',1150,70);g.fillStyle='#C6D63F';g.fillText('PILOT',1240,70);return c.toDataURL('image/jpeg',.9)}
+function fxStop(){FX.gen++;clearTimeout(FX.timer);if(FX.track){FX.track.stop();FX.track=null}if(FX.v){FX.v.srcObject=null;FX.v=null}}
+async function fxApply(){const raw=RM.raw;if(!raw)return;const vt=raw.getVideoTracks()[0];fxStop();const gen=FX.gen,look=(RLOOKS.find(l=>l[0]===RLOOK)||RLOOKS[0])[2];
+ const fin=s=>{if(gen!==FX.gen)return;RM.s=s;RM.apply();bApi.local=s;bApi.swap(s);bApi.vAttach();rLookApply()};
+ if(!vt||(FX.bg==='aus'&&look==='none')){fin(raw);return}
+ FX.seg=null;if(FX.bg!=='aus'){const sel=document.querySelector('select[data-bg]');if(sel)sel.disabled=true;
+  try{FX.seg=await fxSegLoad()}catch(e){toast('Hintergrund konnte nicht geladen werden. Bitte Seite neu laden.');FX.bg='aus'}if(sel)sel.disabled=false;if(gen!==FX.gen)return}
+ const c=RBGS.find(b=>b[0]===FX.bg)||RBGS[0];FX.img=null;if(FX.bg==='plum'||FX.bg==='hell'||(FX.bg==='eigen'&&FX.custom)){const im=new Image();im.onload=()=>{if(gen===FX.gen)FX.img=im};im.src=FX.bg==='eigen'?FX.custom:fxGrad(FX.bg)}
+ const st=vt.getSettings(),w=st.width||1280,hh=st.height||720;
+ const v=FX.v=document.createElement('video');v.muted=true;v.playsInline=true;v.srcObject=new MediaStream([vt]);v.play().catch(()=>{});
+ const out=FX.out=Object.assign(document.createElement('canvas'),{width:w,height:hh}),person=Object.assign(document.createElement('canvas'),{width:w,height:hh}),maskC=document.createElement('canvas');
+ out.getContext('2d').fillRect(0,0,w,hh);FX.track=out.captureStream(30).getVideoTracks()[0];
+ const draw=()=>{if(v.readyState<2)return;const ctx=out.getContext('2d');
+  if(!FX.seg){ctx.filter=look;ctx.drawImage(v,0,0,w,hh);ctx.filter='none';return}
+  let ts=performance.now();if(ts<=FX.last)ts=FX.last+1;FX.last=ts;const res=FX.seg.segmentForVideo(v,ts),m=res.confidenceMasks&&res.confidenceMasks[0];
+  if(m){if(maskC.width!==m.width||maskC.height!==m.height){maskC.width=m.width;maskC.height=m.height}const d=m.getAsFloat32Array(),mc=maskC.getContext('2d'),img=mc.createImageData(m.width,m.height);for(let i=0;i<d.length;i++)img.data[i*4+3]=Math.min(255,Math.max(0,(d[i]-.15)*1.6*255));mc.putImageData(img,0,0)}
+  res.close();
+  if(c[2]){ctx.filter=`blur(${c[2]}px) ${look==='none'?'':look}`;ctx.drawImage(v,0,0,w,hh);ctx.filter='none'}
+  else if(FX.img){const b=FX.img,r=Math.max(w/b.width,hh/b.height);ctx.drawImage(b,(w-b.width*r)/2,(hh-b.height*r)/2,b.width*r,b.height*r)}
+  else ctx.drawImage(v,0,0,w,hh);
+  const pc=person.getContext('2d');pc.globalCompositeOperation='source-over';pc.clearRect(0,0,w,hh);pc.filter=look;pc.drawImage(v,0,0,w,hh);pc.filter='none';pc.globalCompositeOperation='destination-in';pc.filter='blur(2px)';pc.drawImage(maskC,0,0,w,hh);pc.filter='none';ctx.drawImage(person,0,0)};
+ const loop=()=>{if(gen!==FX.gen)return;try{draw()}catch(e){}FX.timer=setTimeout(loop,33)};loop();
+ fin(new MediaStream([FX.track,...raw.getAudioTracks()]))}
+function rBg(v){if(v==='eigen'){const f=document.getElementById('rbgf');if(f)f.click();return}FX.bg=v;try{localStorage.setItem('np-bg',v)}catch(e){}fxApply()}
+function rBgFile(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;if(FX.custom)URL.revokeObjectURL(FX.custom);FX.custom=URL.createObjectURL(f);FX.bg='eigen';fxApply();const s=document.querySelector('select[data-bg]');if(s)s.value='eigen'}
 const rBar=(inRoom,extra)=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';return `<div class="rtech">
  <div class="rtg"><div class="rtgt">Mikrofon</div><div class="rtr"><button class="rtgl ${j.mic?'':'off'}" onclick="rTog(this,'mic')" title="${j.mic?'Mikro an (klicken: aus)':'Mikro aus (klicken: an)'}" aria-label="Mikrofon an/aus" aria-pressed="${j.mic}">${ic(j.mic?'mic':'micoff')}</button><select class="rfld" data-dev="mic" onchange="RM.set('mic',this.value)" aria-label="Mikrofon wählen"><option>Mikrofon</option></select></div>
   <div class="rmeter" title="Pegel deines Mikrofons: zeigt, ob Ton ankommt"><div class="rlvl ${j.mic?'':'off'}"><b></b></div><span id="rlvt">${j.mic?'Pegel':'Mikro aus'}</span></div>
   <div class="rtr"><span class="rtgi" title="Lautsprecher">${ic('vol')}</span><select class="rfld" data-dev="spk" onchange="RM.set('spk',this.value)" aria-label="Lautsprecher wählen"><option>Lautsprecher</option></select></div></div>
  <div class="rtg"><div class="rtgt">Kamera</div><div class="rtr"><button class="rtgl ${j.cam?'':'off'}" onclick="rTog(this,'cam')" title="${j.cam?'Kamera an (klicken: aus)':'Kamera aus (klicken: an)'}" aria-label="Kamera an/aus" aria-pressed="${j.cam}">${ic(j.cam?'video':'camoff')}</button><select class="rfld" data-dev="cam" onchange="RM.set('cam',this.value)" aria-label="Kamera wählen"><option>Kamera</option></select></div>
-  <select class="rfld" onchange="rLook(this.value)" aria-label="Bild-Look" title="Farb-Look deines Kamerabilds">${RLOOKS.map(l=>`<option value="${l[0]}" ${l[0]===RLOOK?'selected':''}>Look: ${l[1]}</option>`).join('')}</select></div>
+  <div class="rtr2"><select class="rfld" onchange="rLook(this.value)" aria-label="Bild-Look" title="Farb-Look deines Kamerabilds (sieht auch dein Gegenüber)">${RLOOKS.map(l=>`<option value="${l[0]}" ${l[0]===RLOOK?'selected':''}>Look: ${l[1]}</option>`).join('')}</select><select class="rfld" data-bg onchange="rBg(this.value)" aria-label="Hintergrund" title="Hintergrund hinter dir (sieht auch dein Gegenüber)">${RBGS.map(b=>`<option value="${b[0]}" ${b[0]===FX.bg?'selected':''}>${b[1]}</option>`).join('')}</select></div><input type="file" id="rbgf" accept="image/*" hidden onchange="rBgFile(this)"></div>
  ${inRoom?`<div class="rtg"><div class="rtgt">Raum</div><div class="rtr2"><button class="rctl ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht, Liste oder Kundenkonto im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Bildschirm teilen'}</span></button><button class="rctl ${rPtr?'on':''}" onclick="rPtrT(this)" title="Zeiger: Stelle für den Kunden markieren">${ic('ptr')}<span>${rPtr?'Pointer an':'Laserpointer'}</span></button></div>
   <div class="rtr"><div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rctl end" onclick="rEnd()">${ic('x')}<span>Beenden</span></button></div></div>`:''}${extra||''}</div>`};
 const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (GEN(e)IUS-App)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
@@ -1645,30 +1678,23 @@ function rChApply(type,x,from){x=x||{};const c=rCh();if(type==='chat')rChAdd(x,f
  else if(type==='q-show'){c.show=x.cid||null;rChR()}
  else if(type==='q-done'){const m=c.m.find(y=>y.cid===x.cid);if(m)m.done=true;if(c.show===x.cid)c.show=null;rChR()}}
 function rChSend(){const t=document.getElementById('rchin'),q=document.getElementById('rchq');if(!t)return;const text=t.value.trim();if(!text)return;
- const e={cid:'a-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),text,q:!!(q&&q.checked),name:bApi.advName||'Dein Betreuer',at:new Date().toISOString()};
+ const e={cid:'a-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),text,q:false,name:bApi.advName||'Dein Betreuer',at:new Date().toISOString()};
  rChAdd(e,'advisor');t.value='';if(q)q.checked=false;if(rLiveB())bApi.ev('chat',e);if(e.q)alog('Frage gestellt: '+text)}
 function rQShow(cid){rCh().show=cid;rChR();if(rLiveB())bApi.ev('q-show',{cid});const m=rCh().m.find(x=>x.cid===cid);if(m)alog('Frage eingeblendet: '+m.text)}
 function rQDone(cid){rChApply('q-done',{cid});if(rLiveB())bApi.ev('q-done',{cid})}
 function rChKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();rChSend()}}
-function rChIn(el){const q=document.getElementById('rchq');if(q&&/\?\s*$/.test(el.value))q.checked=true}
+function rChIn(el){}
 const rChTime=a=>{const d=new Date(a);return isNaN(d)?'':d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'})};
-function rChR(){const c=rCh(),l=document.getElementById('rchl');const open=c.m.filter(m=>m.q&&!m.done).length;
- const cnt=document.getElementById('rchc');if(cnt)cnt.textContent=open?open+' offen':'';
- document.querySelectorAll('[data-chf]').forEach(b=>b.classList.toggle('on',b.dataset.chf===RCHF));
- if(l){const list=c.m.filter(m=>RCHF==='all'||m.q);
-  l.innerHTML=list.map(m=>`<div class="rmsg ${m.from==='advisor'?'me':''} ${m.q?'q':''} ${m.done?'done':''} ${c.show===m.cid?'shown':''}"><div class="rmh"><b>${esc(m.from==='advisor'?'Du':m.name)}</b>${m.q?'<span class="rqtag">Frage</span>':''}<small>${rChTime(m.at)}</small></div><div class="rmt">${esc(m.text)}</div>
-   ${m.q?(m.done?'<div class="rqok">abgeschlossen ✓</div>':`<div class="rqa"><button class="btn sm ${c.show===m.cid?'lime':'line'}" onclick="rQShow(${c.show===m.cid?'null':`'${m.cid}'`})">${c.show===m.cid?'Ausblenden':'Einblenden'}</button><button class="btn sm line" onclick="rQDone('${m.cid}')">${ic('check')} Abschließen</button></div>`):''}</div>`).join('')||`<div class="rchempty">${RCHF==='q'?'Noch keine Fragen.':'Noch keine Nachrichten. Fragen von '+esc(bFirst(rB()))+' erscheinen hier.'}</div>`;
-  l.scrollTop=l.scrollHeight}
- const o=document.getElementById('rqov');if(o){const m=c.show&&c.m.find(x=>x.cid===c.show);
-  o.innerHTML=m?`<div class="rqcard"><div class="eyebrow">Frage von ${esc(m.from==='advisor'?'deinem Betreuer':m.name)}</div><b>${esc(m.text)}</b><div class="rqcb"><button class="btn sm line" onclick="rQShow(null)">Ausblenden</button><button class="btn sm lime" onclick="rQDone('${m.cid}')">${ic('check')} Abschließen</button></div></div>`:''}}
-const rChCard=()=>`<div class="card rchat">${kHead('chat','Chat & Fragen')}<span class="rchc" id="rchc"></span>
- <div class="rchf"><button data-chf="all" onclick="RCHF='all';rChR()">Alle</button><button data-chf="q" onclick="RCHF='q';rChR()">Nur Fragen</button></div>
+function rChR(){const c=rCh(),l=document.getElementById('rchl');
+ if(l){l.innerHTML=c.m.map(m=>`<div class="rmsg ${m.from==='advisor'?'me':''}"><div class="rmh"><b>${esc(m.from==='advisor'?'Du':m.name)}</b><small>${rChTime(m.at)}</small></div><div class="rmt">${esc(m.text)}</div></div>`).join('')||`<div class="rchempty">Noch keine Nachrichten. Schreib ${esc(bFirst(rB()))} etwas oder warte auf eine Nachricht.</div>`;l.scrollTop=l.scrollHeight}
+ const o=document.getElementById('rqov');if(o)o.innerHTML=''}
+const rChCard=()=>`<div class="card rchat">${kHead('chat','Chat mit '+esc(bFirst(rB())))}
  <div class="rchl" id="rchl"></div>
- <div class="rchw"><textarea id="rchin" rows="2" placeholder="Nachricht an ${esc(bFirst(rB()))} …" onkeydown="rChKey(event)" oninput="rChIn(this)"></textarea>
- <div class="rchs"><label class="rchql"><input type="checkbox" id="rchq"> Als Frage stellen</label><button class="btn lime sm" onclick="rChSend()">${ic('send')} Senden</button></div></div></div>`;
+ <div class="rchw"><textarea id="rchin" rows="2" placeholder="Nachricht an ${esc(bFirst(rB()))} …" onkeydown="rChKey(event)"></textarea>
+ <div class="rchs"><small class="mut">Enter sendet, Umschalt+Enter neue Zeile</small><button class="btn lime sm" onclick="rChSend()">${ic('send')} Senden</button></div></div></div>`;
 function rJoin(){const b=rB();RJ[b.id]={t0:Date.now(),mic:RMP.mic,cam:RMP.cam};
  if(!(bApi.on&&b.live)){const id=b.id,f=bFirst(b),say=(ms,e)=>setTimeout(()=>{if(RJ[id]&&rSel===id)rChApply('chat',Object.assign({name:f,at:new Date().toISOString()},e),'customer')},ms);
-  say(6000,{cid:'d1',text:'Hallo! Danke, dass du dir Zeit nimmst 🙂',q:false});say(16000,{cid:'d2',text:'Soll ich Vitamin D im Winter höher dosieren?',q:true})}bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
+  say(6000,{cid:'d1',text:'Hallo! Danke, dass du dir Zeit nimmst 🙂',q:false});say(16000,{cid:'d2',text:'Soll ich Vitamin D im Winter höher dosieren?',q:false})}bApi.start(b);alog('Beratung gestartet: Zugriff auf die Berichte freigegeben');render()}
 function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];const on=j[k];el.classList.toggle('off',!on);el.setAttribute('aria-pressed',on);el.innerHTML=ic(k==='mic'?(on?'mic':'micoff'):(on?'video':'camoff'));
  el.title=k==='mic'?(on?'Mikro an (klicken: aus)':'Mikro aus (klicken: an)'):(on?'Kamera an (klicken: aus)':'Kamera aus (klicken: an)');RM.apply();bApi.tog(k,on);
  if(k==='mic'){const t=document.getElementById('rlvt');if(t)t.textContent=on?'Pegel':'Mikro aus';document.querySelectorAll('.rlvl').forEach(x=>x.classList.toggle('off',!on))}
@@ -1747,7 +1773,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   const o=await pc.createOffer();await pc.setLocalDescription(o);this.ev('signal',{sdp:{type:'offer',sdp:o.sdp}})},
  async sig(x){const pc=this.pc;if(!pc)return;try{if(x.sdp&&x.sdp.type==='answer'){if(pc.signalingState!=='have-local-offer')return;await pc.setRemoteDescription(x.sdp);for(const c of this.qc)await pc.addIceCandidate(c);this.qc=[]}
   else if(x.candidate){if(pc.remoteDescription)await pc.addIceCandidate(x.candidate);else this.qc.push(x.candidate)}}catch(e){console.warn('Signal',e)}},
- vAttach(){const r=document.getElementById('rvr'),l=document.getElementById('rvl');if(l&&this.local){if(l.srcObject!==this.local)l.srcObject=this.local;l.closest('.me').classList.add('has')}
+ vAttach(){const r=document.getElementById('rvr'),l=document.getElementById('rvl');if(l)l.style.filter='none';if(l&&this.local){if(l.srcObject!==this.local)l.srcObject=this.local;l.closest('.me').classList.add('has')}
   if(r&&this.remote){if(r.srcObject!==this.remote)r.srcObject=this.remote;r.closest('.rcust').classList.add('has');if(RM.dev.spk&&r.setSinkId)r.setSinkId(RM.dev.spk).catch(()=>{})}},
  swap(s){if(!this.pc)return;const ss=this.pc.getSenders();if(!ss.some(y=>y.track)){this.call();return}s.getTracks().forEach(t=>{const x=ss.find(y=>y.track&&y.track.kind===t.kind);if(x)x.replaceTrack(t)})},
  tog(k,on){if(this.local)this.local.getTracks().filter(t=>t.kind===(k==='mic'?'audio':'video')).forEach(t=>t.enabled=on)},
