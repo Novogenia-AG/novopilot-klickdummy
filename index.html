@@ -903,7 +903,7 @@ const PB_LV=[0,5,10,20,30];
 const PB={name:(()=>{try{return localStorage.getItem('np-berater-name')||''}catch(e){return ''}})()||PARTNER.company,
   photo:(()=>{try{return localStorage.getItem('np-berater-foto-'+PARTNER.id)}catch(e){return null}})()};
 const pbCode=d=>d?`${PARTNER.id}-${d}`:'';
-const pbUrl=d=>{const u=new URL('berater.html',location.href);u.hash='';u.search='';const q=new URLSearchParams({d:String(d)});if(d)q.set('c',pbCode(d));q.set('n',PB.name);q.set('s',PARTNER.id);if(/\/\/dev\./.test(PARTNER.shop))q.set('h','dev');return u.href+'?'+q.toString()};
+const pbUrl=d=>{const u=new URL('berater.html',location.href);u.hash='';u.search='';const q=new URLSearchParams({d:String(d)});if(d)q.set('c',pbCode(d));q.set('n',PB.name);q.set('s',PARTNER.id);return u.href+'?'+q.toString()};
 const pbLbl=d=>d?`${d} % Gutschein`:'Ohne Gutschein';
 const pbInit=()=>PB.name.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'N';
 const pbAv=(c='')=>PB.photo?`<img class="pbav ${c}" src="${PB.photo}" alt="">`:`<span class="pbav pbini ${c}">${esc(pbInit())}</span>`;

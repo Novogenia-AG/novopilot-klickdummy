@@ -516,11 +516,11 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 </script>
 <script>
 /* NovoPilot-Produktberater: Werte kommen aus dem Link des Betreuers
-   ?d=Rabatt (0|5|10|20|30) &c=Gutscheincode &n=Name &s=Shop-ID (oder URL) &h=dev (Test-Shop) */
+   ?d=Rabatt (0|5|10|20|30) &c=Gutscheincode &n=Name &s=Shop-ID -> immer offizieller Shop novodaily.com/<ID> */
 const QS=new URLSearchParams(location.search);
 const DISCOUNT=[0,5,10,20,30].includes(+QS.get('d'))?+QS.get('d'):0;
 const CODE=DISCOUNT?(QS.get('c')||'').replace(/[^A-Za-z0-9-]/g,'').slice(0,32):"";
-const SID=QS.get('s')||'';const SHOP=/^[A-Za-z0-9]{3,20}$/.test(SID)?(QS.get('h')==='dev'?'https://dev.novodaily.com/':'https://novodaily.com/')+SID:/^https:\/\/(dev\.)?novodaily\.com\/[A-Za-z0-9]{3,20}$/.test(SID)?SID:"https://novodaily.com";
+const SID=QS.get('s')||'';const SHOP=/^[A-Za-z0-9]{3,20}$/.test(SID)?'https://novodaily.com/'+SID:/^https:\/\/(dev\.)?novodaily\.com\/[A-Za-z0-9]{3,20}$/.test(SID)?'https://novodaily.com/'+SID.split('/')[3]:"https://novodaily.com";
 const SHOPID=(SHOP.split('/')[3]||'');
 const NAME=(QS.get('n')||'Dein NovoDaily-Berater').replace(/[<>]/g,'').slice(0,40);
 const INIT=NAME.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'N';
