@@ -291,6 +291,54 @@ a{color:inherit;text-decoration:none}
 .rlasd{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#ff2a2a 30% 62%,rgba(255,42,42,0) 72%);box-shadow:0 0 12px 5px rgba(255,30,30,.55),0 0 26px 10px rgba(255,30,30,.25);opacity:0;pointer-events:none;transition:opacity .15s}.rlasd.on{opacity:1}
 .rslas{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);color:#fff;flex:none}.rslas:hover{background:rgba(255,255,255,.3)}.rslas.on{background:#ff2a2a;box-shadow:0 0 10px 2px rgba(255,42,42,.6)}.rslas .ic{width:14px;height:14px}
 .rctl[data-las].on{background:#ff2a2a;color:#fff;box-shadow:0 0 12px 1px rgba(255,42,42,.5)}
+
+/* ===== Farbvarianten (Vorschau): html.th-mittel | html.lt.th-hell | html.lt.th-weiss ===== */
+/* C: Mittelblau – weiße Schrift bleibt, Hintergrund deutlich heller */
+html.th-mittel{background:#1F4E9A}
+.th-mittel body{background:radial-gradient(1200px 700px at 70% -10%,#4F86D6 0%,transparent 60%),linear-gradient(180deg,#2C63B8,#1A4790);background-attachment:fixed}
+.th-mittel .rail{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.08))}
+.th-mittel .hero{background:linear-gradient(135deg,#0F3A80,#1D5BB5)}
+.th-mittel .room .rvid{background:#173f80}
+.th-mittel .rtech{background:linear-gradient(165deg,rgba(255,255,255,.2),rgba(255,255,255,.12))}
+/* A + B: hell (gemeinsam) */
+html.lt{background:#EEF3FA;--pg:#0B2350;--pgs:rgba(11,35,80,.68);--pgl:rgba(0,34,94,.14)}
+.lt body{color:var(--pg);background:radial-gradient(1100px 600px at 75% -10%,#DCE8F8 0%,transparent 60%),linear-gradient(180deg,#F5F8FC,#E6EDF7);background-attachment:fixed}
+.lt .rail{background:rgba(255,255,255,.86);border-right:1px solid var(--pgl);box-shadow:4px 0 24px -16px rgba(0,34,94,.35)}
+.lt .brand{color:var(--plum)}.lt .brand b{color:var(--lime-d)}
+.lt .nav{color:var(--plum)}.lt .nav:hover{background:rgba(0,34,94,.06)}.lt .rail .sep{background:var(--pgl)}
+.lt .who{color:var(--pgs)}.lt .avatar{background:rgba(0,34,94,.1);color:var(--plum)}
+.lt .pill-btn{border-color:rgba(0,34,94,.22);background:#fff;color:var(--plum)}
+.lt .sub,.lt .note,.lt .pager,.lt .step,.lt .rtop,.lt .lgd2,.lt .rhd span:not(.st){color:var(--pgs)}
+.lt .bigsec h2,.lt .rtop b,.lt .step.on{color:var(--pg)}.lt .sec h2{color:var(--pg)}
+.lt .card,.lt .row,.lt .tile,.lt .ocard,.lt .cal{box-shadow:0 14px 34px -22px rgba(0,34,94,.45),0 1px 3px rgba(0,34,94,.08)}
+.lt .fchip{background:#fff;border-color:var(--pgl);color:var(--plum)}.lt .fchip.on{background:var(--lime);border-color:transparent;color:var(--lime-ink)}
+.lt .achip.reset{color:var(--plum);border-color:rgba(0,34,94,.25)}
+.lt .privacy{background:#fff;border-color:var(--pgl)}.lt .privacy .ic{color:var(--lime-d)}
+.lt .step i,.lt .bar{background:rgba(0,34,94,.12)}
+.lt .lgd2 .lb{border-color:rgba(0,34,94,.3)}
+.lt .netviz{border-color:rgba(0,34,94,.18)}
+/* Beratung: Technik-Panel hell, Video bleibt dunkel */
+.lt .rtech{background:#fff;color:var(--pg);border:1px solid var(--pgl);box-shadow:0 14px 34px -22px rgba(0,34,94,.45)}
+.lt .rtg,.lt .rtech .rviewp{background:#F1F4F9;color:var(--pg)}.lt .rtgt,.lt .rtech .rvpl,.lt .rtgi,.lt .rmeter span,.lt .rtech .rclock small{color:var(--pgs)}
+.lt .rfld{background:#fff;border-color:var(--pgl);color:var(--pg)}.lt .rfld:hover{background:#F7F9FC}.lt .rfld select{color:var(--pg)}
+.lt .rtgl,.lt .rctl{background:#fff;color:var(--plum);border:1px solid var(--pgl)}.lt .rtgl:hover,.lt .rctl:hover{background:#EAF0F8}
+.lt .rctl.on{background:var(--lime);color:var(--lime-ink);border-color:transparent}.lt .rctl[data-las].on{background:#ff2a2a;color:#fff}
+.lt .rmeter .rlvl{background:rgba(0,34,94,.1)}.lt .rtech .rclock b{color:var(--pg)}
+.lt .rtech .rvpos button,.lt .rtech .rvseg{background:#fff;color:var(--plum)}.lt .rtech .rvseg button{color:var(--plum)}.lt .rtech .rvseg button.on{background:var(--plum);color:#fff}
+/* A: Hell – Kopfbox bleibt dunkelblau als Anker */
+.th-hell .hero{background:linear-gradient(135deg,#00225E,#1D468C);border-color:transparent;color:#fff}
+/* B: Ganz hell – auch die Kopfbox hell */
+.th-weiss .hero{background:linear-gradient(135deg,#FFFFFF,#E3EDFA);border:1px solid var(--pgl);color:var(--pg);box-shadow:0 18px 40px -26px rgba(0,34,94,.45)}
+.th-weiss .hero p{color:var(--pgs)}.th-weiss .hero .eyebrow{color:var(--berry)}
+.lt .btn.ghost{border-color:rgba(0,34,94,.28);color:var(--plum);background:#fff}.th-hell .hero .btn.ghost{border-color:rgba(255,255,255,.3);color:#fff;background:none}
+.th-weiss .hero .btn.ghost{border-color:rgba(0,34,94,.28);color:var(--plum)}
+.th-weiss .hero .st{background:#fff;box-shadow:0 0 0 1px var(--pgl)}
+/* Umschalter */
+.thsw{display:inline-flex;align-items:center;gap:4px;padding:3px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:12px;font-weight:700}
+.lt .thsw{border-color:rgba(0,34,94,.22);background:#fff}
+.thsw>span{padding:0 6px 0 8px;opacity:.75}.thsw button{padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.thsw button.on{background:var(--lime);color:var(--lime-ink)}
+@media (max-width:760px){.thsw>span{display:none}.thsw button{padding:5px 7px}}
 /* Kundenseite */
 .knav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .kh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.kh b{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--plum)}
@@ -664,6 +712,12 @@ const I={
  db:'<ellipse cx="12" cy="5.5" rx="7" ry="3"/><path d="M5 5.5v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/><path d="M5 11.5v7c0 1.7 3.1 3 7 3s7-1.3 7-3v-7"/>',
  lab:'<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>'
 };
+const THS=[['dunkel','Dunkel'],['mittel','Mittelblau'],['hell','Hell'],['weiss','Ganz hell']];
+function thSet(t,keep){const H=document.documentElement;THS.forEach(x=>H.classList.remove('th-'+x[0]));H.classList.toggle('lt',t==='hell'||t==='weiss');if(t!=='dunkel')H.classList.add('th-'+t);
+ try{localStorage.setItem('np-theme',t)}catch(e){}document.querySelectorAll('.thsw button').forEach(b=>b.classList.toggle('on',b.dataset.th===t))}
+const thCur=()=>{const q=new URLSearchParams(location.search).get('farbe');if(q&&THS.some(x=>x[0]===q))return q;try{return localStorage.getItem('np-theme')||'dunkel'}catch(e){return 'dunkel'}};
+thSet(thCur());
+const thSw=()=>`<div class="thsw" role="group" aria-label="Farbvariante"><span>Farbe</span>${THS.map(x=>`<button data-th="${x[0]}" class="${thCur()===x[0]?'on':''}" onclick="thSet('${x[0]}')">${x[1]}</button>`).join('')}</div>`;
 const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${I[n]||''}</svg>`;
 
 /* ===================== Daten (Stage-Erfassung 30.10.2026) ===================== */
@@ -1863,7 +1917,7 @@ addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
 
 function render(keepFocus){let id=location.hash.slice(1)||'home';if(id.startsWith('partner-')){pSel=id.slice(8);id='partner'}if(id.startsWith('kunde-')){kSel=+id.slice(6);id='kunde'}if(id.startsWith('raum-')){rSel=id.slice(5);id='raum'}const page=P[id]?id:'home';renderRail(page==='partner'?'network':page==='kunde'?'customers':page==='raum'?'beratung':page);
   const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
-  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Berichte und Kundendaten live)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${thSw()}<button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Berichte und Kundendaten live)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
   if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
   if(!keepFocus)window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{closeDrawer();render()});render();
