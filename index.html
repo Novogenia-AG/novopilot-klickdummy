@@ -292,6 +292,37 @@ a{color:inherit;text-decoration:none}
 .rslas{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);color:#fff;flex:none}.rslas:hover{background:rgba(255,255,255,.3)}.rslas.on{background:#ff2a2a;box-shadow:0 0 10px 2px rgba(255,42,42,.6)}.rslas .ic{width:14px;height:14px}
 .rctl[data-las].on{background:#ff2a2a;color:#fff;box-shadow:0 0 12px 1px rgba(255,42,42,.5)}
 
+
+/* Produktberater mit Gutschein */
+.pbset{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.pbme{display:flex;flex-direction:column;align-items:center;gap:8px}.pbtx{flex:1;min-width:240px}
+.pbav{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;display:inline-grid;place-items:center}.pbav.big{width:96px;height:96px;box-shadow:0 0 0 4px var(--lime)}
+.pbini{background:var(--plum);color:var(--lime);font-weight:800;font-size:15px}.pbini.big{font-size:32px}
+.pbup{cursor:pointer}
+.pbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.pbc{display:flex;flex-direction:column;gap:12px;padding:18px}.pbh{display:flex;flex-direction:column;gap:2px}
+.pbpct{font-family:var(--num);font-size:34px;line-height:1;color:var(--plum)}.pbc:not(.zero) .pbpct{color:var(--lime-ink);background:var(--lime);align-self:flex-start;padding:6px 12px;border-radius:14px}
+.pbl{font-size:12.5px;color:var(--soft);font-weight:600;margin-top:4px}
+.pbcode{display:flex;align-items:baseline;gap:8px;background:var(--wash);border-radius:12px;padding:8px 12px}.pbcode small{font-size:11px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.08em}.pbcode b{font-family:var(--num);font-weight:400;font-size:14px;color:var(--plum);letter-spacing:.03em}.pbcode.none b{font-family:var(--f);font-weight:600;color:var(--soft)}
+.pbqrb{justify-content:center;font-size:15px}
+.pbacts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pbacts .btn{justify-content:center;padding:8px 8px;min-width:0;font-size:12.5px;gap:6px}.pbacts .btn .ic{width:16px;height:16px}
+.pbwa{background:#25D366;color:#fff}.pbwa:hover{background:#1ebe5b}
+.pbnote{margin-top:10px}
+#pbqr{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:16px}#pbqr.on{display:grid}
+.pbqbg{position:absolute;inset:0;background:rgba(0,8,24,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:pbfade .2s ease}
+.pbqc{position:relative;width:min(420px,100%);max-height:calc(100vh - 32px);overflow:auto;scrollbar-width:none;background:#fff;color:var(--ink);border-radius:28px;padding:22px 22px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:0 30px 80px -20px rgba(0,0,0,.7);animation:pbpop .25s cubic-bezier(.2,.9,.3,1.2)}
+.pbqc::-webkit-scrollbar{display:none}
+.pbqx{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:var(--wash);color:var(--plum);display:grid;place-items:center}
+.pbqhd{display:flex;align-items:center;gap:10px;text-align:left;align-self:stretch;padding-right:40px}.pbqhd b{display:block;color:var(--plum);font-size:15px}.pbqhd small{color:var(--soft);font-size:12px}.pbqhd .pbav{width:48px;height:48px}
+.pbqoff{font-family:var(--num);font-size:44px;line-height:1;color:var(--lime-ink);background:var(--lime);border-radius:18px;padding:10px 18px 8px;display:flex;flex-direction:column;align-items:center}.pbqoff small{font-family:var(--f);font-size:12.5px;font-weight:700;margin-top:4px}
+.pbqoff.zero{font-family:var(--f);font-size:17px;font-weight:800;padding:10px 16px}
+.pbqbox{width:min(300px,72vw);aspect-ratio:1;line-height:0;padding:12px;border:1px solid var(--line);border-radius:18px;background:#fff;display:grid;place-items:center}.pbqbox svg{width:100%;height:100%;display:block}
+.pbqerr{font-size:11px;color:var(--soft);line-height:1.2;margin-top:6px}
+.pbqhint{display:flex;align-items:center;gap:6px;margin:0;font-size:14px;font-weight:700;color:var(--plum)}.pbqhint .ic{width:18px;height:18px}
+.pbqcode{font-size:13px;color:var(--soft)}.pbqcode b{font-family:var(--num);font-weight:400;color:var(--plum);letter-spacing:.03em;margin-left:4px}
+body.pbqopen{overflow:hidden}
+@keyframes pbfade{from{opacity:0}}@keyframes pbpop{from{opacity:0;transform:scale(.92)}}
+@media (prefers-reduced-motion:reduce){.pbqbg,.pbqc{animation:none}}
+@media (max-width:560px){.pbset{flex-direction:column;align-items:stretch}.pbme{flex-direction:row;flex-wrap:wrap;justify-content:center}.pbqoff{font-size:38px}}
 /* ===== Farbvarianten (Vorschau): html.th-mittel | html.lt.th-hell | html.lt.th-weiss ===== */
 /* C: Mittelblau – weiße Schrift bleibt, Hintergrund deutlich heller */
 html.th-mittel{background:#1F4E9A}
@@ -653,6 +684,9 @@ const I={
  layout:'<rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>',filetx:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',fsexit:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',edit:'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',micoff:'<line x1="2" x2="22" y1="2" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" x2="12" y1="19" y2="22"/>',camoff:'<path d="M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><path d="m2 2 20 20"/>',screen:'<path d="m9 10 3-3 3 3"/><path d="M12 13V7"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>',fullscr:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',vol:'<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',video:'<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
  cal:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+ wa:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/>',
+ eye:'<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
+ cam:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
  laser:'<path d="M14.5 9.5 20 4"/><path d="m18.5 2.5 3 3"/><path d="M12 12 9.5 14.5" stroke-dasharray="1.6 1.9"/><circle cx="6" cy="18" r="2.2" fill="currentColor"/><path d="M2 18h1.2M6 22v-1.2M3.3 15.3l.8.8M3.3 20.7l.8-.8M8.7 20.7l-.8-.8"/>',
  ptr:'<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
  apple:'<path d="M12 6.528V3a1 1 0 0 1 1-1h0"/><path d="M18.237 21A15 15 0 0 0 22 11a6 6 0 0 0-10-4.472A6 6 0 0 0 2 11a15.1 15.1 0 0 0 3.763 10 3 3 0 0 0 3.648.648 5.5 5.5 0 0 1 5.178 0A3 3 0 0 0 18.237 21"/>',
@@ -853,6 +887,7 @@ const gate=(eye,title,text,url,btn,tiles)=>hero({eye,title,text,acts:`<a class="
 P.shop=()=>gate('Dein Shop','Dein persönlicher Endkundenshop','In deinem NovoDaily-Shop bestellen deine Kundinnen und Kunden selbst. Jede Bestellung über deinen Link wird automatisch dir zugeordnet – dafür erhältst du die Direktverkaufsprovision.',PARTNER.shop,'Shop öffnen',
    [['share','1 · Link teilen','Schick deinen Shop-Link per WhatsApp, E-Mail oder Social Media – oder zeig den QR-Code im Gespräch.'],['shop','2 · Kunde bestellt','Dein Kunde wählt im Shop sein Produkt und bestellt selbst. Du musst nichts weiter eingeben.'],['wallet','3 · Provision','Die Bestellung erscheint bei deinen Kunden und Bestellungen, die Provision unter Finanzen.']])
   +bigsec('Link und QR-Code weitergeben','Alles, was du zum Weiterleiten brauchst – an einem Ort.')+shopCard()
+  +sec('Produktberater mit Gutschein')+`<p class="sub">Schick deinen Kunden einen persönlichen Produktberater: mit deinem Foto, ohne oder mit 5, 10, 20 oder 30 % Gutschein. Er führt durch die Auswahl und endet in deinem Shop.</p><div id="pbsec">${pbSec()}</div>`
   +`<div style="margin-top:14px"><a class="btn lime" href="${PARTNER.shop}" target="_blank" rel="noopener">${ic('ext')} Zum Shop</a></div>`;
 P.academy=()=>gate('Academy','NOVO Academy','In der Academy bildest du dich zu allen unseren Produkten weiter – damit du deine Kunden kompetent beraten kannst. Die Academy ist eine eigene Lernplattform und öffnet sich in einem neuen Fenster.',
    'https://academy.novopilot.com','Zur Academy',
@@ -860,6 +895,45 @@ P.academy=()=>gate('Academy','NOVO Academy','In der Academy bildest du dich zu a
 P.ads=()=>gate('Werbematerial','Werbematerial bestellen','Hier kaufst du physisches Werbematerial für deinen Verkauf – gedruckte Unterlagen für Gespräche, Veranstaltungen und deine Geschäftsräume. Die Bestellung läuft über den Novogenia-Marktplatz, der sich in einem neuen Fenster öffnet.',
    'https://market.novogenia.com/novodaily-werbematerialien/','Zum Werbematerial',
    [['mega','Gedruckte Materialien','Physisches Werbematerial für deinen Verkauf, fertig gestaltet.'],['box','Lieferung','Du bestellst im Marktplatz, die Materialien werden dir zugeschickt.'],['doc','Digitale Vorlagen','Kostenlose digitale Materialien findest du unter Dokumente.']]);
+
+/* ===================== Produktberater mit Gutschein (Shop) =====================
+   Empfänger-Seite: berater.html (Kopie des Friends-&-Family-Produktberaters), Werte im Link:
+   ?d=Rabatt &c=Code &n=Name &s=Shop des Betreuers. Foto: localStorage np-berater-foto-<ID> (Demo; live vom Server). */
+const PB_LV=[0,5,10,20,30];
+const PB={name:(()=>{try{return localStorage.getItem('np-berater-name')||''}catch(e){return ''}})()||PARTNER.company,
+  photo:(()=>{try{return localStorage.getItem('np-berater-foto-'+PARTNER.id)}catch(e){return null}})()};
+const pbCode=d=>d?`${PARTNER.id}-${d}`:'';
+const pbUrl=d=>{const u=new URL('berater.html',location.href);u.hash='';u.search='';const q=new URLSearchParams({d:String(d)});if(d)q.set('c',pbCode(d));q.set('n',PB.name);q.set('s',PARTNER.id);if(/\/\/dev\./.test(PARTNER.shop))q.set('h','dev');return u.href+'?'+q.toString()};
+const pbLbl=d=>d?`${d} % Gutschein`:'Ohne Gutschein';
+const pbInit=()=>PB.name.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'N';
+const pbAv=(c='')=>PB.photo?`<img class="pbav ${c}" src="${PB.photo}" alt="">`:`<span class="pbav pbini ${c}">${esc(pbInit())}</span>`;
+const pbMsg=d=>`Hallo! Hier ist ${PB.name}. Ich schicke dir meinen persönlichen NovoDaily-Produktberater${d?` mit ${d} % Gutschein`:''}: ein paar kurze Fragen, dann siehst du, was am besten zu dir passt, und kommst direkt in meinen Shop.\n${pbUrl(d)}`;
+function pbSec(){return `<div class="card pbset"><div class="pbme">${pbAv('big')}<label class="btn line sm pbup">${ic('cam')} ${PB.photo?'Foto ändern':'Foto hochladen'}<input type="file" accept="image/*" onchange="pbPhoto(this)" hidden></label>${PB.photo?`<button class="btn line sm" onclick="pbPhotoDel()">${ic('x')} Entfernen</button>`:''}</div>
+ <div class="pbtx"><div class="field"><label for="pbname">Dein Name im Produktberater</label><input id="pbname" value="${esc(PB.name)}" maxlength="40" onchange="pbName(this.value)"></div>
+ <p class="hint">Deine Kunden sehen dein Foto und deinen Namen, beantworten ein paar kurze Fragen und bekommen die passende Empfehlung mit Preis. Am Ende geht es mit dem Gutscheincode direkt in deinen Shop, die Bestellung wird dir zugeordnet.</p></div></div>
+ <div class="pbgrid">${PB_LV.map(d=>`<div class="card pbc ${d?'':'zero'}"><div class="pbh"><span class="pbpct">${d?'−'+d+' %':'0 %'}</span><span class="pbl">${d?'Gutschein auf den gesamten Einkauf':'Produktberater ohne Gutschein'}</span></div>
+  ${d?`<div class="pbcode"><small>Code</small><b>${pbCode(d)}</b></div>`:'<div class="pbcode none"><small>Code</small><b>kein Code</b></div>'}
+  <button class="btn lime pbqrb" onclick="pbQR(${d})">${ic('qr')} QR-Code zeigen</button>
+  <div class="pbacts"><a class="btn sm pbwa" href="https://wa.me/?text=${encodeURIComponent(pbMsg(d))}" target="_blank" rel="noopener">${ic('wa')} WhatsApp</a><button class="btn line sm" onclick="copy('${pbUrl(d).replace(/'/g,"%27")}')">${ic('copy')} Link</button><button class="btn line sm" onclick="pbShare(${d})">${ic('share')} Teilen</button><a class="btn line sm" href="${pbUrl(d)}" target="_blank" rel="noopener" title="So sieht es dein Kunde">${ic('eye')} Vorschau</a></div></div>`).join('')}</div>
+ <p class="hint pbnote">Beispiel-Gutscheincodes im Klickdummy. Im echten Portal erzeugt das System deine Codes, und dein Foto wird beim Hochladen gespeichert.</p>`}
+function pbRe(){const el=document.getElementById('pbsec');if(el)el.innerHTML=pbSec()}
+function pbName(v){PB.name=(v||'').trim().slice(0,40)||PARTNER.company;try{localStorage.setItem('np-berater-name',PB.name)}catch(e){}pbRe();toast('Name gespeichert')}
+function pbPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const M=640,s=Math.min(1,M/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);
+ let d=c.toDataURL('image/webp',.8);if(!/^data:image\/webp/.test(d))d=c.toDataURL('image/jpeg',.8);PB.photo=d;try{localStorage.setItem('np-berater-foto-'+PARTNER.id,d)}catch(e){toast('Foto zu groß zum Speichern')}pbRe();toast('Foto gespeichert')};img.onerror=()=>toast('Bild konnte nicht gelesen werden');img.src=u}
+function pbPhotoDel(){PB.photo=null;try{localStorage.removeItem('np-berater-foto-'+PARTNER.id)}catch(e){}pbRe()}
+function pbShare(d){const u=pbUrl(d);navigator.share?navigator.share({title:'NovoDaily Produktberater',text:pbMsg(d).split('\n')[0],url:u}).catch(()=>{}):(copy(u),toast('Link kopiert – zum Teilen einfügen'))}
+let QRLIB=null;
+function qrLib(){return QRLIB||(QRLIB=new Promise((ok,no)=>{if(window.qrcode)return ok(window.qrcode);const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';s.onload=()=>ok(window.qrcode);s.onerror=()=>{QRLIB=null;no()};document.head.appendChild(s)}))}
+function pbQR(d){const u=pbUrl(d);let o=document.getElementById('pbqr');if(!o){o=document.createElement('div');o.id='pbqr';document.body.appendChild(o)}
+ o.innerHTML=`<div class="pbqbg" onclick="pbQRx()"></div><div class="pbqc" role="dialog" aria-modal="true" aria-label="QR-Code ${pbLbl(d)}"><button class="pbqx" onclick="pbQRx()" aria-label="Schließen">${ic('x')}</button>
+  <div class="pbqhd">${pbAv()}<div><b>${esc(PB.name)}</b><small>NovoDaily Produktberater</small></div></div>
+  ${d?`<div class="pbqoff">−${d} %<small>Gutschein auf deinen Einkauf</small></div>`:'<div class="pbqoff zero">Finde dein passendes Produkt</div>'}
+  <div class="pbqbox" id="pbqbox">${qrSvg(u,300)}</div>
+  <p class="pbqhint">${ic('cam')} Mit der Handykamera scannen</p>${d?`<div class="pbqcode">Code <b>${pbCode(d)}</b></div>`:''}</div>`;
+ document.body.classList.add('pbqopen');o.classList.add('on');o.querySelector('.pbqx').focus();
+ qrLib().then(Q=>{const q=Q(0,'M');q.addData(u);q.make();const b=document.getElementById('pbqbox');if(b)b.innerHTML=q.createSvgTag({cellSize:8,margin:0,scalable:true})}).catch(()=>{const b=document.getElementById('pbqbox');if(b)b.insertAdjacentHTML('beforeend','<small class="pbqerr">Vorschau-Code (offline)</small>')})}
+function pbQRx(){const o=document.getElementById('pbqr');if(o){o.classList.remove('on');o.innerHTML=''}document.body.classList.remove('pbqopen')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('pbqopen'))pbQRx()});
 function shareLink(u){navigator.share?navigator.share({url:u}).catch(()=>{}):(copy(u),toast('Link kopiert – zum Teilen einfügen'))}
 
 /* ===================== Filter (Kunden + Bestellungen) ===================== */

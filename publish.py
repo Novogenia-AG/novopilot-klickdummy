@@ -30,3 +30,10 @@ assert all(e.endswith('@example.com') for e in left), left
 assert not re.search(r'Wassermann|Djukanovic|Forij|Cotoara|Dinozo|wallerstorfer', s, re.I)
 open('index.html', 'w', encoding='utf-8').write(s)
 print('index.html geschrieben,', len(s), 'Zeichen')
+
+# Produktberater-Seite (Empfänger-Link aus dem Shop-Bereich) unverändert mitkopieren
+import shutil, os
+shutil.copyfile(os.path.join(os.path.dirname(SRC), 'berater.html'), 'berater.html')
+b = open('berater.html', encoding='utf-8').read()
+assert not re.search(r'Wassermann|Djukanovic|Forij|Cotoara|Dinozo', b, re.I)
+print('berater.html kopiert,', len(b), 'Zeichen')
