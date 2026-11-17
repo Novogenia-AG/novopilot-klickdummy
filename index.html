@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="lt th-hell">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -714,8 +714,8 @@ const I={
 };
 const THS=[['dunkel','Dunkel'],['mittel','Mittelblau'],['hell','Hell'],['weiss','Ganz hell']];
 function thSet(t,keep){const H=document.documentElement;THS.forEach(x=>H.classList.remove('th-'+x[0]));H.classList.toggle('lt',t==='hell'||t==='weiss');if(t!=='dunkel')H.classList.add('th-'+t);
- try{localStorage.setItem('np-theme',t)}catch(e){}document.querySelectorAll('.thsw button').forEach(b=>b.classList.toggle('on',b.dataset.th===t))}
-const thCur=()=>{const q=new URLSearchParams(location.search).get('farbe');if(q&&THS.some(x=>x[0]===q))return q;try{return localStorage.getItem('np-theme')||'dunkel'}catch(e){return 'dunkel'}};
+document.querySelectorAll('.thsw button').forEach(b=>b.classList.toggle('on',b.dataset.th===t))}
+const thCur=()=>{const q=new URLSearchParams(location.search).get('farbe');if(q&&THS.some(x=>x[0]===q))return q;return 'hell'};
 thSet(thCur());
 const thSw=()=>`<div class="thsw" role="group" aria-label="Farbvariante"><span>Farbe</span>${THS.map(x=>`<button data-th="${x[0]}" class="${thCur()===x[0]?'on':''}" onclick="thSet('${x[0]}')">${x[1]}</button>`).join('')}</div>`;
 const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${I[n]||''}</svg>`;
@@ -1917,7 +1917,7 @@ addEventListener('scroll',()=>{if(tourI>=0)tourPlace()},true);
 
 function render(keepFocus){let id=location.hash.slice(1)||'home';if(id.startsWith('partner-')){pSel=id.slice(8);id='partner'}if(id.startsWith('kunde-')){kSel=+id.slice(6);id='kunde'}if(id.startsWith('raum-')){rSel=id.slice(5);id='raum'}const page=P[id]?id:'home';renderRail(page==='partner'?'network':page==='kunde'?'customers':page==='raum'?'beratung':page);
   const a=document.activeElement,isIn=keepFocus&&a&&a.tagName==='INPUT',pos=isIn?a.selectionStart:0,ph=isIn?a.placeholder:null,aid=isIn?a.id:'';
-  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${thSw()}<button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Berichte und Kundendaten live)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
+  document.getElementById('main').innerHTML=`<div class="top"><div class="who"><span class="avatar">CN</span>${PARTNER.company}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button class="pill-btn tourbtn" onclick="tourStart()">${ic('star')} Tutorial</button><a class="pill-btn" href="#academy">${ic('cap')} Academy</a></div></div>`+P[page]()+`<p class="note">Entwurf v1 · Inhalte aus stage.novopilot.com (Stand 30.10.2026)${['network','partner','home'].includes(page)?' · Netzwerk-Details, Provisionssätze und Partner-Bestellungen sind Beispieldaten':''}${['beratung','raum'].includes(page)?(bApi.on?' · Online-Beratung: live mit Backend geneius-beratung (Demo-Berater, Berichte und Kundendaten live)':' · Online-Beratung: Termine, Berichte und Video sind Demo'):''} · Darstellung nach GEN(e)IUS-App-Logik · Demo ohne Backend.</p>`;
   if(isIn){const n=(aid&&document.getElementById(aid))||[...document.querySelectorAll('input')].find(i=>i.placeholder===ph);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}}}
   if(!keepFocus)window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{closeDrawer();render()});render();
