@@ -799,7 +799,7 @@ const ORDERS=[
  ['NS-c149884332c741c493180e42-241026','Nina Wagner','Monthly Subscription Payment','Completed',115,'24/10/2026 11:10'],
  ['NS-e1494a8e2dc648bcb8287c5b-061026','Nina Wagner','NovoDaily Lifestyle+','Report Generation',0,'06/10/2026 13:18'],
  ['NS-9ab46e16872d40d19911953f-240926','Tobias Huber','NovoDaily Lifestyle+','Order Received',0,'24/09/2026 09:01'],
- ['NS-43088da231fa4f0fb6e94eec-220926','Nina Wagner','STD - Pharmaco Sensor (Digital PDF) - DE','Kit Shipped',0,'22/09/2026 12:50'],
+ ['NS-43088da231fa4f0fb6e94eec-220926','Nina Wagner','Lifestyle (Digital PDF) - AT','Kit Shipped',0,'22/09/2026 12:50'],
  ['NS-fc7ddeb2e9f04c1e97244b4c-210926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'21/09/2026 10:09'],
  ['NS-28b97f31ceaa41e9bb4b920d-170926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'17/09/2026 12:07'],
  ['NS-1badac9e8f104637ab5cc38b-090926','Nina Wagner','NovoDaily Lifestyle+','Completed',0,'09/09/2026 10:12'],
@@ -1124,46 +1124,14 @@ function geneOf(c){if(GENE_UP[c.email])return GENE_UP[c.email];
   return o?{src:'Novogenia-Labor',date:o.date,state:'ready',lab:true}:null}
 function geneRefresh(){render(true)}
 const gFirst=c=>c.name.split(' ')[0],dDot=d=>d.split(' ')[0].replace(/\//g,'.');
-function geneDown(c){const g=geneOf(c),e=c.email,ok=gOk[e],fn=gFirst(c),ready=g&&g.state==='ready';
-  return `<div class="gsec"><h4><span class="gic">${ic('dl')}</span>DNA-Daten herunterladen<span class="count">2</span></h4>
-  <p>Die genetischen Rohdaten von ${fn} aus der Analyse – zum Speichern oder für andere Tools.</p>
-  ${!ready?`<div class="gok" style="cursor:default">${ic('clock')} Noch keine Rohdaten – die Downloads werden frei, sobald die Analyse von ${fn} abgeschlossen ist oder Gendaten hochgeladen wurden.</div>`:`
-  <label class="gok"><input type="checkbox" ${ok?'checked':''} onchange="gOk['${e}']=this.checked;geneRefresh()"> ${fn} hat dem Download der Rohdaten zugestimmt</label>`}
-  <div class="gopts">${GOPT.map(o=>`<div class="gopt ${o.cls}"><div class="oh"><span class="num">${o.n}</span><div><div class="oe">OPTION ${o.n}</div><div class="ot">${o.t}</div><span class="gtg">${o.tag}</span></div></div>
-    <div class="gbig">${o.snp}<small>SNPs</small></div><div class="gmeter"><i style="width:${o.w}%"></i></div>
-    <dl class="gkv"><dt>INHALT</dt><dd>${o.inh}</dd><dt>DATEI</dt><dd>${o.dat}</dd><dt>IDEAL FÜR</dt><dd>${o.fur}</dd></dl>
-    <button class="btn ${o.cls?'':'lime'}" ${ready&&ok?'':'disabled'} onclick="geneDl('${e}',${o.n})">${ic(ready?'dl':'lock')} ${ready?`Option ${o.n} herunterladen`:'Noch nicht verfügbar'}</button></div>`).join('')}</div>
-  <p class="gscale">Die Balken sind maßstabsgetreu: Option 2 enthält rund 115-mal so viele Varianten wie Option 1.</p>
-  <details class="gwhat"><summary>${ic('dna')} Was heißt „imputiert“?${ic('chev')}</summary><p>Im Labor werden rund 600.000 Stellen im Erbgut direkt gemessen. Mit großen Referenzdatenbanken lässt sich daraus statistisch ableiten, welche Varianten an vielen weiteren Stellen sehr wahrscheinlich vorliegen – das nennt man Imputation. So entstehen rund 70 Millionen Varianten. Sie sind gut begründete Wahrscheinlichkeiten, aber keine Messwerte.</p></details>
-  <p class="gscale">${ic('shield')} Genetische Daten sind besonders geschützt (Art. 9 DSGVO). Download nur mit Zustimmung von ${fn} – jeder Download wird protokolliert.</p></div>`}
-function geneUpSec(c){const u=GENE_UP[c.email],e=c.email,fn=gFirst(c),i=CUSTOMERS.indexOf(c);
-  return `<div class="gsec"><h4><span class="gic">${ic('up')}</span>Gendaten hochladen</h4>
-  <p>${fn} hat bereits einen DNA-Test bei einem anderen Anbieter gemacht? Lade die Rohdaten hoch und lass sie auswerten.</p>
-  ${u&&u.state==='processing'?`<div class="gdone"><span class="ck">${ic('dna')}</span><div><b>${u.file} wird geprüft …</b><div class="s">Format und Varianten werden zugeordnet</div><div class="gbar"><i></i></div></div></div>`:''}
-  ${u&&u.state==='ready'?`<div class="gdone"><span class="ck">${ic('check')}</span><div><b>Die Gendaten wurden erfolgreich hochgeladen</b>
-    <div class="s">${ic('csv')} ${u.file} · hochgeladen am ${dDot(u.date)} (${ago(u.date)}) · geprüft &amp; zugeordnet</div>
-    <p>Auf Basis dieser Daten kann ${fn} jetzt Upgrade-Analysen bestellen.</p><div class="gchips">${GUPG.map(x=>`<span class="gchip">${x}</span>`).join('')}</div></div>
-    <div style="display:flex;flex-direction:column;gap:8px"><a class="btn lime sm" href="#neu" onclick="wPick=${i};wStep=1;wCust='existing'">${ic('plus')} Upgrade-Analysen bestellen</a><button class="btn line sm" onclick="geneDel('${e}')">Datei entfernen</button></div></div>`:''}
-  <div class="gup"><div class="drop gdrop" onclick="this.querySelector('input').click()" ondragover="event.preventDefault();this.classList.add('on')" ondragleave="this.classList.remove('on')" ondrop="event.preventDefault();this.classList.remove('on');geneUp('${e}',event.dataTransfer.files[0])">
-      <span class="gbig-ic">${ic('up')}</span><b>Datei hierher ziehen</b><small>oder</small><span class="btn sm">${ic('csv')} Datei auswählen</span>
-      <small>Unterstützte Formate: .txt · .csv · .tsv · .vcf · .zip · .gz</small>
-      <input type="file" accept=".txt,.csv,.tsv,.vcf,.zip,.gz" hidden onclick="event.stopPropagation()" onchange="geneUp('${e}',this.files[0])"></div>
-    <div><div class="gcap">ROHDATEN VON</div><div class="gchips">${GSRC.map(s=>`<span class="gchip">${s}</span>`).join('')}<span class="gchip more">und weitere Anbieter</span></div><small style="display:block;margin-top:6px;color:var(--soft)">Die Namen sind Marken ihrer Inhaber, Novogenia arbeitet nicht mit ihnen zusammen.</small>
-      <div class="gcap" style="margin-top:14px">SO FUNKTIONIERT’S</div><div class="gsteps">
-        <div class="gstep"><span class="gic">${ic('up')}</span><b>Hochladen</b>Rohdaten-Datei des Anbieters</div>
-        <div class="gstep"><span class="gic">${ic('dna')}</span><b>Wir prüfen &amp; ordnen zu</b>Format und Varianten werden zugeordnet</div>
-        <div class="gstep"><span class="gic">${ic('chat')}</span><b>Auswertung</b>im Coach und in den Analysen von ${fn}</div></div>
-      <p class="gscale" style="margin-top:10px">Die Daten werden vertraulich behandelt. Hochladen nur mit Zustimmung von ${fn}.</p></div></div></div>`}
-function geneUp(e,f){if(!f)return;if(!/\.(txt|csv|tsv|vcf|zip|gz)$/i.test(f.name)){toast('Dateiformat nicht unterstützt – bitte .txt, .csv, .tsv, .vcf, .zip oder .gz');return}
-  GENE_UP[e]={file:f.name,date:'30/10/2026 12:00',state:'processing'};geneRefresh();
-  setTimeout(()=>{GENE_UP[e].state='ready';geneRefresh();toast('Gendaten geprüft und zugeordnet')},1800)}
-function geneDel(e){delete GENE_UP[e];gOk[e]=false;geneRefresh();toast('Hochgeladene Datei entfernt')}
-function geneDl(e,n){const c=CUSTOMERS.find(x=>x.email===e);
-  const rows=[['rs4477212','1','82154','AA'],['rs3094315','1','752566','AG'],['rs1801133','1','11856378','CT'],['rs4988235','2','135851076','AG'],['rs429358','19','44908684','TT'],['rs7412','19','44908822','CC']];
-  const t=n===2?'##fileformat=VCFv4.2\n##source=NovoPilot (Demo-Auszug, gemessen + imputiert)\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE\n'+rows.map(r=>`${r[1]}\t${r[2]}\t${r[0]}\t${r[3][0]}\t${r[3][1]===r[3][0]?'.':r[3][1]}\t.\tPASS\t.\tGT\t${r[3][1]===r[3][0]?'0/0':'0/1'}`).join('\n')
-    :'# Analysierte DNA-Variationen (Demo-Auszug)\n# rsid\tchromosome\tposition\tgenotype\n'+rows.map(r=>r.join('\t')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=`dna-daten-kunde-${CUSTOMERS.indexOf(c)+1}-option${n}.${GOPT[n-1].ext}`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  toast(`Option ${n} heruntergeladen (Demo-Auszug) – Download protokolliert`)}
+/* 19.11.2026 (NOVO LEGAL): Rohdaten-Download und Fremddaten-Upload macht nur der Kunde selbst in seinem GEN(e)IUS-Konto
+   (genetische Daten, DSGVO Art. 9, GTG § 71). Der Partner sieht nur, ob Gendaten vorhanden sind, und kann die Anleitung schicken. */
+function geneSelf(c){const g=geneOf(c),fn=esc(gFirst(c)),ready=g&&g.state==='ready';
+ return `<div class="card">${kHead('shield','Gendaten von '+fn)}<p style="margin:0 0 10px">${ready?`${ic('check')} Für ${fn} liegen Gendaten vor.`:`Für ${fn} liegen noch keine Gendaten vor.`}</p>
+ <div class="privacy" style="margin:0 0 12px">${ic('lock')}<div><b>Nur ${fn} selbst.</b> Rohdaten herunterladen oder Gendaten eines anderen Anbieters hochladen kann ${fn} nur selbst, in der GEN(e)IUS-App unter „Gendaten“. Genetische Daten sind besonders geschützt: Du hast keinen eigenen Zugriff darauf; in einer Online-Beratung siehst du sie nur mit, wenn ${fn} dir das Konto ausdrücklich freigibt.</div></div>
+ <button class="btn line sm" onclick="geneHow('${esc(c.email)}')">${ic('send')} Anleitung an ${fn} schicken</button></div>`}
+function geneHow(e){const c=CUSTOMERS.find(x=>x.email===e);if(!c)return;const t=`Hallo ${gFirst(c)}! Deine Gendaten findest du in der GEN(e)IUS-App unter „Gendaten“: Dort kannst du deine Rohdaten herunterladen oder Daten eines anderen Anbieters hochladen. Das kannst nur du selbst.`;
+ const ok=()=>toast('Anleitung kopiert – schick sie deinem Kunden per Nachricht'),no=()=>toast('Kopieren nicht möglich – Text: '+t);try{navigator.clipboard.writeText(t).then(ok,no)}catch(x){no()}}
 
 // Kundenseite (#kunde-N): alles, was ein Partner über seinen Kunden wissen sollte –
 // Stammdaten, Adressen, Einwilligungen, Analysen & Abo, Proben, Gendaten, Bestellungen, Verlauf, eigene Notizen.
@@ -1176,7 +1144,7 @@ const CUST_X=[
  {kd:'K-10154',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Maximilianstraße 15','80539 München','Deutschland'],ship:['Packstation 112','80331 München','Deutschland'],src:'Über deinen Shop-Link',pay:'SEPA-Lastschrift',login:'29/10/2026 20:02',cons:{agb:1,ds:1,gen:1,portal:1,mkt:1,contact:1}},
  {kd:'K-10151',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Maximilianstraße 15','80539 München','Deutschland'],ship:null,src:'Über deinen Shop-Link',pay:'Kreditkarte (Mastercard ···· 5100)',login:'18/08/2026 16:20',cons:{agb:1,ds:1,gen:1,portal:1,mkt:0,contact:1}},
  {kd:'K-10120',anr:'Frau',geb:'09/05/1983',tel:'+49 151 0000 505',lang:'Deutsch',bill:['Leopoldstraße 3','80802 München','Deutschland'],ship:null,src:'Von dir angelegt (Partnerbestellung)',pay:'Rechnung',login:'',cons:{agb:1,ds:1,gen:0,portal:1,mkt:0,contact:1}}];
-const CONS=[['agb','AGB akzeptiert'],['ds','Datenschutzhinweise erhalten'],['gen','Gendaten-Freigabe für dich (Download der Rohdaten)'],['portal','Einblick ins Kundenportal für dich'],['contact','Darf von dir kontaktiert werden'],['mkt','Newsletter & Angebote']];
+const CONS=[['agb','AGB akzeptiert'],['ds','Datenschutzhinweise erhalten'],['gen','Gendaten in der GEN(e)IUS-App freigeschaltet'],['portal','Einblick ins Kundenportal für dich'],['contact','Darf von dir kontaktiert werden'],['mkt','Newsletter & Angebote']];
 const UPGR=['Performance','Shape','Nutrition','Beauty'];
 let kSel=null,KNOTE={};
 const kGo=id=>document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
@@ -1201,8 +1169,8 @@ P.kunde=()=>{const c=CUSTOMERS[kSel];if(!c)return P.customers();const x=CUST_X[k
   +`<div class="grid g4">${stat('o','box','Bestellungen',c.orders)}${stat('','wallet','Umsatz',eur(umsatz))}${stat('c','clock','Letzte Bestellung',ago(c.last))}${stat('hl','bank','Deine Provision',eur(c.comm))}</div>`
   // Stammdaten + Konto
   +`<div id="k-stamm"></div>`+sec('Stammdaten & Konto',null)
-  +`<div class="grid g2"><div class="card">${kHead('user','Persönliche Daten',kEdit('Stammdaten'))}<dl class="kv" style="margin:0"><dt>Kundennummer</dt><dd class="mono">${x.kd}</dd><dt>Anrede</dt><dd>${x.anr}</dd><dt>Name</dt><dd>${c.name}</dd><dt>Geburtsdatum</dt><dd>${dshort(x.geb)}</dd><dt>E-Mail</dt><dd style="word-break:break-all">${c.email}</dd><dt>Telefon</dt><dd>${x.tel}</dd><dt>Sprache</dt><dd>${x.lang}</dd></dl></div>
-     <div class="card">${kHead('portal','Kundenkonto & Herkunft')}<dl class="kv" style="margin:0"><dt>Kundenkonto</dt><dd>${x.login?`<span class="st g">Aktiv</span>`:`<span class="st y">Einladung offen</span>`}</dd><dt>Letzter Login</dt><dd>${x.login?ago(x.login):'— noch nie angemeldet'}</dd><dt>Kunde seit</dt><dd>${dshort(c.first)} (${ago(c.first)})</dd><dt>Gewonnen</dt><dd>${x.src}</dd><dt>Zahlungsart</dt><dd>${x.pay}</dd><dt>Kundenportal</dt><dd>${ok?(x.cons.portal?'Einblick für dich freigegeben':'Kunde hat keinen Einblick freigegeben'):'Für dich nicht aktiviert'}</dd></dl>
+  +`<div class="grid g2"><div class="card">${kHead('user','Persönliche Daten',kEdit('Stammdaten'))}<dl class="kv" style="margin:0"><dt>Kundennummer</dt><dd class="mono">${x.kd}</dd><dt>Anrede</dt><dd>${x.anr}</dd><dt>Name</dt><dd>${c.name}</dd><dt>E-Mail</dt><dd style="word-break:break-all">${c.email}</dd><dt>Telefon</dt><dd>${x.tel}</dd><dt>Sprache</dt><dd>${x.lang}</dd></dl></div>
+     <div class="card">${kHead('portal','Kundenkonto & Herkunft')}<dl class="kv" style="margin:0"><dt>Kundenkonto</dt><dd>${x.login?`<span class="st g">Aktiv</span>`:`<span class="st y">Einladung offen</span>`}</dd><dt>Letzter Login</dt><dd>${x.login?ago(x.login):'— noch nie angemeldet'}</dd><dt>Kunde seit</dt><dd>${dshort(c.first)} (${ago(c.first)})</dd><dt>Gewonnen</dt><dd>${x.src}</dd><dt>Kundenportal</dt><dd>${ok?(x.cons.portal?'Einblick für dich freigegeben':'Kunde hat keinen Einblick freigegeben'):'Für dich nicht aktiviert'}</dd></dl>
        ${x.login?'':`<button class="btn lime sm" style="margin-top:12px" onclick="toast('Einladung zum Kundenkonto erneut gesendet (Demo)')">${ic('send')} Einladung erneut senden</button>`}</div></div>`
   // Adressen
   +`<div id="k-addr"></div>`+sec('Adressen',null)
@@ -1218,8 +1186,8 @@ P.kunde=()=>{const c=CUSTOMERS[kSel];if(!c)return P.customers();const x=CUST_X[k
      <div class="card">${kHead('tube','Proben & Kits')}<div class="klines">${kits.map(o=>`<div class="kline"><div><b class="mono">${o.barcode}</b><small>${o.prod} · ${ago(o.date)}</small></div><span class="st ${probeOf(o)==='done'?'g':'y'}">${PROBE[probeOf(o)][0]}</span></div>`).join('')||'<div class="empty">Noch kein Kit versendet.</div>'}</div></div>
      <div class="card">${kHead('star','Passende Upgrades')}${g?(upg.length?`<p style="color:var(--soft);font-size:13px;margin:0 0 10px">Auf Basis der vorhandenen Gendaten – ohne neue Probe:</p><div class="gchips">${upg.map(u=>`<span class="gchip">${u}</span>`).join('')}</div><a class="btn lime sm" style="margin-top:12px" href="#neu" onclick="wPick=${kSel};wStep=1;wCust='existing'">${ic('plus')} Upgrade bestellen</a>`:'<div class="empty">Alle Upgrades bereits bestellt.</div>'):`<div class="empty">Upgrades sind möglich, sobald Gendaten vorliegen.</div>`}</div></div>`
   // Gendaten
-  +`<div id="k-gen"></div>`+sec('Gendaten',null,`Rohdaten von ${fn} herunterladen oder Gendaten eines anderen Anbieters hochladen – genau wie in der GEN(e)IUS-App.`)
-  +`<div class="gbox">${geneDown(c)}${geneUpSec(c)}</div>`
+  +`<div id="k-gen"></div>`+sec('Gendaten',null,`Ob Gendaten vorliegen. Herunterladen und Hochladen macht ${fn} selbst in der GEN(e)IUS-App.`)
+  +geneSelf(c)
   // Bestellungen
   +`<div id="k-ord"></div>`+sec('Bestellungen',os.length)
   +`<div class="rows">${os.map(o=>orderCard(o)).join('')||'<div class="empty">Keine Bestellungen gefunden.</div>'}</div>`
@@ -1247,7 +1215,6 @@ const FEAT={kit:['Proben-Set-Versand','tube','b',40],dna:['DNA-Labor-Analyse','h
 const PTYP={abo:'Abo',bun:'Bundle',ana:'Analyse',upg:'Upgrade',nem:'Nahrungsergänzung',
  book:'Gedrucktes Booklet',ein:'Einzelkomponente'};
 const PRODUCTS=[
- ['ND - Drug Response (Digital PDF) - AT','I-B-ND-DRDIGIAT-1','Test-Bundle','dna','NovoDaily Drug Response Analyse (Austria)','ana',['kit','dna','rep','at'],'NovoDaily','Zeigt, wie der Körper gängige Medikamente verarbeitet – als Grundlage für das Gespräch mit Arzt oder Apotheke.'],
  ['Lifestyle (Digital PDF) - AT','I-B-ND-LDIGIAT-1','Test-Bundle','dna','NovoDaily Lifestyle Analyse (Austria)','ana',['kit','dna','rep','at'],'NovoDaily','Die genetische Standortbestimmung für den Alltag: Ernährung, Bewegung, Regeneration.'],
  ['Lifestyle+ Subsc. (First Order) - AT','I-B-ND-LPSFOAT-1','Abo','abo','NovoDaily Lifestyle+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','life','shapebook','lifebook','nem','at'],'NovoDaily','Das volle Programm über zwölf Monate: Analyse, gedruckte Bücher und die auf die eigenen Werte abgestimmte Nahrungsergänzung.'],
  ['— (neu, noch nicht im Stage-Katalog)','Code folgt','Test-Bundle','bundle','NovoDaily Lifestyle Bundle (Austria)','bun',['kit','dna','shape','life','shapebook','lifebook','at'],'NovoDaily','Analyse, Auswertung und die gedruckten Bücher in einem Paket.'],
@@ -1255,10 +1222,8 @@ const PRODUCTS=[
  ['ND - Performance (Digital PDF) Upsell','I-B-ND-PDIGIUP-1','Test-Bundle','dna','NovoDaily Performance Upgrade','upg',['rep'],'NovoDaily','Baut auf der bereits vorhandenen DNA-Analyse auf – ohne neue Probe.'],
  ['ND - Shape (Digital PDF) Upsell','I-B-ND-SDIGIUP-1','Test-Bundle','dna','NovoDaily Shape Upgrade','upg',['rep'],'NovoDaily','Baut auf der bereits vorhandenen DNA-Analyse auf – ohne neue Probe.'],
  ['Shape+ Subsc. (First Order) - AT','I-B-ND-SPSFOAT-1','Abo','abo','NovoDaily Shape+ Abo-Bundle (Austria)','abo',['abo12','kit','dna','shape','nem','at'],'NovoDaily','Zwölf Monate Begleitung rund um Gewicht und Stoffwechsel, mit passender Nahrungsergänzung.'],
- ['STD - Pharmaco Sensor (Digital PDF) - DE','I-B-STD-PHDIGIDE-1','Test-Bundle','dna','Pharmaco Sensor Medikamenten-Analyse (Deutschland)','ana',['kit','dna','rep','de'],'Novogenia','Zeigt, wie der Körper gängige Medikamente verarbeitet – als Grundlage für das Gespräch mit Arzt oder Apotheke.'],
- ['STD - Pharmaco Sensor (Printed) - AT','I-B-STD-PHPRINAT-1','Test-Bundle','book','Pharmaco Sensor Booklet, gedruckt (Austria)','book',['book','at'],'Novogenia','Der Bericht als gebundenes Buch, zum Nachschlagen und Mitnehmen.']
 ];
-const PSEC=[['abo','Abos','abo','Laufende Abos mit Analyse und Nahrungsergänzung'],['bun','Bundles','bundle','Analyse und Nahrungsergänzung im Paket'],['ana','Analysen','dna','Genanalysen als digitaler Bericht'],['upg','Upgrades','report','Auf Basis bereits vorhandener DNA-Daten neue Analysen bestellen'],['nem','Nahrungsergänzung','pill','Einzelne Nahrungsergänzungen'],['book','Gedruckte Booklets','book','Berichte als gedrucktes Booklet'],['ein','Einzelkomponenten','puzzle','Einzeln bestellbare Bestandteile']];
+const PSEC=[['abo','Abos','abo','Laufende Abos mit Analyse und Nahrungsergänzung'],['bun','Bundles','bundle','Analyse und Nahrungsergänzung im Paket'],['ana','Analysen','dna','Genanalysen als digitaler Bericht'],['upg','Upgrades','report','Auf Basis bereits vorhandener DNA-Daten neue Analysen bestellen'],['nem','Nahrungsergänzung','pill','Einzelne Nahrungsergänzungen'],['ein','Einzelkomponenten','puzzle','Einzeln bestellbare Bestandteile']];
 /* Die Karte zeigt das Produkt so, wie der Endkunde es sieht: Marke, Name, kurzer Text
    und darunter die enthaltenen Leistungen untereinander. Code und technische
    Bezeichnung stehen nur im Fuss, fuer den Partner. */
@@ -1289,10 +1254,10 @@ P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPi
        return PSEC.filter(([k])=>wPF==='all'||k===wPF).map(([k,t,icn,sub])=>{const ps=vis.filter(([p])=>p[5]===k);return `<div class="psec ${k}"><span class="psic">${ic(icn)}</span><div><b>${t}</b> <span class="count">${ps.length}</span><div class="s">${sub}</div></div></div>`
          +(ps.length?`<div class="grid g2 pgrid">${ps.map(([p,i])=>prodCard(p,i)).join('')}</div>`:`<div class="empty" style="margin-bottom:8px">In deinem Katalog ist derzeit kein Produkt dieser Art freigeschaltet.</div>`)}).join('')})()}
      <p style="font-size:13px;font-weight:700;margin-bottom:0">${wProd.size?`Ausgewählt: ${wProd.size}`:'Noch kein Produkt ausgewählt.'}</p>`,
-   3:()=>`<p style="color:var(--soft);font-size:13px;margin-top:0">Beantworte im Namen des Kunden. Pflichtfragen kommen aus den gewählten Produkten – ohne sie wird die Bestellung abgelehnt. Eine Frage, die mehrere Produkte teilen, wird nur einmal gestellt.</p>
+   3:()=>`<p style="color:var(--soft);font-size:13px;margin-top:0">Trag die Angaben deines Kunden ein (mit ihm gemeinsam). Pflichtfragen kommen aus den gewählten Produkten – ohne sie wird die Bestellung abgelehnt. Eine Frage, die mehrere Produkte teilen, wird nur einmal gestellt.</p>
      ${prods.length?`<div class="grid g3"><label class="field">Aktuelles Gewicht <span style="font-weight:500">(optional)</span><input type="number" placeholder="kg"></label><label class="field">Körpergröße <span style="font-weight:500">(optional)</span><input type="number" min="50" max="250" placeholder="cm (50–250)"></label><label class="field">Zielgewicht <span style="font-weight:500">(optional)</span><input type="number" placeholder="kg"></label></div>`:`<div class="empty">Bitte zuerst ein Produkt wählen.</div>`}`,
    4:()=>`<b>Rechnungsadresse</b><div class="grid g2" style="margin-top:10px"><label class="field">Vorname *<input value="${cu?cu.name.split(' ')[0]:''}"></label><label class="field">Nachname *<input value="${cu?cu.name.split(' ').slice(1).join(' '):''}"></label></div>
-     <label class="field">Straße & Hausnummer *<input></label><div class="grid g2"><label class="field">PLZ *<input></label><label class="field">Ort *<input></label></div><label class="field">Land *<select><option>Österreich</option><option>Deutschland</option><option>Schweiz</option></select></label>
+     <label class="field">Straße & Hausnummer *<input></label><div class="grid g2"><label class="field">PLZ *<input></label><label class="field">Ort *<input></label></div><label class="field">Land *<select><option>Österreich</option><option>Deutschland</option></select></label>
      <div class="toggle"><div><b>Lieferadresse</b><div style="color:var(--soft);font-size:13px">Wie Rechnungsadresse · Novogenia schickt das Probenset direkt an den Kunden.</div></div><button class="sw ${wSame?'on':''}" onclick="wSame=!wSame;render()"></button></div>
      ${wSame?'':`<div class="grid g2" style="margin-top:12px"><label class="field">Straße & Hausnummer *<input></label><label class="field">PLZ / Ort *<input></label></div>`}`,
    5:()=>`<div class="grid g2"><div class="card" style="box-shadow:none;border:1px solid var(--line)"><b>Kunde</b><dl class="kv"><dt>Kunde</dt><dd>${cu?cu.name:'Neuer Kunde'}</dd><dt>Typ</dt><dd>${wCust==='existing'?'Bestehender Kunde':'Neuer Kunde'}</dd><dt>E-Mail</dt><dd>${cu?cu.email:'—'}</dd><dt>Vertriebsmodell</dt><dd>Full Service</dd></dl></div>
@@ -1304,10 +1269,14 @@ P.neu=()=>{const S=['Kunde','Produkt','Fragen','Adresse','Prüfen'];const cu=wPi
      <div class="card"><p style="margin-top:0">Lade eine ausgefüllte Vorlage hoch, um viele Bestellungen auf einmal aufzugeben. Bestehende Kunden ordnen wir automatisch zu, den Rest bestätigst du.</p>
      <div class="pick" style="cursor:default"><div style="display:flex;gap:10px;align-items:center"><span class="bubble" style="width:38px;height:38px;border-radius:12px;background:var(--wash);display:grid;place-items:center;color:var(--plum)">${ic('csv')}</span><div><b>reseller-bulk-order-template.xlsx</b><div style="color:var(--soft);font-size:13px">Grundfelder, eine Spalte für den Produktcode und je eine Spalte pro Fragebogen-Frage aus deinem Katalog – bei jedem Download frisch erzeugt. Alle Fragen sind optional; leere Zellen sind immer in Ordnung.</div></div></div><button class="btn lime sm" onclick="toast('Vorlage wird heruntergeladen')">${ic('dl')} Vorlage</button></div>
      <div class="drop" style="margin-top:12px">${ic('dl')}<br><b>Ausgefüllte Vorlage hier ablegen</b><br>oder klicken zum Auswählen – nur .xlsx</div>
-     <p style="color:var(--soft);font-size:13px;margin-bottom:0">Jede Zeile ist eine Bestellung. Die Spalte „Existing? (yes/no)“ legt fest, ob ein bestehender Kunde zugeordnet oder ein Gastkunde angelegt wird. Zugeordnet wird über Vorname + Nachname + Geburtsdatum innerhalb deines Mandanten.</p></div>`:
+     <p style="color:var(--soft);font-size:13px;margin-bottom:0">Jede Zeile ist eine Bestellung. Die Spalte „Existing? (yes/no)“ legt fest, ob ein bestehender Kunde zugeordnet oder ein Gastkunde angelegt wird. Zugeordnet wird über Vorname + Nachname + Geburtsdatum innerhalb deines Mandanten.</p>
+     <div class="privacy" style="margin:12px 0 0">${ic('shield')}<div><b>Einwilligung kommt von jedem Kunden selbst.</b> Jeder Kunde bestätigt die Einwilligung zur genetischen Analyse und die Datenschutzhinweise selbst (Einwilligungsformular im Probenset); ohne Einwilligung startet das Labor nicht. Nur Erwachsene ab 18.</div></div></div>`:
    `<div class="steps">${S.map((s,i)=>`${i?'<span class="bar"></span>':''}<span class="step ${i+1===wStep?'on':i+1<wStep?'done':''}"><i>${i+1<wStep?'✓':i+1}</i>${s}</span>`).join('')}</div>
    <div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>${S[wStep-1]}</b><span style="color:var(--soft);font-size:13px">Schritt ${wStep} von 5</span></div>${body}
-   <div style="display:flex;justify-content:space-between;margin-top:16px"><button class="btn line sm" ${wStep===1?'disabled style="opacity:.4"':''} onclick="wStep--;render()">${ic('back')} Zurück</button><button class="btn lime sm" onclick="wStep<5?(wStep++,render()):toast('Bestellung abgeschickt (Demo)')">${wStep<5?'Weiter':'Bestellung aufgeben'} ${ic('chev')}</button></div></div>`)};
+   ${wStep===5?`<div class="privacy" style="margin-top:14px">${ic('shield')}<div><b>Einwilligung kommt vom Kunden selbst.</b> Die Einwilligung zur genetischen Analyse und die Datenschutzhinweise bestätigt ${cu?esc(cu.name):'dein Kunde'} selbst (mit dem Einwilligungsformular im Probenset). Ohne diese Einwilligung startet das Labor nicht. Genanalysen nur für Erwachsene.
+     <label style="display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-weight:700"><input type="checkbox" ${wAge===wKey()?'checked':''} onchange="wAge=this.checked?wKey():false"> Mein Kunde ist mindestens 18 Jahre alt und weiß, dass er die Einwilligung selbst bestätigt.</label></div></div>`:''}
+   <div style="display:flex;justify-content:space-between;margin-top:16px"><button class="btn line sm" ${wStep===1?'disabled style="opacity:.4"':''} onclick="wStep--;render()">${ic('back')} Zurück</button><button class="btn lime sm" onclick="wStep<5?(wStep++,render()):wAge!==wKey()?toast('Bitte bestätige zuerst: Kunde ist mindestens 18 und gibt die Einwilligung selbst'):(wAge=false,toast('Bestellung angelegt (Demo) – das Labor startet erst mit der Einwilligung deines Kunden'))">${wStep<5?'Weiter':'Bestellung aufgeben'} ${ic('chev')}</button></div></div>`)};
+let wAge=false;const wKey=()=>wCust+':'+(wPick==null?'neu':wPick);
 
 P.finances=()=>{const months=[['Mai',0],['Jun',0],['Jul',0],['Aug',124.36],['Sep',0],['Okt',34.5]];const mx=Math.max(...months.map(m=>m[1]))||1;
   return hero({eye:'Finanzen',title:'Deine Provisionen',text:'Deine Provisionen aus selbst verkauften Produkten – verdient, ausstehend und ausbezahlt. Hier beantragst du deine Auszahlung.',
@@ -1320,7 +1289,7 @@ P.finances=()=>{const months=[['Mai',0],['Jun',0],['Jul',0],['Aug',124.36],['Sep
   +`<div class="rows">${COMMISSIONS.map(commCard).join('')}</div>`
 };
 const bigsec=(t,sub)=>`<div class="bigsec"><h2>${t}</h2></div>${sub?`<p class="sub">${sub}</p>`:''}`;
-const payBtn=w=>`<button class="btn paybtn" onclick="toast('Auszahlung der ${w} beantragt (Demo)')">${ic('bank')} Auszahlung beantragen</button>`;
+const payBtn=w=>`<button class="btn paybtn" title="Es gelten die Provisionsbedingungen (AGB Teil C, Gutschrift an dein hinterlegtes Konto)" onclick="toast('Auszahlung der ${w} beantragt (Demo). Es gelten die Provisionsbedingungen in AGB Teil C.')">${ic('bank')} Auszahlung beantragen</button>`;
 const directStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',ORDERS.length)}${stat('','wallet','Einnahmen gesamt',eur(totalComm),'<div class="trend">↑ ggü. Vormonat</div>')}${stat('c','users','Kunden',CUSTOMERS.length)}${stat('hl','bank','Direktverkaufs&shy;provision auszahlbar',eur(available),payBtn('Direktverkaufsprovision'))}</div>`;
 const netStats=()=>`<div class="grid g4">${stat('o','box','Bestellungen gesamt',NET_COMMISSIONS.length)}${stat('','wallet','Einnahmen gesamt',eur(csum(NET_COMMISSIONS)))}${stat('c','users','Kunden',new Set(NET_COMMISSIONS.map(c=>c.kunde)).size)}${stat('hl','bank','Netzwerk&shy;provision auszahlbar',eur(netAvail()),payBtn('Netzwerkprovision'))}</div>`;
 const netAvail=()=>NET_COMMISSIONS.filter(c=>c.status!=="Paid out").reduce((s,c)=>s+c.amt,0);
@@ -1340,13 +1309,13 @@ P.network=()=>`${hero({eye:'Mein Netzwerk',title:'Dein Netzwerk',text:'Lade neue
   <div class="rows prow">${PARTNERS.map(partnerRow).join('')}</div>
   ${bigsec('Netzwerkprovisionen','Provisionen aus Bestellungen deiner Netzwerk-Partner.')}
   ${netStats()}
-  ${sec('Letzte Netzwerkprovisionen',NET_COMMISSIONS.length,'Endkunden deiner Partner erscheinen anonymisiert (Kundennummer, Ort).')}
+  ${sec('Letzte Netzwerkprovisionen',NET_COMMISSIONS.length,'Endkunden deiner Partner erscheinen pseudonymisiert (Kundennummer, Ort), ohne Name und E-Mail.')}
   <div class="rows">${NET_COMMISSIONS.map(c=>netCard(c)).join('')||'<div class="empty" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)">Noch keine Netzwerk-Provisionen – sobald deine Partner verkaufen, erscheinen sie hier als Bestellkarten.</div>'}</div>`;
 // [Partner, Kundennummer, Ort, Produkt, Bestellwert netto, Status, Datum] – Beispieldaten
 const NET_COMMISSIONS=[
  ['doom2',1042,'Wien','NovoDaily Lifestyle+ Abo-Bundle (Austria)',103.64,'Pending','27/10/2026 10:12'],
  ['doom2',1057,'Graz','NovoDaily Lifestyle Analyse (Austria)',89,'Paid out','12/10/2026 15:30'],
- ['doom13',1063,'Linz','NovoDaily Drug Response Analyse (Austria)',129,'Pending','22/10/2026 11:45'],
+ ['doom13',1063,'Linz','NovoDaily Lifestyle Analyse (Austria)',129,'Pending','22/10/2026 11:45'],
  ['testfirmaf',1071,'Salzburg','NovoDaily Lifestyle+ Abo-Bundle (Austria)',103.64,'Paid out','25/09/2026 09:10'],
  ['testfirmaf',1088,'Salzburg','NovoDaily Performance Upgrade',39,'Pending','20/10/2026 14:05'],
  ['np4417',1090,'Innsbruck','NovoDaily Shape+ Abo-Bundle (Austria)',99,'Pending','18/10/2026 17:22'],
@@ -1368,7 +1337,7 @@ P.partner=()=>{const p=PARTNERS.find(x=>x.id===pSel);if(!p)return P.network();
   +hero({eye:`Partner · Ebene ${p.lvl}`,title:p.name,text:`${p.lvl===1?'Direkt von dir eingeladen':'Eingeladen von '+parName(p)+' – damit deine Ebene 2'} · beigetreten am ${dshort(p.joined)} (${ago(p.joined)}). Für jede Bestellung seiner Endkunden erhältst du ${NET_RATE[p.lvl]} % vom Netto-Bestellwert.`,
      chips:`<span class="st p">Ebene ${p.lvl}</span><span class="st g">Provision: ${NET_RATE[p.lvl]} %</span><span class="st y">${lastOrd(p)}</span>${p.demo?'<span class="st y">Beispieldaten</span>':''}`})
   +`<div class="grid g4">${stat('o','box','Bestellungen',cs.length)}${stat('','wallet','Bestellwert netto',eur(cs.reduce((s,c)=>s+c.net,0)))}${stat('c','users','Kunden',new Set(cs.map(c=>c.kunde)).size)}${stat('hl','bank','Deine Provision daraus',eur(csum(cs)))}</div>`
-  +`<div class="privacy">${ic('shield')}<div><b>Datenschutz (DSGVO)</b><br>Die Endkunden deiner Partner siehst du nur anonymisiert – mit Kundennummer und Ort, ohne Name und E-Mail.</div></div>`
+  +`<div class="privacy">${ic('shield')}<div><b>Datenschutz (DSGVO)</b><br>Die Endkunden deiner Partner siehst du nur pseudonymisiert – mit Kundennummer und Ort, ohne Name und E-Mail.</div></div>`
   +sec('Bestellungen von '+p.name,cs.length,'Bestellwert netto × Provision in % = deine Provision.')
   +`<div class="rows">${cs.map(c=>netCard(c,false)).join('')||'<div class="empty">Noch keine Bestellungen.</div>'}</div>`
   +(subs.length?sec('Von '+p.name+' eingeladen',subs.length,'Diese Partner sind deine Ebene 2 – tippe einen an für seine Bestellungen.')+`<div class="rows">${subs.map(partnerRow).join('')}</div>`:'')};
@@ -1482,7 +1451,7 @@ P.settings=()=>hero({eye:'Einstellungen',title:'Einstellungen',text:'Sprache, Ze
    Demo-"Jetzt" = 30.10.2026 12:00 (wie ago()). Mit erreichbarem Backend "geneius-beratung" laufen
    Termine, freie Zeiten, Raum-Zustand und Übergaben über die API (bLive), sonst Demo-Daten.
    Gemeinsamer Zustand (Spec): {sessionId, view, reportId, spread, htmlAnchor, highlight{page,x,y}, by, at}
-   view "meds": reportId "pgx", spread = Index der Medikamentengruppe. highlight.page = null → Position relativ zur ganzen Ansicht. */
+   (Ansicht "meds"/Medikamente am 19.11.2026 entfernt: Pharmakogenetik nur ärztlich, nicht über Partner.) highlight.page = null → Position relativ zur ganzen Ansicht. */
 const BAPI='https://geneius-beratung.daniel.internal.novogenia.com';
 let BNOW=new Date('2026-10-30T12:00');const BMON0='2026-10-26',CH0=8,CH1=20,CPX=44;
 const dIso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -1495,7 +1464,7 @@ const ADV={rate:120,dur:30,buf:0,langs:'Deutsch, Englisch',intro:'Wir gehen dein
  assigned:[[0,'Eigener Kunde'],[1,'Eigener Kunde'],[2,'Von Novogenia zugewiesen'],[4,'Eigener Kunde']]};
 ADV.offer=(()=>{try{return localStorage.getItem('np-beratung-offer')==='1'}catch(e){return false}})();
 const advRatePv=r=>[30,45,60].map(m=>`<div class="kline"><div><b>${m} Minuten</b><small>${m===ADV.dur?'deine Termindauer':'Termin'}</small></div><b>${eur(r*m/60)}</b></div>`).join('');
-function advRate(){drawer(`<div class="eyebrow" style="color:var(--berry)">Online-Beratung</div><h3 style="margin:6px 0 4px">Stundensatz anpassen</h3><p class="mut">So viel zahlen deine Kunden pro Stunde Beratung, inkl. MwSt. Abgerechnet wird minutengenau über den Novogenia-Shop.</p>
+function advRate(){drawer(`<div class="eyebrow" style="color:var(--berry)">Online-Beratung</div><h3 style="margin:6px 0 4px">Stundensatz anpassen</h3><p class="mut">So viel zahlen deine Kunden pro Stunde Beratung (Endpreis inkl. gesetzlicher Umsatzsteuer). Bezahlt wird bei der Buchung über den Novogenia-Shop, der Termin hat einen festen Preis.</p>
  <label class="field">Stundensatz in € pro Stunde<input id="rateIn" type="number" min="0" max="1000" step="5" inputmode="decimal" value="${ADV.rate}" oninput="ADV._r=Math.max(0,+this.value||0);document.getElementById('ratePv').innerHTML=advRatePv(ADV._r)"></label>
  <div class="pfchips" style="margin:-4px 0 14px">${[60,90,120,150,180].map(v=>`<button class="chip" onclick="const i=document.getElementById('rateIn');i.value=${v};i.dispatchEvent(new Event('input'))">${eur(v)}</button>`).join('')}</div>
  <b>Das kostet ein Termin</b><div class="klines" id="ratePv" style="margin:8px 0 14px">${advRatePv(ADV.rate)}</div>
@@ -1578,7 +1547,7 @@ function bRow(b){const s=bStat(b),dt=new Date(b.d+'T00:00');
  <div class="bkr"><span class="st ${s[0]}">${s[1]}</span>${bWin(b)?`<a class="btn lime sm" href="#raum-${b.id}" onclick="event.stopPropagation()">${ic('video')} Beratungsraum</a>`:''}</div></div>`}
 const advCard=()=>`<div class="eyebrow" style="color:var(--berry)">Vorschau in der GEN(e)IUS-App</div><div class="advc"><span class="avatar big">CN</span><div><b>${esc(PARTNER.company)}</b><small>Dein Berater · ${esc(ADV.langs)}</small></div></div>
  <p style="font-size:13.5px;margin:10px 0">${esc(ADV.intro)}</p><div class="advprice"><b>${eur(ADV.rate)} pro Stunde</b><span>Termin ${ADV.dur} Min. = ${eur(ADV.rate*ADV.dur/60)}</span>${ADV.firstFree?'<span class="st g">Erstberatung kostenlos</span>':''}</div>
- <p class="mut" style="margin:10px 0 0">Bezahlt wird bei der Buchung über den Novogenia-Shop. Dauert die Beratung länger, wird minutengenau nachverrechnet.</p>`;
+ <p class="mut" style="margin:10px 0 0">Bezahlt wird bei der Buchung über den Novogenia-Shop (Endpreis für den Kunden, inkl. gesetzlicher Umsatzsteuer). Der Termin hat einen festen Preis; länger beraten geht nur, wenn dein Kunde vorher zustimmt.</p><div class="privacy" style="margin-top:10px">${ic('shield')}<div><b>Lifestyle-Beratung, keine ärztliche oder genetische Beratung.</b> Du erklärst Ergebnisse und Produkte. Fragen zu Krankheiten, Medikamenten oder Diagnosen gehören zu Ärztin oder Arzt. Buchungs-, Widerrufs- und Absageregeln legt Novogenia in den Buchungsbedingungen fest.</div></div>`;
 function advPrev(){const e=document.getElementById('advprev');if(e)e.innerHTML=advCard();bApi.advSave()}
 const durSel=(fn)=>`<select onchange="ADV.dur=+this.value;${fn}">${[15,30,45,60].map(v=>`<option value="${v}" ${ADV.dur===v?'selected':''}>${v} Min.${v===30?' (Vorschlag)':''}</option>`).join('')}</select>`;
 P.beratung=()=>{if(!bApi.tried)bLive();
@@ -1595,7 +1564,7 @@ P.beratung=()=>{if(!bApi.tried)bLive();
   <div class="lgd2"><span><i class="lf"></i>Freie Zeit</span><span><i class="lb"></i>Gebucht</span><span><i class="ll"></i>Jetzt im Terminfenster</span><b>${((n)=>n+(n===1?' buchbarer Termin':' buchbare Termine'))(freeUnits(w))} à ${ADV.dur} Min. in dieser Woche</b></div>${calHtml()}`,
  profil:`${sec('Profil & Preis')}<p class="sub">So sehen dich deine Kunden in der GEN(e)IUS-App, bevor sie einen Termin buchen.</p><div class="grid g2">
   <div class="card"><b>Deine Angaben</b><div style="height:12px"></div>
-   <label class="field">Stundensatz (€ pro Stunde, inkl. MwSt.)<input type="number" min="0" step="5" value="${ADV.rate}" oninput="ADV.rate=Math.max(0,+this.value||0);advPrev()"></label>
+   <label class="field">Stundensatz (€ pro Stunde, Endpreis für den Kunden)<input type="number" min="0" step="5" value="${ADV.rate}" oninput="ADV.rate=Math.max(0,+this.value||0);advPrev()"></label>
    <label class="field">Termindauer${durSel('advPrev()')}</label>
    <label class="field">Pause zwischen Terminen<select onchange="ADV.buf=+this.value">${[0,5,10,15].map(v=>`<option value="${v}" ${ADV.buf===v?'selected':''}>${v?v+' Min.':'keine'}</option>`).join('')}</select></label>
    <label class="field">Sprachen<input value="${esc(ADV.langs)}" oninput="ADV.langs=this.value;advPrev()"></label>
@@ -1633,26 +1602,15 @@ const DTXT={einleitung:'Dein Bericht zeigt, wie deine Gene Ernährung, Bewegung 
  eiweiss:'Dein Eiweißbedarf liegt im normalen Bereich. Verteile Eiweiß gleichmäßig über den Tag.',
  gewicht:'Varianten in FTO und MC4R erhöhen die Neigung zu Heißhunger. Regelmäßige Mahlzeiten helfen.',
  plan:'Dein Ernährungsplan fasst zusammen, was du täglich essen kannst. Er ist auf dein Ergebnis abgestimmt.',
- cyp2d6:'CYP2D6 baut viele Medikamente ab, zum Beispiel Schmerzmittel und Antidepressiva. Bei dir arbeitet es langsamer.',
- cyp2c19:'CYP2C19 arbeitet bei dir schneller. Manche Magenschutzmittel wirken dadurch schwächer.',
- slco1b1:'SLCO1B1 beeinflusst, wie Statine in die Leber gelangen. Dein Ergebnis kann das Risiko für Muskelbeschwerden erhöhen.',
- uebersicht:'Alle Medikamente aus deinem Bericht im Überblick. Besprich Änderungen immer mit Ärztin oder Arzt.'};
+ uebersicht:'Alle Ergebnisse aus deinem Bericht im Überblick.'};
 const pScale=p=>`<div class="pscale"><i></i><i></i><i></i><i></i><i></i><b style="left:${12+(p*37)%76}%"></b></div><div class="pscl"><span>niedrig</span><span>hoch</span></div>`;
 const BEDARF=[['Vitamin D3','2.000 IE pro Tag','Erhöhter Bedarf · VDR, GC'],['Omega-3 (EPA + DHA)','1 g pro Tag','Erhöhter Bedarf · FADS1'],['Folat (aktiv)','400 µg pro Tag','Normaler Bedarf · MTHFR'],['Vitamin B12','250 µg pro Tag','Leicht erhöht · FUT2'],['Magnesium','300 mg pro Tag','Normaler Bedarf'],['Vitamin C','200 mg pro Tag','Leicht erhöht · SLC23A1']];
 const FOOD=[['Empfohlen','g',['Lachs, Makrele, Hering','Leinöl und Walnüsse','Spinat, Brokkoli, Grünkohl','Linsen und Kichererbsen','Haferflocken und Vollkorn']],
  ['In Maßen','y',['Kaffee: höchstens 2 Tassen am Tag (langsamer Koffein-Abbau)','Rotes Fleisch: 1–2× pro Woche','Weißbrot und Zucker']],['Gut verträglich','b',['Milch und Milchprodukte','Glutenhaltiges Getreide']]];
-const MI=(name,level,label,genes)=>({name,level,label,genes,note:''});
-const MEDS=[{group:'Schmerzmittel',items:[MI('Ibuprofen','y','Achtung','LST1 / LTA / TNF'),MI('Paracetamol','g','Normal',''),MI('Codein','g','Normal','')]},
- {group:'Blutverdünner & Blutdruck',items:[MI('Clopidogrel','g','Normal',''),MI('Warfarin','g','Normal',''),MI('Hydralazin','r','Handlungsbedarf','NAT2')]},
- {group:'Antidepressiva',items:[MI('Sertralin','g','Normal',''),MI('Fluoxetin','y','Achtung','CYP2D6')]},
- {group:'Cholesterinsenker',items:[MI('Simvastatin','b','Hinweis','SLCO1B1'),MI('Rosuvastatin','g','Normal','')]},
- {group:'Magenschutz & Übelkeit',items:[MI('Omeprazol','g','Normal',''),MI('Esomeprazol','y','Achtung','CYP2C19')]}];
-const MLV={g:'Normal',b:'Hinweis',y:'Achtung',r:'Handlungsbedarf'};
-const cMeds=()=>{const d=bApi.cd[rSel],m=d&&d.meds;const g=Array.isArray(m)?m:m&&m.groups;return g&&g.length?g:MEDS};
 const cBed=()=>{const d=bApi.cd[rSel];return d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>[x.name,x.dose||'',[x.reason,x.group].filter(Boolean).join(' · ')]):BEDARF};
 const FRC=n=>n>=5?'g':n>=3?'b':'y';
 const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.map(g=>[g.group,'b',(g.items||[]).map(i=>`${esc(i.name)}${i.label?` <span class="st ${FRC(i.rating)}">${esc(i.label)}</span>`:''}`)]):FOOD};
-const VLBL={reports:'Berichtsliste',bedarf:'Mein Bedarf',food:'Lebensmittelliste',meds:'Medikamente'};
+const VLBL={reports:'Berichtsliste',bedarf:'Mein Bedarf',food:'Lebensmittelliste'};
 const RSS={},RJ={},ALOG={},RNOTE={},HAND={};let RTI=null,rPtr=false;
 const BC=(()=>{try{return new BroadcastChannel('novopilot-beratung')}catch(e){return null}})(); // Demo-Kanal im selben Browser
 if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list);if(m.type==='access-grant'&&m.sessionId===rS().sessionId)rAccAns(m.granted!==false,m.scope)};
@@ -1690,9 +1648,7 @@ function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rSto
 function rHtml(id){if(rIsOn('report-html',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-html',reportId:id,spread:0,htmlAnchor:'abschnitt-'+r.sec[0][0]},`Bericht geöffnet: ${r.t} (HTML-Version)`)}
 const spLbl=(r,n)=>n===0?'Titelseite':n+1>r.pages?'Seite '+n:`Seite ${n}–${n+1}`;
 function rTurn(n){const r=rRep();n=Math.max(0,Math.min(r.pages-r.pages%2,n));rSend({spread:n},`${r.t}: ${spLbl(r,n)}`)}
-function rView(v){if(v!=='reports'&&rIsOn(v)){v='reports'}rSend({view:v,reportId:v==='meds'?'pgx':null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
-function rMed(i){rSend({spread:i},`Medikamente: ${cMeds()[i].group}`)}
-function rMedItem(n){const s=rS(),on=s.highlight&&s.highlight.item===n;rSend(on?{}:{highlight:{page:null,item:n}},on?null:`Medikamente: ${n} markiert`)}
+function rView(v){if(v!=='reports'&&rIsOn(v)){v='reports'}rSend({view:v,reportId:null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
 function rAnchor(a){const r=rRep(),sc=r.sec.find(x=>'abschnitt-'+x[0]===a);if(r.html){Object.assign(rS(),{htmlAnchor:a,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===a));alog(`${r.t} (HTML): ${sc[1]}`);bApi.htmlGo(r,a);return}rSend({htmlAnchor:a},`${rRep().t} (HTML): ${sc[1]}`)}
 function rScroll(){const h=document.getElementById('rhtml');if(!h)return;let cur=null;for(const x of h.querySelectorAll('section'))if(x.offsetTop-h.scrollTop<=40)cur=x;const s=rS();
  if(cur&&cur.id!==s.htmlAnchor){Object.assign(s,{htmlAnchor:cur.id,highlight:null,by:'advisor',at:Date.now()});rPub();document.querySelectorAll('.rchip[data-a]').forEach(c=>c.classList.toggle('on',c.dataset.a===cur.id));
@@ -1721,15 +1677,11 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
   h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${cur===x?'on':''}" onclick="event.stopPropagation();rTurn(${x[2]-x[2]%2})">${x[1]}</button>`).join('')}</div>
   <div class="spread">${pgHtml(r,L,'l')}${pgHtml(r,L+1,'r')}</div><div class="pgnav"><button class="btn line sm" ${L<=0?'disabled':''} onclick="event.stopPropagation();rTurn(${L-2})">${ic('back')} Zurück</button><b>${spLbl(r,L)} von ${r.pages}</b><button class="btn lime sm" ${L>=mx?'disabled':''} onclick="event.stopPropagation();rTurn(${L+2})">Weiter ${ic('chev')}</button></div>`}
  else if(s.view==='report-html'&&bApi.reps[rSel])h=`${rHead(r,s)}${r.html?`<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${esc(x[1])}</button>`).join('')}</div>
-  <div class="rframe"><iframe id="rhf" title="${esc(r.t)}"></iframe><div class="rfov"></div></div>`:'<div class="empty">Für diesen Bericht gibt es keine HTML-Version.</div>'}`;
+  <div class="rframe"><iframe id="rhf" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-downloads" title="${esc(r.t)}"></iframe><div class="rfov"></div></div>`:'<div class="empty">Für diesen Bericht gibt es keine HTML-Version.</div>'}`;
  else if(s.view==='report-html')h=`${rHead(r,s)}<div class="pfchips knav">${r.sec.map(x=>`<button class="rchip ${s.htmlAnchor==='abschnitt-'+x[0]?'on':''}" data-a="abschnitt-${x[0]}" onclick="event.stopPropagation();rAnchor('abschnitt-${x[0]}')">${x[1]}</button>`).join('')}</div>
   <div class="rhtml" id="rhtml" onscroll="rScroll()">${r.sec.map(x=>`<section id="abschnitt-${x[0]}" class="${s.htmlAnchor==='abschnitt-'+x[0]?'cur':''}"><h4>${x[1]}</h4>${x[3]?`<span class="st b">Dein Ergebnis: ${x[3]}</span>`:''}<p>${DTXT[x[0]]||`Was deine Gene über ${x[1]} sagen${x[3]?`. Dein Ergebnis: ${x[3]}`:''}.`}</p><p class="mut">Was das für deinen Alltag bedeutet: Empfehlungen zu Ernährung, Bewegung und Lebensstil, abgestimmt auf dein Ergebnis.</p>${[1,2,3].map(i=>`<div class="ln" style="width:${60+i*11}%"></div>`).join('')}</section>`).join('')}<div style="height:320px"></div></div>`;
  else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${cBed().map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small class="clamp2">${esc(x[2])}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
  else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3 fgrid3">${cFood().map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
- else if(s.view==='meds'){const M=cMeds(),i=Math.min(s.spread||0,M.length-1),g=M[i],hi=s.highlight&&s.highlight.item;h=`<div class="kh"><b>${ic('pill')} Medikamente</b>${sees}</div><p class="mut">Aus dem Bericht Medikamente (PGx). Medikamente nie selbst absetzen oder ändern, immer mit Ärztin oder Arzt besprechen. Tippe auf einen Wirkstoff, um ihn für ${fn} zu markieren.</p>
-  <div class="pfchips knav">${M.map((m,k)=>`<button class="rchip ${k===i?'on':''}" onclick="event.stopPropagation();rMed(${k})">${esc(m.group)}</button>`).join('')}</div>
-  <div class="medpg"><h4>${esc(g.group)}</h4><div class="klines">${(g.items||[]).map(d=>`<div class="kline mrow ${hi===d.name?'mon':''}" onclick="event.stopPropagation();rMedItem(${esc(JSON.stringify(d.name))})"><div><b>${esc(d.name)}</b><small class="clamp2">${esc([d.note&&d.note!==d.label?d.note:'',d.genes&&!(d.note||'').includes(d.genes)?d.genes:''].filter(Boolean).join(' · ')||(d.level==='g'?'Keine Auffälligkeit':''))}</small></div><span class="st ${d.level}">${esc(d.label||MLV[d.level]||'')}</span></div>`).join('')}</div></div>
-  <div class="pgnav"><button class="btn line sm" ${i<=0?'disabled':''} onclick="event.stopPropagation();rMed(${i-1})">${ic('back')} Zurück</button><b>${i+1} von ${M.length}</b><button class="btn lime sm" ${i>=M.length-1?'disabled':''} onclick="event.stopPropagation();rMed(${i+1})">Weiter ${ic('chev')}</button></div>`}
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
 function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();if(s.view==='reports'&&rPtr){rPtr=false;rLasUI()}rShare(s);const r0=rRep(),want=s.view==='account'?ACCT_URL:r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
  if(want&&cf&&cf.getAttribute('src')===want){rHl();const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);return}
@@ -1820,7 +1772,7 @@ function rAsk(){const b=rB();ACC[rSel]='pending';alog(`Zugriff auf die Berichte 
 function rAccAns(ok,scope){if(scope==='account'){if(ACCX[rSel]!=='pending')return;const f=bFirst(rB());ACCX[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf das Kundenkonto freigegeben`:`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);toast(ok?'Kundenkonto freigegeben':`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);rAccUI();rShare(rS());if(ok&&rS().view==='reports')rAcct();return}
  if(ACC[rSel]!=='pending')return;const f=bFirst(rB());ACC[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf die Berichte freigegeben`:`${f} hat den Zugriff abgelehnt`);toast(ok?'Zugriff freigegeben: Du kannst jetzt Berichte teilen':`${f} hat den Zugriff abgelehnt`);rAccUI();rShare(rS())}
 function rAccUI(){const e=document.getElementById('racc');if(!e)return;const b=rB(),p=ACC[rSel]==='pending'&&!(bApi.on&&b.live),px=ACCX[rSel]==='pending'&&!(bApi.on&&b.live);
- if(px&&!p){e.innerHTML=`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer dein Kundenkonto mit dir gemeinsam öffnen?</b><p>Er sieht dann alles in deinem Konto, z. B. Rezeptur, Bedarf und Abo. Nur während dieses Termins, jeder Zugriff wird protokolliert.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false,'account')">Nein</button><button class="btn lime sm" onclick="rAccAns(true,'account')">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`;return}
+ if(px&&!p){e.innerHTML=`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer dein Kundenkonto mit dir gemeinsam öffnen?</b><p>Er sieht dann alles in deinem Konto, z. B. Rezeptur, Bedarf, Abo und deine Gendaten. Nur während dieses Termins, jeder Zugriff wird protokolliert. Rohdaten herunterladen oder hochladen darf nur du selbst.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false,'account')">Nein</button><button class="btn lime sm" onclick="rAccAns(true,'account')">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`;return}
  e.innerHTML=p?`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer auf deine Berichte zugreifen?</b><p>Nur während dieses Termins. Jeder Zugriff wird protokolliert.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false)">Nein</button><button class="btn lime sm" onclick="rAccAns(true)">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`:''}
 const rLayC=()=>{const sh=rS().view!=='reports';let m=RLAY.main==='auto'?(sh?'share':'cust'):RLAY.main;if(m==='share'&&!sh)m='cust';return `rvid m-${m} me-${RLAY.me}${sh?' sh':''}`};
 function rLay(){const v=document.getElementById('rvid');if(v)v.className=rLayC();const ms=RLAY.main==='me'?'full':RLAY.me;
@@ -1841,7 +1793,7 @@ function rPdf(id){if(rIsOn('report-pdf',id)){rStop();return}const r=(bApi.reps[r
 function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
 document.addEventListener('fullscreenchange',()=>{const b=document.getElementById('rfsb');if(!b)return;const f=!!document.fullscreenElement;b.innerHTML=ic(f?'fsexit':'fullscr');b.title=f?'Vollbild beenden':'Vollbild';b.setAttribute('aria-label',b.title)});
 function rFull(){const v=document.getElementById('rvid');if(document.fullscreenElement)document.exitFullscreen();else if(v&&v.requestFullscreen)v.requestFullscreen()}
-function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste'],['meds','pill','Medikamente']];
+function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste']];
  if(!accOk()){const st=ACC[rSel];return `${kHead('lock','Berichte von '+fn)}<p class="mut">Bevor du Berichte und Listen teilen kannst, muss ${fn} den Zugriff in der GEN(e)IUS-App freigeben. Die Freigabe gilt nur für diesen Termin.</p>
   ${st==='pending'?`<div class="rwait"><span class="rspin"></span>Warte auf die Freigabe von ${fn} …</div>`:`${st==='no'?`<p class="rno">${fn} hat den Zugriff abgelehnt.</p>`:''}<button class="btn lime rgo" onclick="rAsk()">${ic('lock')} ${st==='no'?'Erneut anfragen':'Zugriff vom Kunden anfordern'}</button>`}`}
  const F=r=>[['report','book','Doppelseite',r.src||r.img||!r.html],['report-pdf','filetx','PDF',r.src||r.pdf],['report-html','code','HTML',r.src||r.html]].filter(x=>x[3]);
@@ -1889,7 +1841,7 @@ function rTog(el,k){const j=RJ[rSel]||RMP;j[k]=!j[k];const on=j[k];el.classList.
 function rEnd(){const b=rB(),j=RJ[b.id],id=b.id,m=Math.max(1,Math.ceil((Date.now()-j.t0)/6e4)),over=Math.max(0,m-b.dur),extra=Math.round(over*ADV.rate/60*100)/100;
  b.done={min:m,extra,note:RNOTE[id]||''};delete RJ[id];clearInterval(RTI);if(document.fullscreenElement)document.exitFullscreen();RM.stop();alog(`Beratung beendet nach ${m} Min.`);bApi.end(b);
  const given=['bedarf','food'].filter(l=>(HAND[id+':'+l]||{}).st==='ok').map(l=>VLBL[l]).join(', ')||'nichts';bTab='termine';location.hash='beratung';
- setTimeout(()=>drawer(`<div class="eyebrow" style="color:var(--berry)">Beratung beendet · ${id}</div><h3 style="margin:6px 0">${esc(bCust(b).name)}</h3><dl class="kv"><dt>Dauer</dt><dd>${m} Min. (minutengenau)</dd><dt>Gebucht</dt><dd>${b.dur} Min. · ${bPrice(b)}</dd><dt>Nachverrechnung</dt><dd>${over?`${over} Min. = ${eur(extra)}`:'keine'}</dd><dt>Übergeben</dt><dd>${given}</dd><dt>Notiz</dt><dd>${esc(b.done.note)||'—'}</dd></dl><p class="mut">Abgerechnet wird über den Novogenia-Shop. Der Zugriff auf die Berichte ist jetzt wieder gesperrt.</p>`),80)}
+ setTimeout(()=>drawer(`<div class="eyebrow" style="color:var(--berry)">Beratung beendet · ${id}</div><h3 style="margin:6px 0">${esc(bCust(b).name)}</h3><dl class="kv"><dt>Dauer</dt><dd>${m} Min.</dd><dt>Gebucht</dt><dd>${b.dur} Min. · ${bPrice(b)}</dd><dt>Überzogen (nur mit Zustimmung verrechenbar)</dt><dd>${over?`${over} Min. = ${eur(extra)}`:'keine'}</dd><dt>Übergeben</dt><dd>${given}</dd><dt>Notiz</dt><dd>${esc(b.done.note)||'—'}</dd></dl><p class="mut">Abgerechnet wird über den Novogenia-Shop. Der Zugriff auf die Berichte ist jetzt wieder gesperrt.</p>`),80)}
 const lockCard=(t,x)=>`<div class="card lockc"><span class="lki">${ic('lock')}</span><div><b>${t}</b><p class="mut" style="margin:6px 0 0">${x}</p></div></div>`;
 P.raum=()=>{const b=rB();if(!b)return P.beratung();const c=bCust(b),back=`<div class="backlink"><a class="btn line sm" href="#beratung">${ic('back')} Online-Beratung</a></div>`;
  if(!advOk(b))return back+lockCard('Kein Zugriff','Dieser Kunde ist dir nicht zugewiesen.');
@@ -1928,12 +1880,13 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
  state(s){if(!this.on||!this.room[rSel])return;const id=this.room[rSel];if(this.t)return;this.t=setTimeout(()=>{this.t=0;this.req('PATCH','/api/collections/rooms/records/'+id,{state:s}).catch(()=>{})},120)},
  ev(type,data,bk){return this.req('POST','/api/collections/events/records',{booking:bk||rSel,type,data:data||{}}).catch(()=>null)},
  handover(list,payload){const bk=rSel;this.ev('handover',{list,payload},bk).then(x=>{if(x)this.hand[x.id]=[bk,list];else toast('Übergabe fehlgeschlagen')})},
- async loadPb(){if(this.pb)return this.pb;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+ async loadPb(){if(this.pb)return this.pb;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';s.integrity='sha384-PyEqd9CedmsyU7NKgzIEmFQVNmsddeiQtKXCrHb7r0pERoeI7MVI3S3gCOkFvo0s';s.crossOrigin='anonymous';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
   this.pb=new PocketBase(BAPI);this.pb.authStore.save(this.tok,this.rec);return this.pb},
  async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
   this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
-  this.req('GET',`/api/advisor/reports/${id}`).then(x=>{this.reps[id]=(x.items||[]).map(r=>({id:r.id||r.ref,t:r.title,pages:r.pages||1,img:r.img,pad:r.pad||3,html:r.htmlUrl,pdf:r.pdfUrl||'',
-   sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,''),z.title,z.page||1,'',z.target||'',z.ref||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
+  this.req('GET',`/api/advisor/reports/${id}`).then(x=>{/* Backend-Werte gehen in HTML und onclick: ID nur Zeichen [A-Za-z0-9_-], Titel ohne Markup, URLs nur https */
+  this.reps[id]=(x.items||[]).map(r=>({id:String(r.id||r.ref||'').replace(/[^\w-]/g,''),t:String(r.title||'').replace(/[<>&"'`]/g,''),pages:Math.max(1,Math.round(+r.pages)||1),img:HTTPS(r.img),pad:Math.round(+r.pad)||3,html:HTTPS(r.htmlUrl),pdf:HTTPS(r.pdfUrl),
+   sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,'').replace(/[^\w-]/g,''),String(z.title||'').replace(/[<>&"'`]/g,''),z.page||1,'',z.target||'',z.ref||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
    alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
   /* Gesundheitsdaten (Bedarf/Lebensmittel/Medikamente) werden nicht mehr geladen: Ansichten entfernt (Datensparsamkeit, 19.11.2026) */
   this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${id}"`)}`).then(x=>{const r=x.items&&x.items[0];if(r){this.room[id]=r.id;rPub()}}).catch(()=>{});
@@ -1976,6 +1929,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   if(document.getElementById('rhf')!==f)return;f.onload=()=>setTimeout(()=>this.htmlGo(r,rS().htmlAnchor),400);f.src=r._doc+frag()},
  htmlGo(r,a){const f=document.getElementById('rhf'),ref=this.ref(r,a);if(!f||!ref)return;const base=(f.src||'').split('#')[0];if(base)f.src=base+'#/seite/'+encodeURIComponent(ref)}};
 const bLiveOk=()=>/^(localhost|127\.0\.0\.1|)$/.test(location.hostname)||new URLSearchParams(location.search).get('live')==='1';
+const HTTPS=u=>/^(https:\/\/|\/(?!\/))[^\s"'<>`]*$/.test(u||'')?u:'';
 async function bLive(){bApi.tried=true;if(!bLiveOk())return;try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),3000);
  const r=await fetch(BAPI+'/api/health',{signal:ctl.signal});if(!r.ok)return;
  const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
@@ -2002,7 +1956,7 @@ const TOUR=[
  ['finances','.paybtn','Auszahlung beantragen','Freigegebene Provisionen werden als „auszahlbar“ angezeigt. Mit „Auszahlung beantragen“ forderst du die Auszahlung auf dein in den Firmendaten hinterlegtes Bankkonto an. Jede Zeile in der Liste zeigt die Herleitung: Produkt, Kunde, Bestellwert netto, Provision in %, deine Provision und Status mit Datum.'],
  ['network','','Dein Netzwerk','Die Visualisierung zeigt, wer dich empfohlen hat und welche Partner du selbst eingeladen hast. Ebene 1 hast du selbst eingeladen, Ebene 2 deine Partner. Zoome hinein oder heraus und fahre mit der Maus über einen Partner, um Details zu sehen.'],
  ['network','.ntiles','Erweitere dein Netzwerk','Lade Kolleginnen und Kollegen als Partner ein: Kopiere deinen persönlichen Einladungslink, teile ihn per WhatsApp, E-Mail oder Social Media, erstelle einen QR-Code für Flyer und Visitenkarten oder teile deine Empfehlungsdaten. Wer sich darüber registriert, wird automatisch dir zugeordnet.'],
- ['network','.prow','Partner im Detail','Tippe einen Partner an – im Baum oder in dieser Liste. Du siehst seine letzte Bestellung, seine Bestellungen mit Bestellwert netto, Ebene, Provision in % und deiner Provision daraus. Endkunden deiner Partner erscheinen aus Datenschutzgründen nur anonymisiert, z. B. „Kunde #1042, Wien“. Deine Netzwerkprovision lässt du dir weiter unten über „Auszahlung beantragen“ auszahlen.'],
+ ['network','.prow','Partner im Detail','Tippe einen Partner an – im Baum oder in dieser Liste. Du siehst seine letzte Bestellung, seine Bestellungen mit Bestellwert netto, Ebene, Provision in % und deiner Provision daraus. Endkunden deiner Partner erscheinen aus Datenschutzgründen nur pseudonymisiert, z. B. „Kunde #1042, Wien“. Deine Netzwerkprovision lässt du dir weiter unten über „Auszahlung beantragen“ auszahlen.'],
  ['support','','Support','Unser Chatbot wurde mit allem trainiert, was für dich wichtig ist – Produkte, Bestellungen, Provisionen, Netzwerk und Portal. Er ist rund um die Uhr erreichbar und damit die schnellste Antwortmöglichkeit. Brauchst du doch einen Menschen, schreib uns per WhatsApp oder über das E-Mail-Formular.'],
  ['academy','','Academy','In der Academy bildest du dich zu allen unseren Produkten fort – damit du deine Kunden kompetent beraten kannst. Diese Seite erklärt die Academy und bringt dich mit einem Klick hin.'],
  ['documents','','Dokumente','Hier findest du Unterlagen zum Herunterladen, Lesen und Lernen – alles rund um unsere Produkte und deinen Verkauf.'],

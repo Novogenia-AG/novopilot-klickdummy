@@ -262,6 +262,25 @@ function berater(search) {
   check(G, 'NovoPilot: QR-Bibliothek lokal eingebettet (kein CDN-Abruf noetig)', /var qrcode=function\(\)/.test(npHtml));
   check(G, 'berater.html: noindex', /<meta name="robots" content="noindex/.test(pbHtml));
   check(G, 'berater.html: Bild mit Stoerer "Gratis" nicht mehr verwendet', !pbHtml.includes('img:NDIMG[2]'));
+  // Runde 2 (Dauerfreigabe 19.11.2026): Gentest-Recht und Datenschutz
+  const prodBlock = (npHtml.match(/const PRODUCTS=\[[\s\S]*?\n\];/) || [''])[0];
+  check(G, 'Partnerkatalog ohne Pharmakogenetik', prodBlock.length > 100 && !/Pharmaco|Drug Response/.test(prodBlock));
+  check(G, 'keine Medikamenten-Ansicht mehr im Beratungsraum', !/const MEDS=|function rMed|cMeds\(/.test(npHtml));
+  check(G, 'kein Rohdaten-Download/-Upload durch Partner', !/function geneDl|function geneUpSec|function geneDown/.test(npHtml) && /function geneSelf/.test(npHtml));
+  check(G, 'Partnerbestellung: Einwilligung durch Kunden + ab 18', /let wAge=false/.test(npHtml) && npHtml.includes('mindestens 18 Jahre'));
+  check(G, 'keine Schweiz als Lieferland bei Partnerbestellung', !npHtml.includes('<option>Schweiz</option>'));
+  check(G, 'Kunden anderer Partner: pseudonymisiert statt anonymisiert', !/siehst du nur anonymisiert|erscheinen anonymisiert/.test(npHtml));
+  check(G, 'HTML-Bericht in sandbox-iframe', /<iframe id="rhf" sandbox="/.test(npHtml));
+  check(G, 'PocketBase mit Integritaetspruefung (SRI)', /pocketbase@0\.26\.2[^\n]*s\.integrity='sha384-/.test(npHtml));
+  check(G, 'Backend-Berichtswerte bereinigt (ID, Titel, URLs)', /const HTTPS=/.test(npHtml) && /html:HTTPS\(r\.htmlUrl\)/.test(npHtml));
+  check(G, 'Online-Beratung: Hinweis keine aerztliche/genetische Beratung', npHtml.includes('keine ärztliche oder genetische Beratung'));
+  {
+    const src = (npHtml.match(/const HTTPS=u=>[^\n]*/) || [''])[0];
+    let HTTPS = null; try { HTTPS = new Function(src + ';return HTTPS;')(); } catch (e) {}
+    const cases = [['https://x.y/a-{n}.webp', true], ['/berichte/a.pdf', true], ['//evil.com/a', false], ['javascript:alert(1)', false], ['https://a/"onerror="alert(1)', false], ["https://a/'x", false], ['https://a/<b>', false]];
+    check(G, 'HTTPS(): nur saubere https- oder Pfad-URLs', !!HTTPS && cases.every(([u, ok]) => (HTTPS(u) === u) === ok), cases.filter(([u, ok]) => !HTTPS || (HTTPS(u) === u) !== ok).map(c => c[0]).join(' | '));
+  }
+  check(G, '18+-Bestaetigung gilt nur fuer den gewaehlten Kunden', /const wKey=\(\)=>/.test(npHtml) && /wAge!==wKey\(\)/.test(npHtml));
   check(G, 'NovoPilot: Netzwerkprovision nur aus Endkunden-Bestellungen', npHtml.includes('Für jede Bestellung seiner Endkunden'));
   check(G, 'berater.html: Provision offengelegt (DE und EN)', (pbTxt.match(/erhalte ich eine Provision/g) || []).length >= 2 && (pbTxt.match(/receive a commission/g) || []).length >= 2);
   check(G, 'berater.html: keine falsche Exklusivitaet', !/Persönlicher Gutschein|gib den Link nicht weiter|don't pass the link on/.test(pbTxt));

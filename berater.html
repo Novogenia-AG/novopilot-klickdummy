@@ -556,7 +556,7 @@ de:{oq:"„",cq:"“",badge:"Dein Gutschein",hello:"Hallo!",
   chatLbl:"Fragen? Frag den KI-Produktberater",chatAria:"KI-Produktberater öffnen",chatSub:"Unsicher, was passt? Der KI-Produktberater von NovoDaily beantwortet deine Fragen zu den Produkten. Er ist eine KI, kein Mensch, und kann Fehler machen.",chatBtn:"KI-Produktberater fragen",
   endSwipe:"Nach oben wischen: alle Produkte, dein Gutschein und Hinweise",
   listKicker:"Deine Empfehlungen",listTitle:"Das passt für dich am besten",listMore:"Weitere passende Möglichkeiten",
-  pMonth:(v)=>`ca. ${v} € pro Monat`,pDay:(v)=>`ca. ${v} € pro Tag`,pFrom:(v)=>`ab ca. ${v} €`,pRun:(n)=>`Mindestlaufzeit ${n} Monate`,pBind:(n)=>`${n} Monate Bindung`,
+  pMonth:(v)=>`ca. ${v} € pro Monat`,pDay:(v)=>`ca. ${v} € pro Tag`,pFrom:(v)=>`ab ca. ${v} €`,pRun:(n,tot)=>`Mindestlaufzeit ${n} Monate (gesamt ${tot} € ohne Gutschein)`,pBind:(n)=>`${n} Monate Bindung`,
   pWith:(d)=>`Mit deinem ${d}‑%‑Gutschein`,pNote:"Preise inkl. MwSt., laut NovoDaily-Shop, Stand 05.11.2026, Versandkosten laut Shop. Abos haben eine Mindestlaufzeit und verlängern sich danach automatisch. Maßgeblich sind Preis, Laufzeit und Kündigungsfrist im Shop.",imprint:"Impressum",privacy:"Datenschutz",terms:"AGB",
   allKicker:"Alle Produkte im Überblick",allSub:"Tippe auf ein Produkt, dann geht es mit deinem Gutschein zum Shop.",grpAbo:"Genanalyse + Nahrungsergänzung im Abo",grpA:"Einzelanalysen",grpUp:"Wenn du schon eine Genanalyse hast",
   gift:(d)=>`Ich schenke dir einen ${d}‑%‑Gutschein`,
@@ -599,7 +599,7 @@ en:{oq:"“",cq:"”",badge:"Your voucher",hello:"Hi there!",
   chatLbl:"Questions? Ask the AI product advisor",chatAria:"Open AI product advisor",chatSub:"Not sure what fits? NovoDaily's AI product advisor answers your questions about the products. It is an AI, not a human, and can make mistakes.",chatBtn:"Ask the AI product advisor",
   endSwipe:"Swipe up: all products, your voucher and notes",
   listKicker:"Your recommendations",listTitle:"This suits you best",listMore:"Other good options",
-  pMonth:(v)=>`approx. €${v} per month`,pDay:(v)=>`approx. €${v} per day`,pFrom:(v)=>`from approx. €${v}`,pRun:(n)=>`${n}-month minimum term`,pBind:(n)=>`${n}-month minimum`,
+  pMonth:(v)=>`approx. €${v} per month`,pDay:(v)=>`approx. €${v} per day`,pFrom:(v)=>`from approx. €${v}`,pRun:(n,tot)=>`${n}-month minimum term (total €${tot} without voucher)`,pBind:(n)=>`${n}-month minimum`,
   pWith:(d)=>`With your ${d}% voucher`,pNote:"Prices incl. VAT, according to the NovoDaily shop as of 5 Nov 2026, shipping as per the shop. Subscriptions have a minimum term and renew automatically afterwards. The price, term and notice period shown in the shop apply.",imprint:"Imprint",privacy:"Privacy",terms:"Terms",
   allKicker:"All products at a glance",allSub:"Tap a product to go to the shop with your voucher.",grpAbo:"Genetic analysis + food supplements subscription",grpA:"Single analyses",grpUp:"If you already have a genetic analysis",
   gift:(d)=>`I'm giving you a ${d}% voucher`,
@@ -650,7 +650,7 @@ const P={
    en:{name:"NovoDailies",sub:"Your personalised food supplement based on your genetic analysis",pts:["Made individually based on your Lifestyle or Performance genetic analysis","90-day pack, delivered every 3 months","Subscription with monthly billing"]}}
 };
 /* Shop-Preise NPDW2412, ausgelesen 05.11.2026. m = pro Monat, from = Einmalpreis ab (digitaler Bericht) */
-const PRICE={lifestyle:{m:114,run:12},shape:{m:114},performance:{m:114,run:15},refill:{m:114,bind:3},
+const PRICE={lifestyle:{m:114,run:12},shape:{m:114,run:12},performance:{m:114,run:15},refill:{m:114,bind:3},
  lifestyleA:{from:650},shapeA:{from:299},performanceA:{from:785},
  upgrade:{from:275},upShape:{from:215},upLifestyle:{from:565},upPerformance:{from:660}};
 const eur=(n,lang)=>n.toLocaleString(lang==='de'?'de-AT':'en-GB',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
@@ -934,7 +934,7 @@ function PriceTag({id,lang}){
   const pr=PRICE[id]; if(!pr) return null; const t=T[lang];
   const base=pr.m||pr.from, disc=Math.round(base*(100-DISCOUNT))/100;
   const fmt=v=>pr.m?t.pMonth(eur(v,lang)):t.pFrom(eur(v,lang));
-  const extra=pr.run?' · '+t.pRun(pr.run):pr.bind?' · '+t.pBind(pr.bind):'';
+  const extra=pr.run?' · '+t.pRun(pr.run,eur(base*pr.run,lang)):pr.bind?' · '+t.pBind(pr.bind):'';
   if(pr.m){
     /* Abo: Preis pro Tag gross, pro Monat klein darunter (Monat x 12 / 365) */
     const day=v=>(Math.round(v*12/365*100)/100).toLocaleString(lang==='de'?'de-AT':'en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
