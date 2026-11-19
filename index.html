@@ -1131,7 +1131,7 @@ function geneSelf(c){const g=geneOf(c),fn=esc(gFirst(c)),ready=g&&g.state==='rea
  <div class="privacy" style="margin:0 0 12px">${ic('lock')}<div><b>Nur ${fn} selbst.</b> Rohdaten herunterladen oder Gendaten eines anderen Anbieters hochladen kann ${fn} nur selbst, in der GEN(e)IUS-App unter „Gendaten“. Genetische Daten sind besonders geschützt, du hast als Betreuer keinen Zugriff darauf.</div></div>
  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn line sm" onclick="geneHow('${esc(c.email)}')">${ic('send')} Anleitung an ${fn} schicken</button><button class="btn line sm" onclick="impVid()">${ic('video')} Was heißt imputiert? (Video, 1 Min.)</button></div></div>`}
 /* Erklärvideo „Was heißt imputiert?“ (Daniels KI-Avatar, freigegeben 19.11.2026). DE-Fassung eintragen, sobald vorhanden. */
-const IMPV={de:'',en:'media/imputation_en.mp4',poster:'media/imputation_poster.webp'};
+const IMPV={de:'media/imputation_de.mp4',en:'media/imputation_en.mp4',poster:'media/imputation_poster_de.webp'};
 function impVid(){const de=!!IMPV.de;drawer(`<div class="eyebrow" style="color:var(--berry)">Gendaten</div><h3>Was heißt imputiert?</h3>
  <p style="color:var(--soft);font-size:14px">Wir messen rund 600.000 Stellen der DNA. Die übrigen rund 70 Millionen werden statistisch ergänzt, mit Hilfe tausender echter Genome, ähnlich wie bei einem Kreuzworträtsel. Unsichere Stellen werden aussortiert, in die Ergebnisse kommen nur die sicheren.</p>
  <video controls playsinline preload="none" poster="${IMPV.poster}" src="${de?IMPV.de:IMPV.en}" style="display:block;width:100%;max-width:300px;aspect-ratio:9/16;margin:6px auto;border-radius:16px;background:#000"></video>

@@ -289,7 +289,7 @@ function berater(search) {
     const allowed = ['hello', 'ready', 'signal', 'handover', 'chat', 'q-show', 'q-done', 'access-request', 'bye'];
     check(G, 'Beratung: nur erlaubte Event-Typen ans Backend', sent.length > 0 && sent.every(t => allowed.includes(t)), sent.filter(t => !allowed.includes(t)).join(','));
   }
-  check(G, 'Imputations-Video mit KI-Kennzeichnung und vorhandener Datei', /KI-generiertes Video · Digitaler Avatar und Stimmklon/.test(npHtml) && fs.existsSync(path.join(SRC_DIR, 'media', 'imputation_en.mp4')));
+  check(G, 'Imputations-Video mit KI-Kennzeichnung und vorhandener Datei', /KI-generiertes Video · Digitaler Avatar und Stimmklon/.test(npHtml) && fs.existsSync(path.join(SRC_DIR, 'media', 'imputation_en.mp4')) && /IMPV=\{de:'media\/imputation_de\.mp4'/.test(npHtml) && fs.existsSync(path.join(SRC_DIR, 'media', 'imputation_de.mp4')));
   check(G, '18+-Bestaetigung gilt nur fuer den gewaehlten Kunden', /const wKey=\(\)=>/.test(npHtml) && /wAge!==wKey\(\)/.test(npHtml));
   check(G, 'NovoPilot: Netzwerkprovision nur aus Endkunden-Bestellungen', npHtml.includes('Für jede Bestellung seiner Endkunden'));
   check(G, 'berater.html: Provision offengelegt (DE und EN)', (pbTxt.match(/erhalte ich eine Provision/g) || []).length >= 2 && (pbTxt.match(/receive a commission/g) || []).length >= 2);
