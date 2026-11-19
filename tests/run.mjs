@@ -281,6 +281,12 @@ function berater(search) {
     check(G, 'HTTPS(): nur saubere https- oder Pfad-URLs', !!HTTPS && cases.every(([u, ok]) => (HTTPS(u) === u) === ok), cases.filter(([u, ok]) => !HTTPS || (HTTPS(u) === u) !== ok).map(c => c[0]).join(' | '));
   }
   check(G, 'Beratung: keine automatische Nachverrechnung (wie Kundenseite)', !/nachverrechnet|minutengenau/.test(npHtml) && /extra=0;/.test(npHtml) && npHtml.includes('Eine Verlängerung gibt es nur, wenn der Kunde zustimmt'));
+  check(G, 'Beratung: Widerruf (consent-revoke) schliesst die Freigabe', /d\.type==='consent-revoke'\)rRevoke\(x\.scope\)/.test(npHtml) && /function rRevoke\(scope\)/.test(npHtml));
+  {
+    const sent = [...npHtml.matchAll(/(?:this|bApi)\.ev\('([a-z-]+)'/g)].map(m => m[1]);
+    const allowed = ['hello', 'ready', 'signal', 'handover', 'chat', 'q-show', 'q-done', 'access-request', 'bye'];
+    check(G, 'Beratung: nur erlaubte Event-Typen ans Backend', sent.length > 0 && sent.every(t => allowed.includes(t)), sent.filter(t => !allowed.includes(t)).join(','));
+  }
   check(G, '18+-Bestaetigung gilt nur fuer den gewaehlten Kunden', /const wKey=\(\)=>/.test(npHtml) && /wAge!==wKey\(\)/.test(npHtml));
   check(G, 'NovoPilot: Netzwerkprovision nur aus Endkunden-Bestellungen', npHtml.includes('Für jede Bestellung seiner Endkunden'));
   check(G, 'berater.html: Provision offengelegt (DE und EN)', (pbTxt.match(/erhalte ich eine Provision/g) || []).length >= 2 && (pbTxt.match(/receive a commission/g) || []).length >= 2);

@@ -1771,6 +1771,10 @@ function rAsk(){const b=rB();ACC[rSel]='pending';alog(`Zugriff auf die Berichte 
  rShare(rS());rAccUI();toast(`Anfrage gesendet: ${bFirst(b)} sieht sie jetzt in der GEN(e)IUS-App`)}
 function rAccAns(ok,scope){if(scope==='account'){if(ACCX[rSel]!=='pending')return;const f=bFirst(rB());ACCX[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf das Kundenkonto freigegeben`:`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);toast(ok?'Kundenkonto freigegeben':`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);rAccUI();rShare(rS());if(ok&&rS().view==='reports')rAcct();return}
  if(ACC[rSel]!=='pending')return;const f=bFirst(rB());ACC[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf die Berichte freigegeben`:`${f} hat den Zugriff abgelehnt`);toast(ok?'Zugriff freigegeben: Du kannst jetzt Berichte teilen':`${f} hat den Zugriff abgelehnt`);rAccUI();rShare(rS())}
+/* Kunde beendet den Einblick (Event consent-revoke vom Server): Freigabe weg, geteilte Ansicht schliessen */
+function rRevoke(scope){const f=bFirst(rB()),acct=scope==='account';if(acct)ACCX[rSel]='no';else{ACC[rSel]='no';ACCX[rSel]='no'}
+ alog(acct?`${f} hat den Einblick ins Kundenkonto beendet`:`${f} hat den Zugriff auf die Berichte beendet`);
+ const v=rS().view;if(v!=='reports'&&(!acct||v==='account'))rStop();rAccUI();rShare(rS());toast(acct?`${f} hat den Einblick ins Kundenkonto beendet`:`${f} hat den Zugriff auf die Berichte beendet`)}
 function rAccUI(){const e=document.getElementById('racc');if(!e)return;const b=rB(),p=ACC[rSel]==='pending'&&!(bApi.on&&b.live),px=ACCX[rSel]==='pending'&&!(bApi.on&&b.live);
  if(px&&!p){e.innerHTML=`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer dein Kundenkonto mit dir gemeinsam öffnen?</b><p>Er sieht dann alles in deinem Konto, z. B. Rezeptur, Bedarf, Abo und deine Gendaten. Nur während dieses Termins, jeder Zugriff wird protokolliert. Rohdaten herunterladen oder hochladen darf nur du selbst.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false,'account')">Nein</button><button class="btn lime sm" onclick="rAccAns(true,'account')">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`;return}
  e.innerHTML=p?`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer auf deine Berichte zugreifen?</b><p>Nur während dieses Termins. Jeder Zugriff wird protokolliert.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false)">Nein</button><button class="btn lime sm" onclick="rAccAns(true)">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`:''}
@@ -1904,6 +1908,7 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
   else if(d.type==='handover-ack'){const h=this.hand[x.handoverId];if(h&&h[0]===rSel)rAck(h[1]);else if(x.list)rAck(x.list)}
   else if(d.type==='access-grant')rAccAns(x.granted!==false,x.scope);
   else if(d.type==='access-deny')rAccAns(false,x.scope);
+  else if(d.type==='consent-revoke')rRevoke(x.scope);
   else if(d.type==='bye'){const v=document.querySelector('.rcust');if(v)v.classList.remove('has');this.remote=null;alog('Kunde hat den Raum verlassen')}},
  async call(){if(this.pc)this.pc.close();const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});this.qc=[];
   if(this.local)this.local.getTracks().forEach(t=>pc.addTrack(t,this.local));else{pc.addTransceiver('audio',{direction:'recvonly'});pc.addTransceiver('video',{direction:'recvonly'})}
@@ -1935,7 +1940,7 @@ async function bLive(){bApi.tried=true;if(!bLiveOk())return;try{const ctl=new Ab
  const a=await bApi.req('POST','/api/demo/login',{role:'advisor'});bApi.tok=a.token;bApi.rec=a.record;bApi.adv=(a.record&&a.record.advisorId)||'a1';
  const f=encodeURIComponent(`advisor="${bApi.adv}"`);
  const ad=await bApi.req('GET',`/api/collections/advisors/records?filter=${encodeURIComponent(`ref="${bApi.adv}"`)}`).then(x=>x.items[0]).catch(()=>null);
- if(ad){bApi.advRec=ad.id;bApi.advName=ad.name;if(typeof ad.consultOff==='boolean')ADV.offer=!ad.consultOff;Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro})}
+ if(ad){bApi.advRec=ad.id;bApi.advName=(ad.title&&!String(ad.name||'').startsWith(ad.title)?ad.title+' ':'')+(ad.name||'');if(typeof ad.consultOff==='boolean')ADV.offer=!ad.consultOff;Object.assign(ADV,{rate:ad.rateEur??ADV.rate,dur:ad.slotMin||ADV.dur,langs:(ad.langs||[]).join(', ')||ADV.langs,intro:ad.bio||ADV.intro})}
  const sl=await bApi.req('GET',`/api/collections/slots/records?perPage=500&filter=${f}`),bk=await bApi.req('GET',`/api/collections/bookings/records?perPage=500&sort=start&filter=${f}`);
  const loc=x=>{const d=new Date(x.replace(' ','T'));return[dIso(d),d.getHours()*60+d.getMinutes()]};
  SLOTS=sl.items.map(s=>{const[d,a]=loc(s.start),b=loc(s.end)[1];return{d,a,b,rid:s.id,booked:!!s.booked}});
@@ -1943,6 +1948,7 @@ async function bLive(){bApi.tried=true;if(!bLiveOk())return;try{const ctl=new Ab
   return{id:x.id,live:true,d,t,dur,price:x.priceEur||0,free:!!x.free,cancel:x.status==='cancelled',cust:{name:x.customerName||'Kunde'},
    consent:x.consentAt?new Date(x.consentAt.replace(' ','T')).toLocaleString('de-AT',{dateStyle:'short',timeStyle:'short'})+' Uhr':'',
    done:x.status==='done'?{min:x.billedMinutes||dur,extra:0,note:''}:null}});
+ BOOKINGS.forEach((b,i)=>{const x=bk.items[i];if(x.consentAt)ACC[b.id]='ok';if(x.accountAt)ACCX[b.id]='ok'});/* Freigaben aus der Buchung: consentAt = Berichte, accountAt = Kundenkonto */
  BNOW=new Date();setInterval(()=>{BNOW=new Date()},3e4);bApi.on=true;toast('Live-Backend verbunden'+(bApi.advName?' · '+bApi.advName:''));render(true)}catch(e){console.info('Online-Beratung: Demo-Daten (Backend nicht erreichbar)',e)}}
 
 const TOUR=[
