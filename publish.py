@@ -32,3 +32,9 @@ shutil.copyfile(os.path.join(DIR, 'berater.html'), 'berater.html')
 b = open('berater.html', encoding='utf-8').read()
 assert not re.search(CFG['verboten_berater'], b, re.I), 'echter Name in berater.html'
 print('berater.html kopiert,', len(b), 'Zeichen')
+
+# Medien (Erklaervideos, Poster) mitkopieren
+os.makedirs('media', exist_ok=True)
+for f in os.listdir(os.path.join(DIR, 'media')):
+    shutil.copyfile(os.path.join(DIR, 'media', f), os.path.join('media', f))
+print('media kopiert:', ', '.join(sorted(os.listdir('media'))))
