@@ -54,7 +54,7 @@ const pbHtml = fs.readFileSync(PB_FILE, 'utf8');
 {
   const G = '1 Syntax';
   const np = inlineScripts(npHtml);
-  check(G, 'NovoPilot: genau ein Inline-Script-Block', np.length === 1, `gefunden: ${np.length}`);
+  check(G, 'NovoPilot: zwei Inline-Script-Bloecke (QR-Bibliothek + App)', np.length === 2, `gefunden: ${np.length}`);
   np.forEach((s, i) => { const e = nodeCheck(s.code, `np-${i}`); check(G, `NovoPilot Script ${i + 1} (ab Zeile ${s.line}) node --check`, !e, e); });
   const pb = inlineScripts(pbHtml);
   check(G, 'berater.html: Inline-Scripts vorhanden', pb.length > 0, `gefunden: ${pb.length}`);
@@ -64,8 +64,8 @@ const pbHtml = fs.readFileSync(PB_FILE, 'utf8');
 // ---------- 2) NovoPilot: jede Route rendern ----------
 async function loadNP(width) {
   const env = makeEnv({ width });
-  const code = inlineScripts(npHtml)[0].code;
-  try { env.run(code); } catch (e) { return { env, err: e }; }
+  // alle Inline-Scripts der Reihe nach (1. = eingebettete QR-Bibliothek, 2. = App)
+  try { for (const sc of inlineScripts(npHtml)) env.run(sc.code); } catch (e) { return { env, err: e }; }
   await env.flush();
   return { env, err: null };
 }
@@ -233,7 +233,7 @@ function berater(search) {
       check(G, `frische Ausgabe enthaelt keinen der ${tokens.size} Originalwerte`, !l.length, l.join(' ; '));
       const mails = [...new Set(idx.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}/g) || [])].filter(e => !/@example\.com$|^np_ct_NP\w+@email\.com$/.test(e));
       check(G, 'index.html: nur @example.com bzw. Demo-Mails', !mails.length, mails.join(', '));
-      const e = nodeCheck(inlineScripts(idx)[0].code, 'published-index'); check(G, 'veroeffentlichte index.html node --check', !e, e);
+      const e = inlineScripts(idx).map((sc, i) => nodeCheck(sc.code, 'published-index-' + i)).filter(Boolean).join(' | '); check(G, 'veroeffentlichte index.html node --check', !e, e);
       const repoIdx = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
       if (repoIdx !== idx) warn(G, 'Repo-index.html entspricht nicht der aktuellen Quelle', 'Quelle wurde nach dem letzten publish geaendert (nur Info)');
       const repoBer = fs.readFileSync(path.join(REPO, 'berater.html'), 'utf8');
@@ -245,6 +245,29 @@ function berater(search) {
     const l = leak(fs.readFileSync(p, 'utf8'), 'Repo/' + f);
     check(G, `eingecheckte ${f} enthaelt keine Originalwerte`, !l.length, l.join(' ; '));
   }
+}
+
+// ---------- 6) Rechts- und Datenschutz-Regeln (NOVO LEGAL, 19.11.2026) ----------
+{
+  const G = '6 Recht und Datenschutz';
+  const pbTxt = pbHtml.replace(/data:[a-z/+0-9]+;base64,[A-Za-z0-9+/=]+/g, '');
+  check(G, 'NovoPilot laedt keine Google Fonts', !/fonts\.googleapis|fonts\.gstatic/.test(npHtml));
+  check(G, 'NovoPilot: noindex', /<meta name="robots" content="noindex/.test(npHtml));
+  check(G, 'NovoPilot: Impressum- und Datenschutz-Link', npHtml.includes('novogenia.com/de/imprint.html') && npHtml.includes('novogenia.com/de/privacy.html'));
+  check(G, 'NovoPilot: Shop des Partners ist der offizielle Shop', !/dev\.novodaily\.com/.test(npHtml));
+  check(G, 'NovoPilot: Live-Backend nur lokal oder mit ?live=1', /const bLiveOk=/.test(npHtml) && /if\(!bLiveOk\(\)\)return;/.test(npHtml));
+  check(G, 'NovoPilot: keine Gesundheitsdaten mehr vom Backend geladen', !npHtml.includes('/api/advisor/customer/'));
+  check(G, 'NovoPilot: WhatsApp-Text nennt Partnerrolle und Provision', /const pbMsg=[^\n]*Partnerprogramm[^\n]*Provision/.test(npHtml));
+  check(G, 'NovoPilot: Kundenkonto braucht eigene Freigabe (ACCX)', /ACCX\[rSel\]!=='ok'/.test(npHtml) && /if\(scope==='account'\)\{/.test(npHtml));
+  check(G, 'NovoPilot: QR-Bibliothek lokal eingebettet (kein CDN-Abruf noetig)', /var qrcode=function\(\)/.test(npHtml));
+  check(G, 'berater.html: noindex', /<meta name="robots" content="noindex/.test(pbHtml));
+  check(G, 'berater.html: Bild mit Stoerer "Gratis" nicht mehr verwendet', !pbHtml.includes('img:NDIMG[2]'));
+  check(G, 'NovoPilot: Netzwerkprovision nur aus Endkunden-Bestellungen', npHtml.includes('Für jede Bestellung seiner Endkunden'));
+  check(G, 'berater.html: Provision offengelegt (DE und EN)', (pbTxt.match(/erhalte ich eine Provision/g) || []).length >= 2 && (pbTxt.match(/receive a commission/g) || []).length >= 2);
+  check(G, 'berater.html: keine falsche Exklusivitaet', !/Persönlicher Gutschein|gib den Link nicht weiter|don't pass the link on/.test(pbTxt));
+  check(G, 'berater.html: Preise mit MwSt.-, Versand- und Laufzeithinweis', pbTxt.includes('Preise inkl. MwSt.') && pbTxt.includes('Versandkosten laut Shop') && pbTxt.includes('verlängern sich danach automatisch'));
+  check(G, 'berater.html: Rabattstufe streng geprueft', pbTxt.includes("/^(0|5|10|20|30)$/.test(QS.get('d')||'')"));
+  check(G, 'berater.html: jedes Produktbild nur einmal eingebettet', (pbHtml.match(/data:image\/webp;base64,/g) || []).length <= 6);
 }
 
 // ---------- Ausgabe ----------
