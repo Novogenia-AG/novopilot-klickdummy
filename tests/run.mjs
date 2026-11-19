@@ -256,7 +256,9 @@ function berater(search) {
   check(G, 'NovoPilot: Impressum- und Datenschutz-Link', npHtml.includes('novogenia.com/de/imprint.html') && npHtml.includes('novogenia.com/de/privacy.html'));
   check(G, 'NovoPilot: Shop des Partners ist der offizielle Shop', !/dev\.novodaily\.com/.test(npHtml));
   check(G, 'NovoPilot: Live-Backend nur lokal oder mit ?live=1', /const bLiveOk=/.test(npHtml) && /if\(!bLiveOk\(\)\)return;/.test(npHtml));
-  check(G, 'NovoPilot: keine Gesundheitsdaten mehr vom Backend geladen', !npHtml.includes('/api/advisor/customer/'));
+  check(G, 'NovoPilot: Kundendaten nur nach Konto-Freigabe, Berichte nur nach Berichte-Freigabe, keine Medikamente', (npHtml.match(/\/api\/advisor\/customer\//g) || []).length === 1 && /loadCd\(id\)\{/.test(npHtml) && /if\(ok&&rB\(\)\.live\)bApi\.loadCd\(rSel\)/.test(npHtml) && /if\(ACC\[id\]==='ok'\)this\.loadReps\(id\)/.test(npHtml) && !npHtml.includes('/api/advisor/meds'));
+  check(G, 'Kundenkonto: kein iframe der oeffentlichen GEN(e)IUS-App mehr', !/ACCT_URL/.test(npHtml) && !npHtml.includes('sieht mit: Rezeptur'));
+  check(G, 'Live: keine Demo-Berichte als Ersatz', /const rReps=\(\)=>rB\(\)\.live\?\(bApi\.reps\[rSel\]\|\|\[\]\):REPORTS;/.test(npHtml) && !npHtml.includes('bApi.reps[rSel]||REPORTS'));
   check(G, 'NovoPilot: WhatsApp-Text nennt Partnerrolle und Provision', /const pbMsg=[^\n]*Partnerprogramm[^\n]*Provision/.test(npHtml));
   check(G, 'NovoPilot: Kundenkonto braucht eigene Freigabe (ACCX)', /ACCX\[rSel\]!=='ok'/.test(npHtml) && /if\(scope==='account'\)\{/.test(npHtml));
   check(G, 'NovoPilot: QR-Bibliothek lokal eingebettet (kein CDN-Abruf noetig)', /var qrcode=function\(\)/.test(npHtml));

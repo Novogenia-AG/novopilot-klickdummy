@@ -1128,7 +1128,7 @@ const gFirst=c=>c.name.split(' ')[0],dDot=d=>d.split(' ')[0].replace(/\//g,'.');
    (genetische Daten, DSGVO Art. 9, GTG § 71). Der Partner sieht nur, ob Gendaten vorhanden sind, und kann die Anleitung schicken. */
 function geneSelf(c){const g=geneOf(c),fn=esc(gFirst(c)),ready=g&&g.state==='ready';
  return `<div class="card">${kHead('shield','Gendaten von '+fn)}<p style="margin:0 0 10px">${ready?`${ic('check')} Für ${fn} liegen Gendaten vor.`:`Für ${fn} liegen noch keine Gendaten vor.`}</p>
- <div class="privacy" style="margin:0 0 12px">${ic('lock')}<div><b>Nur ${fn} selbst.</b> Rohdaten herunterladen oder Gendaten eines anderen Anbieters hochladen kann ${fn} nur selbst, in der GEN(e)IUS-App unter „Gendaten“. Genetische Daten sind besonders geschützt: Du hast keinen eigenen Zugriff darauf; in einer Online-Beratung siehst du sie nur mit, wenn ${fn} dir das Konto ausdrücklich freigibt.</div></div>
+ <div class="privacy" style="margin:0 0 12px">${ic('lock')}<div><b>Nur ${fn} selbst.</b> Rohdaten herunterladen oder Gendaten eines anderen Anbieters hochladen kann ${fn} nur selbst, in der GEN(e)IUS-App unter „Gendaten“. Genetische Daten sind besonders geschützt, du hast als Betreuer keinen Zugriff darauf.</div></div>
  <button class="btn line sm" onclick="geneHow('${esc(c.email)}')">${ic('send')} Anleitung an ${fn} schicken</button></div>`}
 function geneHow(e){const c=CUSTOMERS.find(x=>x.email===e);if(!c)return;const t=`Hallo ${gFirst(c)}! Deine Gendaten findest du in der GEN(e)IUS-App unter „Gendaten“: Dort kannst du deine Rohdaten herunterladen oder Daten eines anderen Anbieters hochladen. Das kannst nur du selbst.`;
  const ok=()=>toast('Anleitung kopiert – schick sie deinem Kunden per Nachricht'),no=()=>toast('Kopieren nicht möglich – Text: '+t);try{navigator.clipboard.writeText(t).then(ok,no)}catch(x){no()}}
@@ -1586,7 +1586,7 @@ P.beratung=()=>{if(!bApi.tried)bLive();
 const DREP='https://geneius-app.daniel.internal.novogenia.com/berichte/'; // Demo-Berichte wie in der GEN(e)IUS-App unter „Analysen“
 const REPORTS=[{id:'nutrition',t:'Nutrition-Analyse',sub:'Nutrition · Detox · Burnout · Bio Age',src:DREP+'tester/nutrition',cov:DREP+'cover.webp',pages:0,sec:[['start','Nutrition-Analyse',1,'','']]},
  {id:'shape',t:'Shape-Analyse',sub:'Deine Genanalyse zur Gewichtsregulation',src:DREP+'tester/shape',cov:DREP+'shape-cover.webp',pages:0,sec:[['start','Shape-Analyse',1,'','']]}];
-const ACCT_URL='https://geneius-app.daniel.internal.novogenia.com/'; // Demo: GEN(e)IUS-App, wie sie jetzt ist
+/* Kundenkonto: seit 19.11.2026 Auszug aus /api/advisor/customer statt iframe der öffentlichen App (Freigabe + Protokoll) */
 const rSrc=(r,v)=>r.src+(v==='report'?'-buch.html':v==='report-pdf'?'.pdf':'-handy.html');
 const DTXT={einleitung:'Dein Bericht zeigt, wie deine Gene Ernährung, Bewegung und Alltag beeinflussen. Jede Seite erklärt ein Thema und was du konkret tun kannst.',
  'vitamin-d':'Varianten in VDR und GC beeinflussen, wie gut Vitamin D transportiert und genutzt wird. Lass deinen Spiegel prüfen und plane Zeit im Tageslicht ein.',
@@ -1607,16 +1607,18 @@ const pScale=p=>`<div class="pscale"><i></i><i></i><i></i><i></i><i></i><b style
 const BEDARF=[['Vitamin D3','2.000 IE pro Tag','Erhöhter Bedarf · VDR, GC'],['Omega-3 (EPA + DHA)','1 g pro Tag','Erhöhter Bedarf · FADS1'],['Folat (aktiv)','400 µg pro Tag','Normaler Bedarf · MTHFR'],['Vitamin B12','250 µg pro Tag','Leicht erhöht · FUT2'],['Magnesium','300 mg pro Tag','Normaler Bedarf'],['Vitamin C','200 mg pro Tag','Leicht erhöht · SLC23A1']];
 const FOOD=[['Empfohlen','g',['Lachs, Makrele, Hering','Leinöl und Walnüsse','Spinat, Brokkoli, Grünkohl','Linsen und Kichererbsen','Haferflocken und Vollkorn']],
  ['In Maßen','y',['Kaffee: höchstens 2 Tassen am Tag (langsamer Koffein-Abbau)','Rotes Fleisch: 1–2× pro Woche','Weißbrot und Zucker']],['Gut verträglich','b',['Milch und Milchprodukte','Glutenhaltiges Getreide']]];
-const cBed=()=>{const d=bApi.cd[rSel];return d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>[x.name,x.dose||'',[x.reason,x.group].filter(Boolean).join(' · ')]):BEDARF};
+const cBed=()=>{const d=bApi.cd[rSel];return d&&d.bedarf&&d.bedarf.length?d.bedarf.map(x=>[x.name,x.dose||'',[x.reason,x.group].filter(Boolean).join(' · ')]):rLive()?[]:BEDARF};
 const FRC=n=>n>=5?'g':n>=3?'b':'y';
-const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.map(g=>[g.group,'b',(g.items||[]).map(i=>`${esc(i.name)}${i.label?` <span class="st ${FRC(i.rating)}">${esc(i.label)}</span>`:''}`)]):FOOD};
+const cFood=()=>{const d=bApi.cd[rSel];return d&&d.food&&d.food.length?d.food.map(g=>[g.group,'b',(g.items||[]).map(i=>`${esc(i.name)}${i.label?` <span class="st ${FRC(i.rating)}">${esc(i.label)}</span>`:''}`)]):rLive()?[]:FOOD};
 const VLBL={reports:'Berichtsliste',bedarf:'Mein Bedarf',food:'Lebensmittelliste'};
 const RSS={},RJ={},ALOG={},RNOTE={},HAND={};let RTI=null,rPtr=false;
 const BC=(()=>{try{return new BroadcastChannel('novopilot-beratung')}catch(e){return null}})(); // Demo-Kanal im selben Browser
 if(BC)BC.onmessage=e=>{const m=e.data||{};if(m.type==='handover-ack'&&m.sessionId===rS().sessionId)rAck(m.list);if(m.type==='access-grant'&&m.sessionId===rS().sessionId)rAccAns(m.granted!==false,m.scope)};
 const rB=()=>BOOKINGS.find(b=>b.id===rSel);
 const rS=()=>RSS[rSel]||(RSS[rSel]={sessionId:bApi.on&&rB()&&rB().live?rSel:'S-'+rSel,view:'reports',reportId:null,spread:0,htmlAnchor:null,highlight:null,by:'advisor',at:Date.now()});
-const rRep=()=>(bApi.reps[rSel]||REPORTS).find(x=>x.id===rS().reportId);
+const rLive=()=>!!(rB()||{}).live;
+const rReps=()=>rLive()?(bApi.reps[rSel]||[]):REPORTS;
+const rRep=()=>(rReps()).find(x=>x.id===rS().reportId);
 const tNow=()=>new Date().toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 const logHtml=()=>(ALOG[rSel]||[]).map(l=>`<li><small>${l.t}</small>${esc(l.x)}</li>`).join('')||'<li class="mut">Noch keine Zugriffe.</li>';
 function alog(x){(ALOG[rSel]=ALOG[rSel]||[]).unshift({t:tNow(),x});const e=document.getElementById('rlog');if(e)e.innerHTML=logHtml()}
@@ -1644,8 +1646,8 @@ function rLasClick(e){e.stopPropagation();const o=e.currentTarget;o.style.pointe
 function rLasOut(e){const d=e.currentTarget.querySelector('.rlasd');if(d)d.classList.remove('on');const s=rS();if(s.highlight&&s.highlight.laser){clearTimeout(rLas.t);s.highlight=null;s.at=Date.now();rPub()}}
 const rIsOn=(v,id)=>{const s=rS();return s.view===v&&(id==null||s.reportId===id)};
 function rStop(){rView('reports')}
-function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
-function rHtml(id){if(rIsOn('report-html',id)&&document.getElementById('rpick')){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-html',reportId:id,spread:0,htmlAnchor:'abschnitt-'+r.sec[0][0]},`Bericht geöffnet: ${r.t} (HTML-Version)`)}
+function rOpen(id){if(rIsOn('report',id)&&document.getElementById('rpick')){rStop();return}const r=(rReps()).find(x=>x.id===id);rSend({view:'report',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (Doppelseite)`)}
+function rHtml(id){if(rIsOn('report-html',id)&&document.getElementById('rpick')){rStop();return}const r=(rReps()).find(x=>x.id===id);rSend({view:'report-html',reportId:id,spread:0,htmlAnchor:'abschnitt-'+r.sec[0][0]},`Bericht geöffnet: ${r.t} (HTML-Version)`)}
 const spLbl=(r,n)=>n===0?'Titelseite':n+1>r.pages?'Seite '+n:`Seite ${n}–${n+1}`;
 function rTurn(n){const r=rRep();n=Math.max(0,Math.min(r.pages-r.pages%2,n));rSend({spread:n},`${r.t}: ${spLbl(r,n)}`)}
 function rView(v){if(v!=='reports'&&rIsOn(v)){v='reports'}rSend({view:v,reportId:null,spread:0,htmlAnchor:null},v==='reports'?null:`${VLBL[v]} geöffnet`)}
@@ -1667,9 +1669,9 @@ function pgHtml(r,p,side){const s=rS();if(p<1||p>r.pages)return `<div class="pg 
  ${[...Array(first?(tx?3:7):(tx?7:12))].map((_,i)=>`<div class="ln" style="width:${58+((p*7+i*13)%40)}%"></div>`).join('')}${!first&&p%3===0?`<div class="res">Tipp für deinen Alltag</div>`:''}<div class="pno">${p}</div>${hlAt(s,p)}</div>`}
 const rHead=(r,s)=>`<div class="kh"><b>${ic('report')} ${r.t}</b><div class="rhb"><button class="btn line sm" onclick="event.stopPropagation();rView('reports')">${ic('back')} Alle Berichte</button>${s.view==='report'?`<button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML-Version</button>`:`<button class="btn line sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button>`}</div></div>`;
 const sees='<span class="st g">Kunde sieht diese Ansicht</span>';
-function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
+function stageHtml(s){const reps=rReps(),r=reps.find(x=>x.id===s.reportId),fn=esc(bFirst(rB()));let h='';
  const frm=(u,t,z)=>`<div class="rin rif${z?' rzoom':''}"><div class="rload">${esc(t)} wird geladen …</div><iframe id="rdf" src="${u}" title="${esc(t)}"></iframe>${hlAt(s,null)}</div>`;
- if(s.view==='account')return frm(ACCT_URL,'GEN(e)IUS-App von '+bFirst(rB()),1);
+ if(s.view==='account'){const B=cBed(),F=cFood();return `<div class="rin" onclick="rPg(event,null)"><div class="kh"><b>${ic('user')} Kundenkonto von ${fn} (Auszug)</b></div><p class="mut">Freigegeben von ${fn} für diesen Termin. Jeder Zugriff wird protokolliert.</p>${B.length?`<h4>Mein Bedarf</h4><div class="klines">${B.map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small>${esc(x[2])}</small></div><span>${esc(x[1])}</span></div>`).join('')}</div>`:''}${F.length?`<h4 style="margin-top:14px">Lebensmittel</h4><div class="grid g3 fgrid3">${F.map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>`:''}${!B.length&&!F.length?'<div class="empty">Die Kontodaten werden geladen …</div>':''}${hlAt(s,null)}</div>`}
  if(r&&r.src&&/^report/.test(s.view))return frm(rSrc(r,s.view),r.t);
  if(s.view==='report-pdf')return r&&r.pdf?frm(r.pdf,r.t):'<div class="empty">Für diesen Bericht gibt es kein PDF.</div>';
  if(s.view==='reports')h=`<div class="kh"><b>${ic('report')} Berichte von ${fn}</b>${sees}</div><div class="klines">${reps.map(r=>`<div class="kline"><div><b>${r.t}</b><small>${r.pages} Seiten · ${r.sec.length} Abschnitte</small></div><div class="rhb"><button class="btn lime sm" onclick="event.stopPropagation();rOpen('${r.id}')">${ic('book')} Doppelseite</button><button class="btn line sm" onclick="event.stopPropagation();rHtml('${r.id}')">${ic('code')} HTML</button></div></div>`).join('')}</div>`;
@@ -1683,7 +1685,7 @@ function stageHtml(s){const reps=bApi.reps[rSel]||REPORTS,r=reps.find(x=>x.id===
  else if(s.view==='bedarf')h=`<div class="kh"><b>${ic('pill')} Mein Bedarf</b>${sees}</div><p class="mut">Aus den Gendaten berechnet: was ${fn} täglich braucht.</p><div class="klines">${cBed().map(x=>`<div class="kline"><div><b>${esc(x[0])}</b><small class="clamp2">${esc(x[2])}</small></div><b class="dose">${x[1]}</b></div>`).join('')}</div>${handBar('bedarf')}`;
  else if(s.view==='food')h=`<div class="kh"><b>${ic('apple')} Lebensmittelliste</b>${sees}</div><div class="grid g3 fgrid3">${cFood().map(g=>`<div class="fgrp"><span class="st ${g[1]}">${g[0]}</span><ul>${g[2].map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>${handBar('food')}`;
  return `<div class="rin" onclick="rPg(event,null)">${h}${hlAt(s,null)}</div>`}
-function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();if(s.view==='reports'&&rPtr){rPtr=false;rLasUI()}rShare(s);const r0=rRep(),want=s.view==='account'?ACCT_URL:r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
+function rStage(){const el=document.getElementById('rstage');if(!el)return;const s=rS();if(s.view==='reports'&&rPtr){rPtr=false;rLasUI()}rShare(s);const r0=rRep(),want=r0&&r0.src&&/^report/.test(s.view)?rSrc(r0,s.view):null,cf=document.getElementById('rdf');
  if(want&&cf&&cf.getAttribute('src')===want){rHl();const j=document.getElementById('rjson');if(j)j.textContent=JSON.stringify(s,null,1);return}
  el.innerHTML=s.view==='reports'?'':stageHtml(s);
  document.querySelectorAll('.rtab[data-v]').forEach(t=>t.classList.toggle('on',t.dataset.v===s.view||(t.dataset.v==='reports'&&/^report/.test(s.view))));
@@ -1763,20 +1765,20 @@ const rBar=(inRoom,extra)=>{const j=RJ[rSel]||RMP,sh=rS().view!=='reports';retur
   <div class="rtr2"><select class="rfld" onchange="rLook(this.value)" aria-label="Bild-Look" title="Farb-Look deines Kamerabilds (sieht auch dein Gegenüber)">${RLOOKS.map(l=>`<option value="${l[0]}" ${l[0]===RLOOK?'selected':''}>Look: ${l[1]}</option>`).join('')}</select><select class="rfld" data-bg onchange="rBg(this.value)" aria-label="Hintergrund" title="Hintergrund hinter dir (sieht auch dein Gegenüber)">${RBGS.map(b=>`<option value="${b[0]}" ${b[0]===FX.bg?'selected':''}>${b[1]}</option>`).join('')}</select></div><input type="file" id="rbgf" accept="image/*" hidden onchange="rBgFile(this)"></div>
  ${inRoom?`<div class="rtg"><div class="rtgt">Raum</div><div class="rtr2"><button class="rctl ${sh?'on':''}" id="rshb" onclick="rShareBtn()" title="Bericht, Liste oder Kundenkonto im Videobild teilen">${ic('screen')}<span>${sh?'Teilen beenden':'Bildschirm teilen'}</span></button><button class="rctl ${rPtr?'on':''}" data-las onclick="rPtrT()" title="Laserpointer: Kunde sieht, wohin du zeigst">${ic('laser')}<span>${rPtr?'Laser an':'Laserpointer'}</span></button></div>
   <div class="rtr"><div class="rclock"><b id="rtime">00:00</b><small id="rbill"></small></div><button class="rctl end" onclick="rEnd()">${ic('x')}<span>Beenden</span></button></div></div>`:''}${extra||''}</div>`};
-const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (GEN(e)IUS-App)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
+const shLbl=s=>{const r=rRep();return s.view==='account'?'Kundenkonto von '+bFirst(rB())+' (Auszug)':s.view==='report-pdf'&&r?r.t+' · PDF':s.view==='report'&&r?r.t+' · Doppelseite':s.view==='report-html'&&r?r.t+' · HTML-Version':VLBL[s.view]||''};
 const ACC={},ACCX={},RLAY={main:'auto',me:'br'};
 const accOk=()=>ACC[rSel]==='ok';
 function rAsk(){const b=rB();ACC[rSel]='pending';alog(`Zugriff auf die Berichte bei ${bFirst(b)} angefragt`);
  if(bApi.on&&b.live)bApi.ev('access-request',{scope:'reports'});else if(BC)BC.postMessage({type:'access-request',scope:'reports',sessionId:rS().sessionId});
  rShare(rS());rAccUI();toast(`Anfrage gesendet: ${bFirst(b)} sieht sie jetzt in der GEN(e)IUS-App`)}
-function rAccAns(ok,scope){if(scope==='account'){if(ACCX[rSel]!=='pending')return;const f=bFirst(rB());ACCX[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf das Kundenkonto freigegeben`:`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);toast(ok?'Kundenkonto freigegeben':`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);rAccUI();rShare(rS());if(ok&&rS().view==='reports')rAcct();return}
- if(ACC[rSel]!=='pending')return;const f=bFirst(rB());ACC[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf die Berichte freigegeben`:`${f} hat den Zugriff abgelehnt`);toast(ok?'Zugriff freigegeben: Du kannst jetzt Berichte teilen':`${f} hat den Zugriff abgelehnt`);rAccUI();rShare(rS())}
+function rAccAns(ok,scope){if(scope==='account'){if(ACCX[rSel]!=='pending')return;const f=bFirst(rB());ACCX[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf das Kundenkonto freigegeben`:`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);toast(ok?'Kundenkonto freigegeben':`${f} hat den Zugriff auf das Kundenkonto abgelehnt`);rAccUI();rShare(rS());if(ok&&rLive())bApi.loadCd(rSel);if(ok&&rS().view==='reports')rAcct();return}
+ if(ACC[rSel]!=='pending')return;if(ok&&rLive())bApi.loadReps(rSel);const f=bFirst(rB());ACC[rSel]=ok?'ok':'no';alog(ok?`${f} hat den Zugriff auf die Berichte freigegeben`:`${f} hat den Zugriff abgelehnt`);toast(ok?'Zugriff freigegeben: Du kannst jetzt Berichte teilen':`${f} hat den Zugriff abgelehnt`);rAccUI();rShare(rS())}
 /* Kunde beendet den Einblick (Event consent-revoke vom Server): Freigabe weg, geteilte Ansicht schliessen */
 function rRevoke(scope){const f=bFirst(rB()),acct=scope==='account';if(acct)ACCX[rSel]='no';else{ACC[rSel]='no';ACCX[rSel]='no'}
  alog(acct?`${f} hat den Einblick ins Kundenkonto beendet`:`${f} hat den Zugriff auf die Berichte beendet`);
  const v=rS().view;if(v!=='reports'&&(!acct||v==='account'))rStop();rAccUI();rShare(rS());toast(acct?`${f} hat den Einblick ins Kundenkonto beendet`:`${f} hat den Zugriff auf die Berichte beendet`)}
 function rAccUI(){const e=document.getElementById('racc');if(!e)return;const b=rB(),p=ACC[rSel]==='pending'&&!(bApi.on&&b.live),px=ACCX[rSel]==='pending'&&!(bApi.on&&b.live);
- if(px&&!p){e.innerHTML=`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer dein Kundenkonto mit dir gemeinsam öffnen?</b><p>Er sieht dann alles in deinem Konto, z. B. Rezeptur, Bedarf, Abo und deine Gendaten. Nur während dieses Termins, jeder Zugriff wird protokolliert. Rohdaten herunterladen oder hochladen darf nur du selbst.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false,'account')">Nein</button><button class="btn lime sm" onclick="rAccAns(true,'account')">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`;return}
+ if(px&&!p){e.innerHTML=`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer dein Kundenkonto mit dir gemeinsam öffnen?</b><p>Er sieht dann einen Auszug aus deinem Konto: deinen Bedarf und deine Lebensmittelliste. Nur während dieses Termins, jeder Zugriff wird protokolliert. Rohdaten herunterladen oder hochladen darf nur du selbst.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false,'account')">Nein</button><button class="btn lime sm" onclick="rAccAns(true,'account')">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`;return}
  e.innerHTML=p?`<div class="racc"><div class="eyebrow">Demo · So sieht es ${esc(bFirst(b))} in der GEN(e)IUS-App</div><b>Darf dein Betreuer auf deine Berichte zugreifen?</b><p>Nur während dieses Termins. Jeder Zugriff wird protokolliert.</p><div class="acts"><button class="btn line sm" onclick="rAccAns(false)">Nein</button><button class="btn lime sm" onclick="rAccAns(true)">${ic('check')} Ja, freigeben</button></div><small>Demo: Antworte hier stellvertretend für die Kundin.</small></div>`:''}
 const rLayC=()=>{const sh=rS().view!=='reports';let m=RLAY.main==='auto'?(sh?'share':'cust'):RLAY.main;if(m==='share'&&!sh)m='cust';return `rvid m-${m} me-${RLAY.me}${sh?' sh':''}`};
 function rLay(){const v=document.getElementById('rvid');if(v)v.className=rLayC();const ms=RLAY.main==='me'?'full':RLAY.me;
@@ -1793,11 +1795,11 @@ function rAcct(){if(rIsOn('account')){rStop();return}
   if(bApi.on&&b.live)bApi.ev('access-request',{scope:'account'});else if(BC)BC.postMessage({type:'access-request',scope:'account',sessionId:rS().sessionId});
   rAccUI();rShare(rS());return toast(`Eigene Freigabe für das Kundenkonto angefragt: ${bFirst(b)} bestätigt sie in der GEN(e)IUS-App`)}
  rSend({view:'account',reportId:null,spread:0,htmlAnchor:null},`Kundenkonto übernommen: GEN(e)IUS-App von ${bFirst(rB())}${rB().live?'':' (Demo-Konto)'}`)}
-function rPdf(id){if(rIsOn('report-pdf',id)){rStop();return}const r=(bApi.reps[rSel]||REPORTS).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
+function rPdf(id){if(rIsOn('report-pdf',id)){rStop();return}const r=(rReps()).find(x=>x.id===id);rSend({view:'report-pdf',reportId:id,spread:0,htmlAnchor:null},`Bericht geöffnet: ${r.t} (PDF)`)}
 function rShareBtn(){if(rS().view!=='reports'){rView('reports');return}const p=document.getElementById('rpick');if(p){p.scrollIntoView({block:'nearest',behavior:'smooth'});p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}toast('Wähle rechts, was du teilen möchtest')}
 document.addEventListener('fullscreenchange',()=>{const b=document.getElementById('rfsb');if(!b)return;const f=!!document.fullscreenElement;b.innerHTML=ic(f?'fsexit':'fullscr');b.title=f?'Vollbild beenden':'Vollbild';b.setAttribute('aria-label',b.title)});
 function rFull(){const v=document.getElementById('rvid');if(document.fullscreenElement)document.exitFullscreen();else if(v&&v.requestFullscreen)v.requestFullscreen()}
-function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste']];
+function rPick(s){const reps=rReps(),fn=esc(bFirst(rB())),L=[['bedarf','pill','Mein Bedarf'],['food','apple','Lebensmittelliste']];
  if(!accOk()){const st=ACC[rSel];return `${kHead('lock','Berichte von '+fn)}<p class="mut">Bevor du Berichte und Listen teilen kannst, muss ${fn} den Zugriff in der GEN(e)IUS-App freigeben. Die Freigabe gilt nur für diesen Termin.</p>
   ${st==='pending'?`<div class="rwait"><span class="rspin"></span>Warte auf die Freigabe von ${fn} …</div>`:`${st==='no'?`<p class="rno">${fn} hat den Zugriff abgelehnt.</p>`:''}<button class="btn lime rgo" onclick="rAsk()">${ic('lock')} ${st==='no'?'Erneut anfragen':'Zugriff vom Kunden anfordern'}</button>`}`}
  const F=r=>[['report','book','Doppelseite',r.src||r.img||!r.html],['report-pdf','filetx','PDF',r.src||r.pdf],['report-html','code','HTML',r.src||r.html]].filter(x=>x[3]);
@@ -1805,13 +1807,13 @@ function rPick(s){const reps=bApi.reps[rSel]||REPORTS,fn=esc(bFirst(rB())),L=[['
  return `${kHead('screen','Im Video teilen')}<p class="mut">Freigegeben von ${fn}. Was du teilst, sieht ${fn} im Videobild.</p><div class="rplist">
  ${reps.map(r=>{const on=s.reportId===r.id&&/^report/.test(s.view);return `<div class="rpi rpr ${on?'on':''}"><div class="rpt">${r.cov?`<img class="rpc" src="${r.cov}" alt="" loading="lazy">`:`<span class="rpc">${ic('report')}</span>`}<div><b>${esc(r.t)}</b><small>${esc(r.sub||(r.pages?r.pages+' Seiten':''))}</small></div></div>
   <div class="rfmt">${F(r).map(([v,i,t])=>`<button class="btn sm ${on&&s.view===v?'lime':'line'}" onclick="${go[v]}('${r.id}')" title="${on&&s.view===v?'Nochmal klicken: Teilen beenden':'Im Video teilen'}">${ic(i)} ${t}</button>`).join('')}</div></div>`}).join('')}
- <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Du navigierst in der GEN(e)IUS-App von ${fn}, ${fn} sieht mit: Rezeptur, Bedarf, Abo und mehr.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Teilen beenden':'Übernehmen'}</button></div></div>`}
+ <div class="rpi racct ${s.view==='account'?'on':''}"><div><b>${ic('user')} Kundenkonto übernehmen</b><small>Auszug aus dem Konto von ${fn}: Bedarf und Lebensmittel. Nur mit eigener Freigabe von ${fn}, jeder Zugriff wird protokolliert.</small></div><button class="btn sm ${s.view==='account'?'lime':'line'}" onclick="rAcct()">${s.view==='account'?'Teilen beenden':'Übernehmen'}</button></div></div>`}
 function rShare(s){const sh=s.view!=='reports';rLay();
  const sb=document.getElementById('rshb');if(sb){sb.classList.toggle('on',sh);sb.querySelector('span').textContent=sh?'Teilen beenden':'Bildschirm teilen'}
  const l=document.getElementById('rsl');if(l)l.textContent=shLbl(s);const p=document.getElementById('rpick');if(p)p.innerHTML=rPick(s)}
 function rTick(){const e=document.getElementById('rtime'),j=RJ[rSel],b=rB();if(!e||!j){clearInterval(RTI);return}
  const sec=Math.floor((Date.now()-j.t0)/1000),m=Math.max(1,Math.ceil(sec/60));e.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
- document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. = ${eur((m-b.dur)*ADV.rate/60)}`:'')}
+ document.getElementById('rbill').textContent=`${m} von ${b.dur} Min.`+(m>b.dur?` · +${m-b.dur} Min. (fester Preis)`:'')}
 function rMount(){rStage();rPub();rAccUI();rChR();rLookApply();rDevs();if(RM.s){RM.meter();bApi.vAttach()}else RM.get();clearInterval(RTI);RTI=setInterval(rTick,1000);rTick()}
 const CHAT={};let RCHF='all';
 const rCh=()=>CHAT[rSel]||(CHAT[rSel]={m:[],show:null});
@@ -1886,13 +1888,17 @@ const bApi={cd:{},on:false,tried:false,tok:'',rec:null,adv:null,advRec:null,reps
  handover(list,payload){const bk=rSel;this.ev('handover',{list,payload},bk).then(x=>{if(x)this.hand[x.id]=[bk,list];else toast('Übergabe fehlgeschlagen')})},
  async loadPb(){if(this.pb)return this.pb;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pocketbase@0.26.2/dist/pocketbase.umd.js';s.integrity='sha384-PyEqd9CedmsyU7NKgzIEmFQVNmsddeiQtKXCrHb7r0pERoeI7MVI3S3gCOkFvo0s';s.crossOrigin='anonymous';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
   this.pb=new PocketBase(BAPI);this.pb.authStore.save(this.tok,this.rec);return this.pb},
- async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
-  this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
+ loadReps(id){if(!this.on)return;
   this.req('GET',`/api/advisor/reports/${id}`).then(x=>{/* Backend-Werte gehen in HTML und onclick: ID nur Zeichen [A-Za-z0-9_-], Titel ohne Markup, URLs nur https */
   this.reps[id]=(x.items||[]).map(r=>({id:String(r.id||r.ref||'').replace(/[^\w-]/g,''),t:String(r.title||'').replace(/[<>&"'`]/g,''),pages:Math.max(1,Math.round(+r.pages)||1),img:HTTPS(r.img),pad:Math.round(+r.pad)||3,html:HTTPS(r.htmlUrl),pdf:HTTPS(r.pdfUrl),
    sec:(r.sections||[]).map(z=>[String(z.id).replace(/^abschnitt-/,'').replace(/[^\w-]/g,''),String(z.title||'').replace(/[<>&"'`]/g,''),z.page||1,'',z.target||'',z.ref||''])})).map(r=>r.sec.length?r:Object.assign(r,{sec:[['start',r.t,1,'','']]}));
    alog(`Berichtsliste geladen: ${this.reps[id].length} Bericht${this.reps[id].length===1?'':'e'}`);rStage()}).catch(e=>toast('Berichte nicht verfügbar: '+e.message));
-  /* Gesundheitsdaten (Bedarf/Lebensmittel/Medikamente) werden nicht mehr geladen: Ansichten entfernt (Datensparsamkeit, 19.11.2026) */
+ },
+ /* Kundenkonto-Auszug (Bedarf, Lebensmittel) nur nach access-grant {scope:'account'}; Medikamente gibt es nicht mehr */
+ loadCd(id){if(!this.on)return Promise.resolve();return this.req('GET',`/api/advisor/customer/${id}`).then(x=>{this.cd[id]=x;rStage()}).catch(e=>toast('Kundenkonto nicht verfügbar: '+e.message))},
+ async start(b){if(!this.on||!b.live)return;const id=b.id;this.joinAt=Date.now();
+  this.req('POST',`/api/booking/${id}/start`).catch(()=>{});
+  if(ACC[id]==='ok')this.loadReps(id);/* Berichte nur mit Freigabe (consentAt bzw. access-grant reports) */
   this.req('GET',`/api/collections/rooms/records?filter=${encodeURIComponent(`booking="${id}"`)}`).then(x=>{const r=x.items&&x.items[0];if(r){this.room[id]=r.id;rPub()}}).catch(()=>{});
   (RM.s?Promise.resolve(RM.s):RM.get()).then(m=>{if(!m||rSel!==id)return;this.local=m;this.vAttach();if(this.pc)this.call()}); // nicht blockieren: Signalisierung startet sofort
   const pb=await this.loadPb().catch(()=>null);
