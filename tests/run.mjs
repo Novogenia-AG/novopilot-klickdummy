@@ -280,6 +280,7 @@ function berater(search) {
     const cases = [['https://x.y/a-{n}.webp', true], ['/berichte/a.pdf', true], ['//evil.com/a', false], ['javascript:alert(1)', false], ['https://a/"onerror="alert(1)', false], ["https://a/'x", false], ['https://a/<b>', false]];
     check(G, 'HTTPS(): nur saubere https- oder Pfad-URLs', !!HTTPS && cases.every(([u, ok]) => (HTTPS(u) === u) === ok), cases.filter(([u, ok]) => !HTTPS || (HTTPS(u) === u) !== ok).map(c => c[0]).join(' | '));
   }
+  check(G, 'Beratung: keine automatische Nachverrechnung (wie Kundenseite)', !/nachverrechnet|minutengenau/.test(npHtml) && /extra=0;/.test(npHtml) && npHtml.includes('Eine Verlängerung gibt es nur, wenn der Kunde zustimmt'));
   check(G, '18+-Bestaetigung gilt nur fuer den gewaehlten Kunden', /const wKey=\(\)=>/.test(npHtml) && /wAge!==wKey\(\)/.test(npHtml));
   check(G, 'NovoPilot: Netzwerkprovision nur aus Endkunden-Bestellungen', npHtml.includes('Für jede Bestellung seiner Endkunden'));
   check(G, 'berater.html: Provision offengelegt (DE und EN)', (pbTxt.match(/erhalte ich eine Provision/g) || []).length >= 2 && (pbTxt.match(/receive a commission/g) || []).length >= 2);
